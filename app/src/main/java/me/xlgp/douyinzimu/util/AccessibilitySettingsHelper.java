@@ -1,18 +1,15 @@
 package me.xlgp.douyinzimu.util;
 
-import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
 import android.view.accessibility.AccessibilityManager;
-import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 
 import java.util.List;
 
-import me.xlgp.douyinzimu.constant.AccessibilityServiceConstant;
 import me.xlgp.douyinzimu.service.DouYinAccessibilityService;
 
 public class AccessibilitySettingsHelper {
@@ -37,7 +34,7 @@ public class AccessibilitySettingsHelper {
     public static boolean isEnabled(Context context) {
         String serviceClassName = DouYinAccessibilityService.class.getName();
         AccessibilityManager manager = (AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
-        if (!manager.isEnabled()){
+        if (!manager.isEnabled()) {
             return false;
         }
         List<AccessibilityServiceInfo> enabledServiceList = manager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
