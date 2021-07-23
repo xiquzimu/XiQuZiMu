@@ -19,7 +19,7 @@ public class DianZanService {
 
     public DianZanService(AccessibilityService service, DianZan dianZan) {
         this.service = service;
-        this.dianZan = dianZan == null ? new DianZan() : dianZan;
+        this.dianZan = dianZan == null ? new DianZan(500) : dianZan;
         dianZanGestureDescription = new DianZanGestureDescription().build();
     }
 

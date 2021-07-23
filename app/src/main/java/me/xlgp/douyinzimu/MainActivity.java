@@ -3,7 +3,6 @@ package me.xlgp.douyinzimu;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.Random;
 
 import me.xlgp.douyinzimu.constant.SysSettingsContant;
-import me.xlgp.douyinzimu.service.FloatingService;
 import me.xlgp.douyinzimu.util.AccessibilitySettingsHelper;
 import me.xlgp.douyinzimu.util.CopyUtil;
 import me.xlgp.douyinzimu.util.FloatingHelper;
@@ -21,7 +19,6 @@ import me.xlgp.douyinzimu.util.FloatingHelper;
 public class MainActivity extends AppCompatActivity {
 
     private ClipboardManager clipboardManager = null;
-    private static final int FLOATING_CODE = 1;
     private static final int ACCESSIBILITY_CODE = 2;
     private Intent floatingIntent = null;
 
@@ -41,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onStartFloatingService(View view) {
+        if (!AccessibilitySettingsHelper.isEnabled(this)) {
+            Toast.makeText(this, "请先开启无障碍服务", Toast.LENGTH_SHORT).show();
+            return;
+        }
         FloatingHelper.openAndStart(this);
     }
 

@@ -47,12 +47,15 @@ public class AccessibilitySettingsHelper {
                     return true;
                 }
             }
-
+            boolean isExist = false;
             for (AccessibilityServiceInfo service : installedServiceList) {
-                if (!serviceClassName.equals(service.getResolveInfo().serviceInfo.name)) {
-                    Toast.makeText(context, "系统查询不到本服务", Toast.LENGTH_SHORT).show();
-                    return false;
+                if (serviceClassName.equals(service.getResolveInfo().serviceInfo.name)) {
+                    isExist = true;
+                    break;
                 }
+            }
+            if (!isExist) {
+                Toast.makeText(context, "系统查询不到本服务", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             Toast.makeText(context, "辅助服务异常", Toast.LENGTH_SHORT).show();

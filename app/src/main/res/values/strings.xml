@@ -4,6 +4,7 @@
     <string name="accessibility_service_label">抖音字幕辅助服务</string>
     <string name="accessibility_service_description">抖音字幕需要辅助服务</string>
     <string name="pinglunBtn">评论</string>
+    <string name="pinglunSwitch">评论</string>
     <string name="moveLayoutBtn">移动</string>
     <string name="dianzan">点赞</string>
     <string name="closeFloating">关闭</string>

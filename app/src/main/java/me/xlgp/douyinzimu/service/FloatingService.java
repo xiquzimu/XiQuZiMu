@@ -7,23 +7,22 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.IBinder;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.google.android.material.switchmaterial.SwitchMaterial;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import me.xlgp.douyinzimu.MainActivity;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.listener.FloatingMoveListener;
+import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.util.FloatingHelper;
 
 public class FloatingService extends Service {
@@ -41,7 +40,7 @@ public class FloatingService extends Service {
 
         if (enableShow()) {
             showFloatingWindow();
-        }else {
+        } else {
             Toast.makeText(this, "已启动悬浮窗", Toast.LENGTH_SHORT).show();
         }
         return super.onStartCommand(intent, flags, startId);
@@ -53,8 +52,8 @@ public class FloatingService extends Service {
     }
 
     private View createDemoView() {
-
-        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.floating_layout, null);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.floating_layout, null);
 
         return linearLayout;
     }
@@ -76,15 +75,18 @@ public class FloatingService extends Service {
         return layoutParams;
     }
 
-    private void viewListener(View view, WindowManager.LayoutParams layoutParams, WindowManager windowManager){
-        Button moveBtn = view.findViewById(R.id.moveLayoutBtn);
-        moveBtn.setOnTouchListener(new FloatingMoveListener(view, layoutParams, windowManager));
-        Button closeBtn = view.findViewById(R.id.closeBtn);
-        closeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                windowManager.removeView(view);
-                mFloatingViewList.remove(view);
+    private void viewListener(View view, WindowManager.LayoutParams layoutParams, WindowManager windowManager) {
+        view.findViewById(R.id.moveLayoutBtn).setOnTouchListener(new FloatingMoveListener(view, layoutParams, windowManager));
+        view.findViewById(R.id.closeBtn).setOnClickListener(v -> {
+            windowManager.removeView(view);
+            mFloatingViewList.remove(view);
+        });
+        SwitchMaterial switchMaterial = view.findViewById(R.id.pingLunSwitch);
+        switchMaterial.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                PingLun.getInstance().start();
+            } else {
+                PingLun.getInstance().stop();
             }
         });
     }

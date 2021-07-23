@@ -13,7 +13,6 @@ public class DouYinAccessibilityService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-
         switch (event.getEventType()) {
             case TYPE_VIEW_CLICKED:
                 if (DianZanHelper.isEnabled(this, event)) {
