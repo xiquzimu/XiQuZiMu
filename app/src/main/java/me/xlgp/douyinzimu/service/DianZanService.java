@@ -2,7 +2,6 @@ package me.xlgp.douyinzimu.service;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.GestureDescription;
-import android.graphics.Path;
 
 import me.xlgp.douyinzimu.obj.Callback;
 import me.xlgp.douyinzimu.obj.ClickGestureDescription;
@@ -39,7 +38,7 @@ public class DianZanService {
          */
         dianZan.updateCount();
         //模拟点赞手势
-        service.dispatchGesture(dianZanGestureDescription, new DianZanGestureResultCallback(() -> dianZan()), null);
+        service.dispatchGesture(dianZanGestureDescription, new DianZanGestureResultCallback((obj) -> dianZan()), null);
 
     }
 }

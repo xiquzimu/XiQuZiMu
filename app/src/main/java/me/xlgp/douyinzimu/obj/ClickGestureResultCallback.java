@@ -17,7 +17,7 @@ public class ClickGestureResultCallback extends AccessibilityService.GestureResu
     public void onCompleted(GestureDescription gestureDescription) {
         super.onCompleted(gestureDescription);
         if (callback != null) {
-            callback.call();
+            callback.call(null);
         }
     }
 

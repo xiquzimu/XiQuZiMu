@@ -7,4 +7,5 @@
     <string name="moveLayoutBtn">移动</string>
     <string name="dianzan">点赞</string>
     <string name="closeFloating">关闭</string>
+    <string name="dy_input_layout_text">说点什么...</string>
 </resources>

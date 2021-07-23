@@ -2,7 +2,6 @@ package me.xlgp.douyinzimu.obj;
 
 import android.accessibilityservice.GestureDescription;
 import android.graphics.Path;
-import android.graphics.Point;
 import android.graphics.PointF;
 
 public class ClickGestureDescription {
@@ -25,7 +24,7 @@ public class ClickGestureDescription {
         return path;
     }
 
-    protected class Point extends PointF {
+    public static class Point extends PointF {
 
         public Point(float x, float y) {
             super(x, y);
