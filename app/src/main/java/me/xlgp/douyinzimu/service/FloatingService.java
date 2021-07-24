@@ -24,6 +24,7 @@ import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.listener.FloatingMoveListener;
 import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.util.FloatingHelper;
+import me.xlgp.douyinzimu.zimu.NvfumaZimu;
 
 public class FloatingService extends Service {
 
@@ -51,10 +52,9 @@ public class FloatingService extends Service {
         return true;
     }
 
-    private View createDemoView() {
+    private View getFloatingLayout() {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.floating_layout, null);
-
         return linearLayout;
     }
 
@@ -75,18 +75,23 @@ public class FloatingService extends Service {
         return layoutParams;
     }
 
-    private void viewListener(View view, WindowManager.LayoutParams layoutParams, WindowManager windowManager) {
+    private void viewListener(View view, WindowManager.LayoutParams layoutParams) {
+        WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         view.findViewById(R.id.moveLayoutBtn).setOnTouchListener(new FloatingMoveListener(view, layoutParams, windowManager));
         view.findViewById(R.id.closeBtn).setOnClickListener(v -> {
             windowManager.removeView(view);
             mFloatingViewList.remove(view);
         });
-        SwitchMaterial switchMaterial = view.findViewById(R.id.pingLunSwitch);
-        switchMaterial.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        ((SwitchMaterial) view.findViewById(R.id.pingLunSwitch)).setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 PingLun.getInstance().start();
             } else {
                 PingLun.getInstance().stop();
+            }
+        });
+        view.findViewById(R.id.pingLunBtn).setOnClickListener(v -> {
+            if (!PingLun.getInstance().disabled()) {
+                PingLunService.getInstance().setZiMuList(NvfumaZimu.getZhongZhuangYuan());
             }
         });
     }
@@ -94,17 +99,11 @@ public class FloatingService extends Service {
     @SuppressLint("ClickableViewAccessibility")
     private void showFloatingWindow() {
         if (FloatingHelper.enable(this)) {
-            // 获取WindowManager服务
-            WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-
+            View view = getFloatingLayout();
             WindowManager.LayoutParams layoutParams = createLayoutParams();
-            View view = createDemoView();
-
-            viewListener(view, layoutParams, windowManager);
-
             // 将悬浮窗控件添加到WindowManager
-            windowManager.addView(view, layoutParams);
-
+            ((WindowManager) getSystemService(WINDOW_SERVICE)).addView(view, layoutParams);
+            viewListener(view, layoutParams);
             mFloatingViewList.add(view);
         }
     }

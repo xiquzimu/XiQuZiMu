@@ -3,13 +3,18 @@ package me.xlgp.douyinzimu.util;
 import android.accessibilityservice.AccessibilityService;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.util.List;
 
 import me.xlgp.douyinzimu.R;
+import me.xlgp.douyinzimu.obj.Callback;
 import me.xlgp.douyinzimu.obj.PingLun;
+import me.xlgp.douyinzimu.obj.ZiMu;
+import me.xlgp.douyinzimu.obj.ZiMuList;
+import me.xlgp.douyinzimu.service.PingLunService;
 
 public class PingLunHelper {
 
@@ -38,16 +43,21 @@ public class PingLunHelper {
 
     public static boolean openInputLayout(AccessibilityService service) {
         AccessibilityNodeInfo nodeInfo = service.getRootInActiveWindow();
-        List<AccessibilityNodeInfo> nodeInfoList = nodeInfo.findAccessibilityNodeInfosByText(service.getString(R.string.dy_input_layout_text));
+
         try {
-            for (AccessibilityNodeInfo node : nodeInfoList) {
-                if (node.getParent().isClickable()) {
-                    node.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                    return true;
+            if (nodeInfo != null) {
+                List<AccessibilityNodeInfo> nodeInfoList = nodeInfo.findAccessibilityNodeInfosByText(service.getString(R.string.dy_input_layout_text));
+                for (AccessibilityNodeInfo node : nodeInfoList) {
+                    if (node.getParent().isClickable()) {
+                        node.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                        return true;
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
-            nodeInfo.recycle();
+            if (nodeInfo != null) nodeInfo.recycle();
         }
         return false;
     }
@@ -84,7 +94,7 @@ public class PingLunHelper {
      * @param value
      * @return
      */
-    private static boolean input(AccessibilityService service, CharSequence value) {
+    private static boolean input(AccessibilityService service, CharSequence value, Callback callback) {
         AccessibilityNodeInfo node = null;
         try {
             node = service.getRootInActiveWindow().findFocus(AccessibilityNodeInfo.FOCUS_INPUT);
@@ -92,10 +102,13 @@ public class PingLunHelper {
             //输入数据
             Bundle arguments = new Bundle();
             arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, value);
-            boolean bool = node.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
-            if (bool) {
+            boolean setTextSuccess = node.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
+            if (setTextSuccess) {
                 //发送事件
-                getSendNodeByInputNode(node).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                boolean sendSuccess = getSendNodeByInputNode(node).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                if (sendSuccess) { //发送成功之后，回调
+                    callback.call(true);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -125,6 +138,20 @@ public class PingLunHelper {
     private static final int SEND = 3;
     private static final int PING_LUN_END = 4;
 
+    private static Callback pinglunCompleted(Context context, ZiMuList ziMuList) {
+        Callback callback = object -> {
+            System.out.println(ziMuList.current().toString());
+            if (ziMuList.hasNext()) { //继续评论
+                new Handler().postDelayed(() -> {
+                    openInputLayout((AccessibilityService) context);
+                }, ziMuList.current().getDelayMillis());
+            } else {
+                PingLunService.getInstance().clear();
+            }
+        };
+        return callback;
+    }
+
     public static boolean pingLun(Context context, AccessibilityEvent event) {
         try {
             if (PingLunHelper.isEnabled(context, event) && !PingLun.getInstance().disabled()) { //事件源：即判断该事件是否为douyinzimu app中评论按钮发出的事件，douyinzimu 的评论按钮
@@ -132,7 +159,9 @@ public class PingLunHelper {
                 return true;
             }
             if (isInputLayout(context, event) && !PingLun.getInstance().disabled()) { //事件源：是否为douyin界面评论按钮发出的事件，douyin 界面的评论按钮
-                input((AccessibilityService) context, "赞"); //输入评论内容，点击发送
+                ZiMuList ziMuList = PingLunService.getInstance().getZiMuList();
+                ZiMu ziMu = ziMuList.next();
+                input((AccessibilityService) context, ziMu.getContent(), pinglunCompleted(context, ziMuList)); //输入评论内容，点击发送
                 return true;
             }
         } catch (Exception e) {

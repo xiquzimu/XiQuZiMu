@@ -30,6 +30,4 @@ public class DouYinAccessibilityService extends AccessibilityService {
     public void onInterrupt() {
 
     }
-
-
 }

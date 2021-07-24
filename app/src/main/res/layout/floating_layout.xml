@@ -3,24 +3,57 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#522D2D2D"
+    android:background="#40000000"
     android:orientation="vertical"
     android:padding="8dp"
     android:theme="@style/Theme.DouYinZiMu">
+
+    <Button
+        android:id="@+id/moveLayoutBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:background="#88FFFFFF"
+        android:minWidth="60dp"
+        android:minHeight="40dp"
+
+        android:text="@string/moveLayoutBtn"
+        android:textColor="#FFFFFF" />
+
+    <Button
+        android:id="@+id/pinglunListBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:background="#88FFFFFF"
+        android:minWidth="60dp"
+        android:minHeight="40dp"
+
+        android:text="@string/pinglinList"
+        android:textColor="#FFFFFF" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/pingLunSwitch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+
         android:layout_marginBottom="6dp"
+        android:width="60dp"
+        android:background="#88FFFFFF"
+        android:minHeight="40dp"
         android:text="@string/pinglunSwitch"
-        android:textColor="#FFFFFF" />
+        android:textAlignment="viewEnd"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp" />
 
     <Button
         android:id="@+id/pingLunBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#88FFFFFF"
+        android:minWidth="60dp"
+        android:minHeight="40dp"
         android:text="@string/pinglunBtn"
         android:textColor="#FFFFFF" />
 
@@ -29,7 +62,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="6dp"
-        android:background="#85FFFFFF"
+
+        android:background="#88FFFFFF"
+
+        android:minWidth="60dp"
+        android:minHeight="40dp"
         android:text="@string/dianzan"
         android:textColor="#FFFFFF" />
 
@@ -37,18 +74,12 @@
         android:id="@+id/closeBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#85FFFFFF"
+
+        android:background="#88FFFFFF"
+
+        android:minWidth="60dp"
+        android:minHeight="40dp"
         android:text="@string/closeFloating"
         android:textColor="#FFFFFF" />
-
-    <Button
-        android:id="@+id/moveLayoutBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:background="#8AFFFFFF"
-        android:text="@string/moveLayoutBtn"
-        android:textColor="#FFFFFF"
-        app:cornerRadius="@dimen/material_emphasis_high_type" />
 
 </LinearLayout>
