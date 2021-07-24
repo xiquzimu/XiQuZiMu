@@ -31,4 +31,8 @@ public class PingLunService {
     public void clear() {
         ziMuList = null;
     }
+
+    public boolean isZiMuList(){
+        return !(ziMuList == null);
+    }
 }
