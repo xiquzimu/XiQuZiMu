@@ -71,7 +71,7 @@
         android:textColor="#FFFFFF" />
 
     <Button
-        android:id="@+id/closeBtn"
+        android:id="@+id/closeFloatingBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
@@ -80,6 +80,6 @@
         android:minWidth="60dp"
         android:minHeight="40dp"
         android:text="@string/closeFloating"
-        android:textColor="#FFFFFF" />
+        android:textColor="#ED4040" />
 
 </LinearLayout>

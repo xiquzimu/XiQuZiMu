@@ -1,10 +1,10 @@
 package me.xlgp.douyinzimu.service;
 
-import me.xlgp.douyinzimu.obj.changduan.ChangeCiList;
+import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 
 public class PingLunService {
 
-    private ChangeCiList changeCiList = null;
+    private ChangCiList changCiList = null;
     private static PingLunService instance = null;
 
     private PingLunService() {
@@ -16,19 +16,19 @@ public class PingLunService {
         return instance;
     }
 
-    public ChangeCiList getChangeCiList() {
-        return changeCiList;
+    public ChangCiList getChangeCiList() {
+        return changCiList;
     }
 
-    public void setChangeCiList(ChangeCiList changeCiList) {
-        this.changeCiList = changeCiList;
+    public void setChangeCiList(ChangCiList changCiList) {
+        this.changCiList = changCiList;
     }
 
     public void clear() {
-        changeCiList = null;
+        changCiList = null;
     }
 
     public boolean hasChangeCi(){
-        return !(changeCiList == null);
+        return !(changCiList == null);
     }
 }

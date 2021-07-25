@@ -12,7 +12,7 @@ import java.util.List;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.obj.Callback;
 import me.xlgp.douyinzimu.obj.PingLun;
-import me.xlgp.douyinzimu.obj.changduan.ChangeCiList;
+import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 import me.xlgp.douyinzimu.service.PingLunService;
 
 public class PingLunHelper {
@@ -126,25 +126,17 @@ public class PingLunHelper {
      * 3：点击发送按钮
      *
      * @param context
-     * @param event
+     * @param
      * @return
      */
-    private static int STEP = 0;
-
-    private static final int START_PING_LUN = 0;
-    private static final int INPUT_LAYOUT_OPEND = 1;
-    private static final int CONTENT_INPUTED = 2;
-    private static final int SEND = 3;
-    private static final int PING_LUN_END = 4;
 
     private static Callback pinglunCompleted(Context context) {
-        ChangeCiList changeCiList = PingLunService.getInstance().getChangeCiList();
+        ChangCiList changCiList = PingLunService.getInstance().getChangeCiList();
         Callback callback = object -> {
-            System.out.println(changeCiList.current().toString());
-            if (changeCiList.hasNext()) { //继续评论
+            if (changCiList.hasNext()) { //继续评论
                 new Handler().postDelayed(() -> {
                     openInputLayout((AccessibilityService) context);
-                }, changeCiList.current().getDelayMillis());
+                }, changCiList.current().getDelayMillis());
             } else {
                 PingLunService.getInstance().clear();
             }
@@ -159,8 +151,8 @@ public class PingLunHelper {
                 return true;
             }
             if (isInputLayout(context, event) && !PingLun.getInstance().disabled()) { //事件源：是否为douyin界面评论按钮发出的事件，douyin 界面的评论按钮
-                ChangeCiList changeCiList = PingLunService.getInstance().getChangeCiList();
-                input((AccessibilityService) context, changeCiList.next().getContent(), pinglunCompleted(context)); //输入评论内容，点击发送
+                ChangCiList changCiList = PingLunService.getInstance().getChangeCiList();
+                input((AccessibilityService) context, changCiList.next().getContent(), pinglunCompleted(context)); //输入评论内容，点击发送
                 return true;
             }
         } catch (Exception e) {

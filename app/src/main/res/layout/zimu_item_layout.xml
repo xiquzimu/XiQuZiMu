@@ -8,5 +8,15 @@
         android:id="@+id/zimu_item_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="女驸马－中状元" />
+        android:layout_margin="0dp"
+        android:background="#56C4C4C4"
+        android:textAlignment="textStart"
+        android:textColor="#FFFFFF" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#6BFFFFFF" />
+
 </LinearLayout>

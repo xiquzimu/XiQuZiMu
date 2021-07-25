@@ -17,24 +17,12 @@ import me.xlgp.douyinzimu.util.CopyUtil;
 import me.xlgp.douyinzimu.util.FloatingHelper;
 
 public class MainActivity extends AppCompatActivity {
-
-    private ClipboardManager clipboardManager = null;
-    private static final int ACCESSIBILITY_CODE = 2;
     private Intent floatingIntent = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-    }
-
-    public void onCopyAndPaste(View view) {
-        CopyUtil.copy(clipboardManager, new Random().nextFloat());
-        String pasteText = CopyUtil.paste(clipboardManager);
-        TextView pasteTextView = findViewById(R.id.pasteTextView);
-        pasteTextView.setText(pasteText);
     }
 
     public void onStartFloatingService(View view) {
@@ -57,10 +45,6 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case SysSettingsContant.FLOATING_CODE:
                 FloatingHelper.resultAndStart(this);
-                break;
-            case ACCESSIBILITY_CODE:
-                Toast.makeText(this, "ACCESSIBILITY 授权反馈:" + resultCode, Toast.LENGTH_SHORT).show();
-                System.out.println(data);
                 break;
         }
     }

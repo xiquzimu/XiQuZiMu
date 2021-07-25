@@ -7,12 +7,12 @@ package me.xlgp.douyinzimu.obj.changduan;
  * 额外信息：名称，剧目，
  * 唱词列表，
  */
-public class ChangeDuan{
+public class ChangDuan {
     private ChangeDuanQiTa changeDuanQiTa;
-    private ChangeCiList changeCiList;
+    private ChangCiList changCiList;
 
-    public ChangeDuan(){
-        changeCiList = new ChangeCiList();
+    public ChangDuan(){
+        changCiList = new ChangCiList();
         changeDuanQiTa = new ChangeDuanQiTa();
     }
 
@@ -20,15 +20,20 @@ public class ChangeDuan{
         return changeDuanQiTa;
     }
 
-    public ChangeCiList getChangeCiList() {
-        return changeCiList;
+    public ChangCiList getChangeCiList() {
+        return changCiList;
+    }
+
+    public ChangCiList getChangeCiList(int cursor){
+        changCiList.setCursor(cursor);
+        return changCiList;
     }
 
     public void setChangeDuanQiTa(ChangeDuanQiTa changeDuanQiTa) {
         this.changeDuanQiTa = changeDuanQiTa;
     }
 
-    public void setChangeCiList(ChangeCiList changeCiList) {
-        this.changeCiList = changeCiList;
+    public void setChangeCiList(ChangCiList changCiList) {
+        this.changCiList = changCiList;
     }
 }

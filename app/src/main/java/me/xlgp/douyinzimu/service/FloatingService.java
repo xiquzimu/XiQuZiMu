@@ -13,27 +13,30 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.listener.FloatingMoveListener;
 import me.xlgp.douyinzimu.obj.PingLun;
-import me.xlgp.douyinzimu.obj.changduan.ChangeCiList;
-import me.xlgp.douyinzimu.obj.changduan.ChangeDuan;
 import me.xlgp.douyinzimu.util.FloatingHelper;
-import me.xlgp.douyinzimu.view.ZiMuItemAdapter;
-import me.xlgp.douyinzimu.zimu.NvfumaChangDuan;
-import me.xlgp.douyinzimu.zimu.TianXianPeiChangDuan;
+import me.xlgp.douyinzimu.view.ZimuFloatinglayout;
 
 public class FloatingService extends Service {
 
     private List<View> mFloatingViewList = new ArrayList<>();
+    private View toolFloatingLayout = null;
+    private Map<String, View> floatingLayoutMap = new HashMap<>();
+    private int viewCount = 0;
+    private static final String TOOL_FLOATING_LAYOUT = "toolFloatingLayout";
+    private static final String ZIMU_LIST_FLOATING_LAYOUT = "zimuListFloatingLayout";
 
     @Nullable
     @Override
@@ -44,17 +47,12 @@ public class FloatingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        if (enableShow()) {
+        if (!containView(TOOL_FLOATING_LAYOUT)) {
             showFloatingWindow(R.layout.floating_layout);
         } else {
             Toast.makeText(this, "已启动悬浮窗", Toast.LENGTH_SHORT).show();
         }
         return super.onStartCommand(intent, flags, startId);
-    }
-
-    private boolean enableShow() {
-        if (mFloatingViewList.size() >= 1) return false;
-        return true;
     }
 
     private View getFloatingLayout(int resource) {
@@ -79,11 +77,15 @@ public class FloatingService extends Service {
         return layoutParams;
     }
 
+    private boolean containView(String key) {
+        return floatingLayoutMap.containsKey(key) && floatingLayoutMap.get(key) != null;
+    }
+
     private void viewListener(View view, WindowManager.LayoutParams layoutParams) {
         WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         view.findViewById(R.id.moveLayoutBtn).setOnTouchListener(new FloatingMoveListener(view, layoutParams, windowManager));
-        view.findViewById(R.id.closeBtn).setOnClickListener(v -> {
-            closeFloatingWindow();
+        view.findViewById(R.id.closeFloatingBtn).setOnClickListener(v -> {
+            closeFloatingWindow(null);
         });
         ((SwitchMaterial) view.findViewById(R.id.pingLunSwitch)).setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -97,46 +99,43 @@ public class FloatingService extends Service {
                 Toast.makeText(this, "评论不可用或唱词不存在", Toast.LENGTH_SHORT).show();
             }
         });
-        view.findViewById(R.id.pinglunListBtn).setOnClickListener(v -> {
-            View zimuView = getFloatingLayout(R.layout.floating_zimu_layout);
-
-            View zimuTitleView = zimuView.findViewById(R.id.zimuListTitleBtn);
+        view.findViewById(R.id.pinglunListBtn).setOnClickListener(v -> { //打开字幕列表layout
+            if (containView(ZIMU_LIST_FLOATING_LAYOUT)) {
+                Toast.makeText(v.getContext(), "字幕列表已存在", Toast.LENGTH_SHORT).show();
+                return;
+            }
             WindowManager.LayoutParams zimulayoutParams = createLayoutParams();
-            zimuTitleView.setOnTouchListener(new FloatingMoveListener(zimuView, zimulayoutParams, (WindowManager) getSystemService(WINDOW_SERVICE)));
-
-            RecyclerView recyclerView = zimuView.findViewById(R.id.zimu_recyclerview);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-            List list = new ArrayList();
-            ChangeDuan changeDuan = new ChangeDuan();
-            changeDuan.setChangeCiList(new ChangeCiList());
-            list.add(new NvfumaChangDuan().getZhongZhuangYuan());
-            list.add(new TianXianPeiChangDuan().getFuQiHuanJia());
-            recyclerView.setAdapter(new ZiMuItemAdapter(list));
-            ((WindowManager) getSystemService(WINDOW_SERVICE)).addView(zimuView, zimulayoutParams);
-            mFloatingViewList.add(zimuView);
+            View zimuLayout = new ZimuFloatinglayout(this, zimulayoutParams).getFloatingLayout();
+            ((WindowManager) getSystemService(WINDOW_SERVICE)).addView(zimuLayout, zimulayoutParams);
+            floatingLayoutMap.put(ZIMU_LIST_FLOATING_LAYOUT, zimuLayout);
         });
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void showFloatingWindow(int resource) {
         if (FloatingHelper.enable(this)) {
-            View view = getFloatingLayout(resource);
+            toolFloatingLayout = getFloatingLayout(resource);
             WindowManager.LayoutParams layoutParams = createLayoutParams();
             // 将悬浮窗控件添加到WindowManager
-            ((WindowManager) getSystemService(WINDOW_SERVICE)).addView(view, layoutParams);
-            viewListener(view, layoutParams);
-            mFloatingViewList.add(view);
+            ((WindowManager) getSystemService(WINDOW_SERVICE)).addView(toolFloatingLayout, layoutParams);
+            viewListener(toolFloatingLayout, layoutParams);
+            floatingLayoutMap.put(TOOL_FLOATING_LAYOUT, toolFloatingLayout);
         }
     }
 
-    private void closeFloatingWindow() {
+    public void closeFloatingWindow(View view) {
         WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-
-        while (mFloatingViewList.size() > 0) {
-            View view = mFloatingViewList.get(mFloatingViewList.size() - 1);
+        if (view == null) {
+            Iterator iter = floatingLayoutMap.entrySet().iterator();
+            while (iter.hasNext()) {
+                Map.Entry entry = (Map.Entry) iter.next();
+                windowManager.removeView((View) entry.getValue());
+                floatingLayoutMap.remove(entry.getKey());
+            }
+        } else if (floatingLayoutMap.containsValue(view)) {
+            Collection collection = floatingLayoutMap.values();
+            collection.remove(view);
             windowManager.removeView(view);
-            mFloatingViewList.remove(view);
         }
     }
 

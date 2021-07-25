@@ -1,21 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
     android:background="#3E5D5D5D"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:textAlignment="textStart">
 
-    <Button
-        android:id="@+id/zimuListTitleBtn"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/zimu_list_title" />
+        android:layout_height="40dp">
+
+        <Button
+            android:id="@+id/zimuListTitleBtn"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#56DDDDDD"
+            android:text="@string/zimu_list_title"
+            android:textColor="#fff"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/closeFloatingBtn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/closeFloatingBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="#56DDDDDD"
+            android:text="@string/closeFloating"
+            android:textColor="#F83737"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/kaiOrShouBtn"
+            app:layout_constraintStart_toEndOf="@+id/zimuListTitleBtn"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/kaiOrShouBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="#56DDDDDD"
+            android:text="@string/kaiOrShoue"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/closeFloatingBtn"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginBottom="4dp"
+        android:background="#56DDDDDD"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/currentZimuTitleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
+            android:text="@string/currentZimuTitle"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/zimu_recyclerview"
-        android:layout_width="250dp"
-        android:layout_height="155dp">
+        android:layout_width="242dp"
+        android:layout_height="120dp">
 
     </androidx.recyclerview.widget.RecyclerView>
+
 </LinearLayout>
