@@ -24,9 +24,12 @@ import java.util.List;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.listener.FloatingMoveListener;
 import me.xlgp.douyinzimu.obj.PingLun;
-import me.xlgp.douyinzimu.obj.ZiMuItem;
+import me.xlgp.douyinzimu.obj.changduan.ChangeCiList;
+import me.xlgp.douyinzimu.obj.changduan.ChangeDuan;
 import me.xlgp.douyinzimu.util.FloatingHelper;
 import me.xlgp.douyinzimu.view.ZiMuItemAdapter;
+import me.xlgp.douyinzimu.zimu.NvfumaChangDuan;
+import me.xlgp.douyinzimu.zimu.TianXianPeiChangDuan;
 
 public class FloatingService extends Service {
 
@@ -90,7 +93,7 @@ public class FloatingService extends Service {
             }
         });
         view.findViewById(R.id.pingLunBtn).setOnClickListener(v -> {
-            if (PingLun.getInstance().disabled() || !PingLunService.getInstance().isZiMuList()) {
+            if (PingLun.getInstance().disabled() || !PingLunService.getInstance().hasChangeCi()) {
                 Toast.makeText(this, "评论不可用或唱词不存在", Toast.LENGTH_SHORT).show();
             }
         });
@@ -105,8 +108,10 @@ public class FloatingService extends Service {
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
             List list = new ArrayList();
-            list.add(new ZiMuItem("女驸马"));
-            list.add(new ZiMuItem("天仙配"));
+            ChangeDuan changeDuan = new ChangeDuan();
+            changeDuan.setChangeCiList(new ChangeCiList());
+            list.add(new NvfumaChangDuan().getZhongZhuangYuan());
+            list.add(new TianXianPeiChangDuan().getFuQiHuanJia());
             recyclerView.setAdapter(new ZiMuItemAdapter(list));
             ((WindowManager) getSystemService(WINDOW_SERVICE)).addView(zimuView, zimulayoutParams);
             mFloatingViewList.add(zimuView);

@@ -1,20 +1,17 @@
-package me.xlgp.douyinzimu.obj;
+package me.xlgp.douyinzimu.obj.changduan;
 
-/**
- * 字幕
- */
-public class ZiMu {
+public class ChangCi {
     private String mContent = null;
     private String mTime = null;
     private long delayMillis = Long.MAX_VALUE;
 
-    public ZiMu(String mContent, String mTime){
+    public ChangCi(String mContent, String mTime) {
         this.mContent = mContent;
         this.mTime = mTime;
         delayMillis = 2000;
     }
 
-    public ZiMu(String mContent, String mTime, long delayMillis){
+    public ChangCi(String mContent, String mTime, long delayMillis) {
         this.mContent = mContent;
         this.mTime = mTime;
         this.delayMillis = delayMillis;
@@ -28,13 +25,13 @@ public class ZiMu {
         return mTime;
     }
 
-    public long getDelayMillis(){
+    public long getDelayMillis() {
         return delayMillis;
     }
 
     @Override
     public String toString() {
-        return "ZiMu{" +
+        return "ChangCi{" +
                 "mContent='" + mContent + '\'' +
                 ", mTime='" + mTime + '\'' +
                 ", delayMillis=" + delayMillis +

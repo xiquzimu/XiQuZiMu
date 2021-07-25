@@ -9,28 +9,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import me.xlgp.douyinzimu.R;
-import me.xlgp.douyinzimu.obj.ZiMuItem;
+import me.xlgp.douyinzimu.obj.changduan.ChangeDuan;
 import me.xlgp.douyinzimu.service.PingLunService;
-import me.xlgp.douyinzimu.zimu.NvfumaZimu;
 
 public class ZiMuItemAdapter extends RecyclerView.Adapter<ZiMuItemAdapter.ViewHolder> {
-    private List<ZiMuItem> ziMuItemList;
+    private List<ChangeDuan> changeDuanList;
 
-    public ZiMuItemAdapter(List<ZiMuItem> list) {
-        this.ziMuItemList = list;
-    }
-
-    public ZiMuItemAdapter(ZiMuItem item) {
-        if (ziMuItemList == null) {
-            ziMuItemList = new ArrayList<>();
-        } else if (!ziMuItemList.isEmpty()) {
-            ziMuItemList.clear();
-        }
-        ziMuItemList.add(item);
+    public ZiMuItemAdapter(List<ChangeDuan> changeDuanList) {
+        this.changeDuanList = changeDuanList;
     }
 
     @NonNull
@@ -44,29 +33,31 @@ public class ZiMuItemAdapter extends RecyclerView.Adapter<ZiMuItemAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ZiMuItemAdapter.ViewHolder holder, int position) {
-        ZiMuItem ziMuItem = ziMuItemList.get(position);
-        holder.setData(ziMuItem);
+        ChangeDuan changeDuan = changeDuanList.get(position);
+        holder.setData(changeDuan);
     }
 
     @Override
     public int getItemCount() {
-        return ziMuItemList.size();
+        return changeDuanList.size();
     }
 
     protected class ViewHolder extends RecyclerView.ViewHolder {
         private Button button;
+        private ChangeDuan changeDuan;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             button = itemView.findViewById(R.id.zimu_item_btn);
             button.setOnClickListener((v) -> {
                 Toast.makeText(v.getContext(), button.getText(), Toast.LENGTH_SHORT).show();
-                PingLunService.getInstance().setZiMuList(NvfumaZimu.getZhongZhuangYuan());
+                PingLunService.getInstance().setChangeCiList(changeDuan.getChangeCiList());
             });
         }
 
-        public void setData(ZiMuItem ziMuItem) {
-            button.setText(ziMuItem.getTitle());
+        public void setData(ChangeDuan changeDuan) {
+            button.setText(changeDuan.getChangeDuanQiTa().getTitle());
+            this.changeDuan = changeDuan;
         }
     }
 }

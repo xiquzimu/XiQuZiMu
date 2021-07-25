@@ -12,8 +12,7 @@ import java.util.List;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.obj.Callback;
 import me.xlgp.douyinzimu.obj.PingLun;
-import me.xlgp.douyinzimu.obj.ZiMu;
-import me.xlgp.douyinzimu.obj.ZiMuList;
+import me.xlgp.douyinzimu.obj.changduan.ChangeCiList;
 import me.xlgp.douyinzimu.service.PingLunService;
 
 public class PingLunHelper {
@@ -138,13 +137,14 @@ public class PingLunHelper {
     private static final int SEND = 3;
     private static final int PING_LUN_END = 4;
 
-    private static Callback pinglunCompleted(Context context, ZiMuList ziMuList) {
+    private static Callback pinglunCompleted(Context context) {
+        ChangeCiList changeCiList = PingLunService.getInstance().getChangeCiList();
         Callback callback = object -> {
-            System.out.println(ziMuList.current().toString());
-            if (ziMuList.hasNext()) { //继续评论
+            System.out.println(changeCiList.current().toString());
+            if (changeCiList.hasNext()) { //继续评论
                 new Handler().postDelayed(() -> {
                     openInputLayout((AccessibilityService) context);
-                }, ziMuList.current().getDelayMillis());
+                }, changeCiList.current().getDelayMillis());
             } else {
                 PingLunService.getInstance().clear();
             }
@@ -159,9 +159,8 @@ public class PingLunHelper {
                 return true;
             }
             if (isInputLayout(context, event) && !PingLun.getInstance().disabled()) { //事件源：是否为douyin界面评论按钮发出的事件，douyin 界面的评论按钮
-                ZiMuList ziMuList = PingLunService.getInstance().getZiMuList();
-                ZiMu ziMu = ziMuList.next();
-                input((AccessibilityService) context, ziMu.getContent(), pinglunCompleted(context, ziMuList)); //输入评论内容，点击发送
+                ChangeCiList changeCiList = PingLunService.getInstance().getChangeCiList();
+                input((AccessibilityService) context, changeCiList.next().getContent(), pinglunCompleted(context)); //输入评论内容，点击发送
                 return true;
             }
         } catch (Exception e) {

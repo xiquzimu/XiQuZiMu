@@ -1,19 +1,19 @@
-package me.xlgp.douyinzimu.obj;
+package me.xlgp.douyinzimu.obj.changduan;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
 
-public class ZiMuList extends ArrayList<ZiMu> {
-    private ListIterator<ZiMu> listIterator = null;
-    private ZiMu current = null;
+public class ChangeCiList extends ArrayList<ChangCi> {
+    private ListIterator<ChangCi> listIterator = null;
+    private ChangCi current = null;
 
-    public ZiMuList() {
+    public ChangeCiList() {
         listIterator = this.listIterator();
     }
 
-    public ZiMu next() {
+    public ChangCi next() {
         if (this.listIterator.hasNext()) {
-            current = (ZiMu) this.listIterator.next();
+            current = (ChangCi) this.listIterator.next();
         } else {
             current = null;
         }
@@ -24,7 +24,7 @@ public class ZiMuList extends ArrayList<ZiMu> {
         return listIterator.hasNext();
     }
 
-    public ZiMu current() {
+    public ChangCi current() {
         return current;
     }
 

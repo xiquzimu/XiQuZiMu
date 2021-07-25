@@ -1,18 +1,14 @@
 package me.xlgp.douyinzimu.service;
 
-import me.xlgp.douyinzimu.obj.ZiMuList;
+import me.xlgp.douyinzimu.obj.changduan.ChangeCiList;
 
 public class PingLunService {
 
-    private ZiMuList ziMuList = null;
+    private ChangeCiList changeCiList = null;
     private static PingLunService instance = null;
 
     private PingLunService() {
 
-    }
-
-    public boolean running() {
-        return true;
     }
 
     public static PingLunService getInstance() {
@@ -20,19 +16,19 @@ public class PingLunService {
         return instance;
     }
 
-    public void setZiMuList(ZiMuList ziMuList) {
-        this.ziMuList = ziMuList;
+    public ChangeCiList getChangeCiList() {
+        return changeCiList;
     }
 
-    public ZiMuList getZiMuList() {
-        return ziMuList;
+    public void setChangeCiList(ChangeCiList changeCiList) {
+        this.changeCiList = changeCiList;
     }
 
     public void clear() {
-        ziMuList = null;
+        changeCiList = null;
     }
 
-    public boolean isZiMuList(){
-        return !(ziMuList == null);
+    public boolean hasChangeCi(){
+        return !(changeCiList == null);
     }
 }
