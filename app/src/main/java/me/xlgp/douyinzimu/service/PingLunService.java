@@ -28,7 +28,7 @@ public class PingLunService {
         changCiList = null;
     }
 
-    public boolean hasChangeCi(){
-        return !(changCiList == null);
+    public boolean hasChangeCi() {
+        return changCiList != null && changCiList.hasNext();
     }
 }

@@ -95,8 +95,11 @@ public class FloatingService extends Service {
             }
         });
         view.findViewById(R.id.pingLunBtn).setOnClickListener(v -> {
-            if (PingLun.getInstance().disabled() || !PingLunService.getInstance().hasChangeCi()) {
-                Toast.makeText(this, "评论不可用或唱词不存在", Toast.LENGTH_SHORT).show();
+            if (PingLun.getInstance().disabled()){
+                Toast.makeText(this, "请开启评论功能", Toast.LENGTH_SHORT).show();
+                return;
+            }else if(!PingLunService.getInstance().hasChangeCi()) {
+                Toast.makeText(this, "请选择唱段", Toast.LENGTH_SHORT).show();
             }
         });
         view.findViewById(R.id.pinglunListBtn).setOnClickListener(v -> { //打开字幕列表layout
@@ -130,8 +133,8 @@ public class FloatingService extends Service {
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
                 windowManager.removeView((View) entry.getValue());
-                floatingLayoutMap.remove(entry.getKey());
             }
+            floatingLayoutMap.clear();
         } else if (floatingLayoutMap.containsValue(view)) {
             Collection collection = floatingLayoutMap.values();
             collection.remove(view);

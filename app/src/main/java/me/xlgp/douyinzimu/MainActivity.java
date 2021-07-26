@@ -22,7 +22,9 @@ public class MainActivity extends AppCompatActivity {
     public void onStartFloatingService(View view) {
         if (!FloatingHelper.enable(this)) {
             FloatingHelper.open(this);
+            return;
         }
+        Toast.makeText(this, "已开启悬浮权限", Toast.LENGTH_SHORT).show();
     }
 
     public void onOpenAccessibilitySetting(View view) {
