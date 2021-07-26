@@ -11,7 +11,7 @@ import me.xlgp.douyinzimu.zimu.TianXianPeiChangDuan;
 public class ChangDuanHelper {
     public static List<ChangDuan> getChangDuanList(){
         ChangDuan changDuan = new ChangDuan();
-        List list = new ArrayList();
+        List<ChangDuan> list = new ArrayList<>();
         changDuan.setChangeCiList(new ChangCiList());
         list.add(new NvfumaChangDuan().getZhongZhuangYuan());
         list.add(new TianXianPeiChangDuan().getFuQiHuanJia());

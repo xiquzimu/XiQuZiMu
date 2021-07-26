@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityService;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
@@ -133,7 +134,7 @@ public class PingLunHelper {
         public void call(Object object) {
             if (changCiList.hasNext()) {
                 long delayMillis = object == null ? this.delayMillis : (long) object;
-                new Handler().postDelayed(() -> {
+                new Handler(Looper.myLooper()).postDelayed(() -> {
                     openInputLayout((AccessibilityService) context);
                 }, delayMillis);
             }
