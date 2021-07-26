@@ -1,19 +1,13 @@
 package me.xlgp.douyinzimu;
 
-import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.Random;
-
-import me.xlgp.douyinzimu.constant.SysSettingsContant;
 import me.xlgp.douyinzimu.util.AccessibilitySettingsHelper;
-import me.xlgp.douyinzimu.util.CopyUtil;
 import me.xlgp.douyinzimu.util.FloatingHelper;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,11 +20,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onStartFloatingService(View view) {
-        if (!AccessibilitySettingsHelper.isEnabled(this)) {
-            Toast.makeText(this, "请先开启无障碍服务", Toast.LENGTH_SHORT).show();
-            return;
+        if (!FloatingHelper.enable(this)) {
+            FloatingHelper.open(this);
         }
-        FloatingHelper.openAndStart(this);
     }
 
     public void onOpenAccessibilitySetting(View view) {
@@ -39,19 +31,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case SysSettingsContant.FLOATING_CODE:
-                FloatingHelper.resultAndStart(this);
-                break;
+    public void onRun(View view) {
+        if (!AccessibilitySettingsHelper.isEnabled(this)) {
+            Toast.makeText(this, "请先开启无障碍服务", Toast.LENGTH_SHORT).show();
+            return;
         }
+        if (!FloatingHelper.enable(this)) {
+            Toast.makeText(this, "请开启悬浮权限", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        floatingIntent = FloatingHelper.getFloatingIntent(this);
+        FloatingHelper.startService(this, floatingIntent);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        stopService(floatingIntent);
+        if (floatingIntent != null) {
+            stopService(floatingIntent);
+        }
     }
 }

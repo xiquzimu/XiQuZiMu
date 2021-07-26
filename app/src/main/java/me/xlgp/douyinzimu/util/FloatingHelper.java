@@ -1,6 +1,7 @@
 package me.xlgp.douyinzimu.util;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -22,24 +23,11 @@ public class FloatingHelper {
     public static boolean enable(Context context){
         return Settings.canDrawOverlays(context);
     }
-
-    public static void startService(Activity activity){
-        activity.startService(new Intent(activity, FloatingService.class));
+    public static Intent getFloatingIntent(Activity activity){
+        return new Intent(activity, FloatingService.class);
+    }
+    public static ComponentName startService(Activity activity, Intent intent){
+        return activity.startService(intent);
     }
 
-    public static void openAndStart(Activity activity){
-        if (!enable(activity)) {
-            open(activity);
-        }else{
-            startService(activity);
-        }
-    }
-    public static void resultAndStart(Activity activity){
-        if (!enable(activity)) {
-            Toast.makeText(activity, "授权失败", Toast.LENGTH_SHORT).show();
-        } else {
-            startService(activity);
-            Toast.makeText(activity, "授权成功", Toast.LENGTH_SHORT).show();
-        }
-    }
 }
