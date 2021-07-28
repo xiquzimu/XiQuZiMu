@@ -9,7 +9,8 @@ public class ClickGestureResultCallback extends AccessibilityService.GestureResu
     public ClickGestureResultCallback(Callback callback) {
         this.callback = callback;
     }
-    public ClickGestureResultCallback(){
+
+    public ClickGestureResultCallback() {
         this(null);
     }
 

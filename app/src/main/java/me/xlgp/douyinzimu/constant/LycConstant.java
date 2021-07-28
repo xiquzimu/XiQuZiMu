@@ -1,7 +1,5 @@
 package me.xlgp.douyinzimu.constant;
 
-import java.util.regex.Pattern;
-
 public class LycConstant {
     public static final String TITLE_REG = "^\\[ti:.*\\]$";
     public static final int TITLE_START = 4;

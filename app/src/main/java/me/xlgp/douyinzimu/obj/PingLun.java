@@ -2,12 +2,11 @@ package me.xlgp.douyinzimu.obj;
 
 public class PingLun {
 
+    private static PingLun instance = null;
     private final int STARTED = 1;
     private final int RUNNING = 1;
     private final int STOPPED = 0;
     private int STATUS;
-
-    private static PingLun instance = null;
 
     private PingLun() {
         STATUS = STOPPED;
@@ -21,11 +20,13 @@ public class PingLun {
     }
 
     public void start() {
-       STATUS = STARTED;
+        STATUS = STARTED;
     }
-    public boolean disabled(){
+
+    public boolean disabled() {
         return STATUS == STOPPED;
     }
+
     public void stop() {
         STATUS = STOPPED;
     }

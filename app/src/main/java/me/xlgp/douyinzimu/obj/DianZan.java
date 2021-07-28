@@ -7,16 +7,20 @@ public class DianZan {
     //点赞数量
     private int count;
     private int initCount = 100;
-    public DianZan(){
+
+    public DianZan() {
         count = initCount;
     }
-    public DianZan(int count){
+
+    public DianZan(int count) {
         this.count = count;
         initCount = count;
     }
-    public void init(){
+
+    public void init() {
         count = initCount;
     }
+
     public int getCount() {
         return count;
     }
@@ -25,12 +29,12 @@ public class DianZan {
         this.count = count;
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return this.count == 0;
     }
 
-    public void updateCount(){
-        if (this.count <= 0){
+    public void updateCount() {
+        if (this.count <= 0) {
             this.count = 0;
             return;
         }

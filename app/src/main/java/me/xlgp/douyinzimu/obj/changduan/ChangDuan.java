@@ -11,7 +11,7 @@ public class ChangDuan {
     private ChangeDuanQiTa changeDuanQiTa;
     private ChangCiList changCiList;
 
-    public ChangDuan(){
+    public ChangDuan() {
         changCiList = new ChangCiList();
         changeDuanQiTa = new ChangeDuanQiTa();
     }
@@ -20,20 +20,20 @@ public class ChangDuan {
         return changeDuanQiTa;
     }
 
-    public ChangCiList getChangeCiList() {
-        return changCiList;
-    }
-
-    public ChangCiList getChangeCiList(int cursor){
-        changCiList.setCursor(cursor);
-        return changCiList;
-    }
-
     public void setChangeDuanQiTa(ChangeDuanQiTa changeDuanQiTa) {
         this.changeDuanQiTa = changeDuanQiTa;
     }
 
+    public ChangCiList getChangeCiList() {
+        return changCiList;
+    }
+
     public void setChangeCiList(ChangCiList changCiList) {
         this.changCiList = changCiList;
+    }
+
+    public ChangCiList getChangeCiList(int cursor) {
+        changCiList.setCursor(cursor);
+        return changCiList;
     }
 }

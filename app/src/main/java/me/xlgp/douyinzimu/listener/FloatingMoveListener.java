@@ -1,7 +1,6 @@
 package me.xlgp.douyinzimu.listener;
 
 import android.view.MotionEvent;
-import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.WindowManager;
 

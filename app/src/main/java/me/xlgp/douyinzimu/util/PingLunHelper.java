@@ -120,27 +120,6 @@ public class PingLunHelper {
         return true;
     }
 
-    private static class pinglunCallback implements Callback {
-        private Context context;
-        private long delayMillis = -1;
-        private ChangCiList changCiList = null;
-
-        public pinglunCallback(Context context, ChangCiList changCiList) {
-            this.context = context;
-            this.changCiList = changCiList;
-        }
-
-        @Override
-        public void call(Object object) {
-            if (changCiList.hasNext()) {
-                long delayMillis = object == null ? this.delayMillis : (long) object;
-                new Handler(Looper.myLooper()).postDelayed(() -> {
-                    openInputLayout((AccessibilityService) context);
-                }, delayMillis);
-            }
-        }
-    }
-
     private static boolean enablePingLun() {
         return !PingLun.getInstance().disabled() && PingLunService.getInstance().hasChangeCi();
     }
@@ -168,6 +147,27 @@ public class PingLunHelper {
             e.printStackTrace();
         }
         return false;
+    }
+
+    private static class pinglunCallback implements Callback {
+        private Context context;
+        private long delayMillis = -1;
+        private ChangCiList changCiList = null;
+
+        public pinglunCallback(Context context, ChangCiList changCiList) {
+            this.context = context;
+            this.changCiList = changCiList;
+        }
+
+        @Override
+        public void call(Object object) {
+            if (changCiList.hasNext()) {
+                long delayMillis = object == null ? this.delayMillis : (long) object;
+                new Handler(Looper.myLooper()).postDelayed(() -> {
+                    openInputLayout((AccessibilityService) context);
+                }, delayMillis);
+            }
+        }
     }
 
 }

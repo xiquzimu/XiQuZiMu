@@ -5,21 +5,22 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import me.xlgp.douyinzimu.R;
+import me.xlgp.douyinzimu.designpatterns.AllObserver;
+import me.xlgp.douyinzimu.designpatterns.ChangDuanObservable;
 import me.xlgp.douyinzimu.listener.FloatingMoveListener;
 import me.xlgp.douyinzimu.service.FloatingService;
 import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
 @SuppressLint("ViewConstructor")
 public class ZimuFloatinglayout extends View {
+    RecyclerView recyclerView = null;
     private View rootLayout = null;
     private WindowManager.LayoutParams layoutParams;
-    RecyclerView recyclerView = null;
     private boolean isShou = false;
 
     public ZimuFloatinglayout(Context context, WindowManager.LayoutParams layoutParams) {
@@ -62,7 +63,14 @@ public class ZimuFloatinglayout extends View {
     private void initRecyclerView() {
         recyclerView = this.rootLayout.findViewById(R.id.zimu_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        TextView textView = this.rootLayout.findViewById(R.id.currentZimuTitleTextView);
-        recyclerView.setAdapter(new ChangDuanAdapter(ChangDuanHelper.getChangDuanList(getContext()), textView));
+
+        recyclerView.setAdapter(new ChangDuanAdapter(ChangDuanHelper.getChangDuanList(getContext()), getChangDuanObservable()));
+    }
+
+    private ChangDuanObservable getChangDuanObservable() {
+        ChangDuanObservable observable = new ChangDuanObservable();
+        observable.addObserver(new AllObserver.CurrentZimuItemObserver(this.rootLayout.findViewById(R.id.currentZimuTitleTextView)));
+        observable.addObserver(new AllObserver.ChangeCiListObserver());
+        return observable;
     }
 }

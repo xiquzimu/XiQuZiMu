@@ -10,8 +10,9 @@ public class ClickGestureDescription {
     public ClickGestureDescription(Point point) {
         this.point = point;
     }
-    public ClickGestureDescription(){
-        this.point = new Point(300,550);
+
+    public ClickGestureDescription() {
+        this.point = new Point(300, 550);
     }
 
     public GestureDescription build() {

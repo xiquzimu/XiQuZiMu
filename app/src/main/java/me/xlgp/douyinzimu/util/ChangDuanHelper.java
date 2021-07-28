@@ -59,7 +59,6 @@ public class ChangDuanHelper {
             }
         }
         ChangCiList changCiList = changDuan.getChangeCiList();
-        changCiList.setCursor(0);
         for (int i = 0; i < changCiList.size(); i++) {
             if (i != changCiList.size() - 1) {
                 changCiList.get(i).setDelayMillis(getDelayMillis(changCiList.get(i + 1).getTime()) - getDelayMillis(changCiList.get(i).getTime()));

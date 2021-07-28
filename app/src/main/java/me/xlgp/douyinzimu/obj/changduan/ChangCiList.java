@@ -16,6 +16,7 @@ public class ChangCiList extends ArrayList<ChangCi> {
         }
         return null;
     }
+
     public boolean hasNext() {
         return listIterator.hasNext();
     }

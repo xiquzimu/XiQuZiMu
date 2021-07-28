@@ -11,14 +11,17 @@ import me.xlgp.douyinzimu.service.DianZanService;
 public class DianZanHelper {
     private Context context;
 
-    public DianZanHelper(){
+    public DianZanHelper() {
 
     }
-    public DianZanHelper(Context context){
-    this.context = context;
+
+    public DianZanHelper(Context context) {
+        this.context = context;
     }
+
     /**
      * 主要验证当前事件源是否是点赞按钮发出的
+     *
      * @param event
      * @return
      */
@@ -35,16 +38,17 @@ public class DianZanHelper {
      * 验证能否点赞，
      * 1：事件源是否是点赞按钮发出的，
      * 2：当前界面是否是douyin
+     *
      * @param context
      * @param event
      * @return
      */
-    public static boolean isEnabled(Context context, AccessibilityEvent event){
+    public static boolean isEnabled(Context context, AccessibilityEvent event) {
         return check(context, event) && AppHelper.isDouYinWindows((AccessibilityService) context);
     }
 
 
-    public static void dianZan(AccessibilityService service){
+    public static void dianZan(AccessibilityService service) {
         new DianZanService(service).dianZan();
     }
 }

@@ -13,11 +13,11 @@ public class ChangeDuanQiTa {
         this.title = title;
     }
 
-    public void setJuMu(String juMu) {
-        this.juMu = juMu;
-    }
-
     public String getJuMu() {
         return juMu;
+    }
+
+    public void setJuMu(String juMu) {
+        this.juMu = juMu;
     }
 }

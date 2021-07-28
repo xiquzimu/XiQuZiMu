@@ -30,12 +30,12 @@ import me.xlgp.douyinzimu.view.ZimuFloatinglayout;
 
 public class FloatingService extends Service {
 
+    private static final String TOOL_FLOATING_LAYOUT = "toolFloatingLayout";
+    private static final String ZIMU_LIST_FLOATING_LAYOUT = "zimuListFloatingLayout";
     private List<View> mFloatingViewList = new ArrayList<>();
     private View toolFloatingLayout = null;
     private Map<String, View> floatingLayoutMap = new HashMap<>();
     private int viewCount = 0;
-    private static final String TOOL_FLOATING_LAYOUT = "toolFloatingLayout";
-    private static final String ZIMU_LIST_FLOATING_LAYOUT = "zimuListFloatingLayout";
 
     @Nullable
     @Override

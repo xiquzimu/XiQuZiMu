@@ -4,8 +4,8 @@ import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 
 public class PingLunService {
 
-    private ChangCiList changCiList = null;
     private static PingLunService instance = null;
+    private ChangCiList changCiList = null;
 
     private PingLunService() {
 

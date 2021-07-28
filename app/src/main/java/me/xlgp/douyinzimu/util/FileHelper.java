@@ -44,9 +44,8 @@ public class FileHelper {
      * @param list
      */
     public static void getFileList(String dirPath, List<File> list) {
-
         File[] files = new File(dirPath).listFiles();
-        if (files.length == 0) return;
+        if (files == null || files.length == 0) return;
         for (File pathname : files) {
             if (pathname.isDirectory()) {
                 getFileList(pathname.getAbsolutePath(), list);
