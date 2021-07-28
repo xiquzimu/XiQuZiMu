@@ -46,7 +46,7 @@ public class ZimuFloatinglayout extends View {
                 layoutParams.height = 160;
                 isShou = true;
             }
-            ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).updateViewLayout(rootLayout,layoutParams);
+            ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).updateViewLayout(rootLayout, layoutParams);
         });
     }
 
@@ -63,6 +63,6 @@ public class ZimuFloatinglayout extends View {
         recyclerView = this.rootLayout.findViewById(R.id.zimu_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         TextView textView = this.rootLayout.findViewById(R.id.currentZimuTitleTextView);
-        recyclerView.setAdapter(new ChangDuanAdapter(ChangDuanHelper.getChangDuanList(), textView));
+        recyclerView.setAdapter(new ChangDuanAdapter(ChangDuanHelper.getChangDuanList(getContext()), textView));
     }
 }

@@ -5,7 +5,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
-import android.os.Build;
 import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,11 +62,7 @@ public class FloatingService extends Service {
     private WindowManager.LayoutParams createLayoutParams() {
         // 设置LayoutParam
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-        } else {
-            layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-        }
+        layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
         layoutParams.format = PixelFormat.TRANSPARENT;
         layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -95,10 +90,10 @@ public class FloatingService extends Service {
             }
         });
         view.findViewById(R.id.pingLunBtn).setOnClickListener(v -> {
-            if (PingLun.getInstance().disabled()){
+            if (PingLun.getInstance().disabled()) {
                 Toast.makeText(this, "请开启评论功能", Toast.LENGTH_SHORT).show();
                 return;
-            }else if(!PingLunService.getInstance().hasChangeCi()) {
+            } else if (!PingLunService.getInstance().hasChangeCi()) {
                 Toast.makeText(this, "请选择唱段", Toast.LENGTH_SHORT).show();
             }
         });

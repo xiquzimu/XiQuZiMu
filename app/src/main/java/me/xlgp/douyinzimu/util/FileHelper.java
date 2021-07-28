@@ -17,9 +17,15 @@ import java.util.Objects;
 
 public class FileHelper {
 
-    public static HashMap getFileMap(String filePath) {
+    /**
+     * 遍历 dirpath 下所有的文本文件及文件夹
+     *
+     * @param dirPath
+     * @return
+     */
+    public static HashMap getFileMap(String dirPath) {
         HashMap map = new HashMap();
-        File[] files = new File(filePath).listFiles();
+        File[] files = new File(dirPath).listFiles();
         if (files.length == 0) return map;
         for (File pathname : files) {
             if (pathname.isDirectory()) {
@@ -29,6 +35,25 @@ public class FileHelper {
             }
         }
         return map;
+    }
+
+    /**
+     * 获取dirPath 下所有文本文件
+     *
+     * @param dirPath
+     * @param list
+     */
+    public static void getFileList(String dirPath, List<File> list) {
+
+        File[] files = new File(dirPath).listFiles();
+        if (files.length == 0) return;
+        for (File pathname : files) {
+            if (pathname.isDirectory()) {
+                getFileList(pathname.getAbsolutePath(), list);
+            } else if (pathname.isFile()) {
+                list.add(pathname);
+            }
+        }
     }
 
     public static String getExternalFileRootDir(File file) {

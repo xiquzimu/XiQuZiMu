@@ -29,6 +29,10 @@ public class ChangCi {
         return delayMillis;
     }
 
+    public void setDelayMillis(long delayMillis) {
+        this.delayMillis = delayMillis;
+    }
+
     @Override
     public String toString() {
         return "ChangCi{" +

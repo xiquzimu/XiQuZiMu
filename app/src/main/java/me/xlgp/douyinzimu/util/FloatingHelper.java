@@ -8,25 +8,26 @@ import android.net.Uri;
 import android.provider.Settings;
 import android.widget.Toast;
 
-import me.xlgp.douyinzimu.constant.SysSettingsContant;
 import me.xlgp.douyinzimu.service.FloatingService;
 
 public class FloatingHelper {
 
-    public static void open(Activity activity){
+    public static void open(Activity activity) {
         if (!enable(activity)) {
             Toast.makeText(activity, "当前无权限，请授权", Toast.LENGTH_SHORT);
-            activity.startActivityForResult(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + activity.getPackageName())), SysSettingsContant.FLOATING_CODE);
+            activity.startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + activity.getPackageName())));
         }
     }
 
-    public static boolean enable(Context context){
+    public static boolean enable(Context context) {
         return Settings.canDrawOverlays(context);
     }
-    public static Intent getFloatingIntent(Activity activity){
+
+    public static Intent getFloatingIntent(Activity activity) {
         return new Intent(activity, FloatingService.class);
     }
-    public static ComponentName startService(Activity activity, Intent intent){
+
+    public static ComponentName startService(Activity activity, Intent intent) {
         return activity.startService(intent);
     }
 
