@@ -24,7 +24,7 @@ import me.xlgp.douyinzimu.obj.changduan.ChangDuan;
 
 public class ChangDuanHelper {
     public static Observable<List<ChangDuan>> getChangDuanList(Context context) {
-        return Observable.just(null).map(s -> {
+        return Observable.just("").map(s -> {
             //todo 唱段与唱词或许应该分开读取，现在是将文件名与文件内容同时扫描
             List<File> fileList = loadFileList(context);
             List<ChangDuan> changDuanList = new ArrayList<>();
