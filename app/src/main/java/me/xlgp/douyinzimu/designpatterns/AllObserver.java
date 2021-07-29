@@ -24,7 +24,7 @@ public class AllObserver {
         @Override
         public void update(Observable o, Object arg) {
             ChangDuan changDuan = ((ChangDuanObservable) o).getChangDuan();
-            textView.setText(changDuan.getChangeDuanQiTa().getJuMu() + " - " + changDuan.getChangeDuanQiTa().getTitle());
+            textView.setText(changDuan.getChangeDuanQiTa().getTitle() + " (" + changDuan.getChangeDuanQiTa().getJuMu() + ")");
         }
     }
 

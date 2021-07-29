@@ -4,6 +4,12 @@ package me.xlgp.douyinzimu.obj.changduan;
 public class ChangeDuanQiTa {
     private String title;//唱段名称
     private String juMu; //剧目
+    private long offset; //时间间隔
+    private String juZhong; //剧种
+
+    public ChangeDuanQiTa() {
+        this.offset = 0;
+    }
 
     public String getTitle() {
         return title;
@@ -19,5 +25,21 @@ public class ChangeDuanQiTa {
 
     public void setJuMu(String juMu) {
         this.juMu = juMu;
+    }
+
+    public long getOffset() {
+        return offset;
+    }
+
+    public void setOffset(long offset) {
+        this.offset = offset;
+    }
+
+    public String getJuZhong() {
+        return juZhong;
+    }
+
+    public void setJuZhong(String juZhong) {
+        this.juZhong = juZhong;
     }
 }

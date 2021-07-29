@@ -51,17 +51,25 @@ public class ChangDuanHelper {
     public static ChangDuan parse(List<String> list) {
         ChangDuan changDuan = new ChangDuan();
         for (String line : list) {
-            //todo 需要完善选段附加内容
-            if (matcher(line, LycConstant.TITLE_REG)) {
-                changDuan.getChangeDuanQiTa().setTitle(getQitaContent(line, LycConstant.TITLE_START));
-            } else if (matcher(line, LycConstant.TIME_REG)) {
+            if (matcher(line, LycConstant.TIME_REG)) { //唱词
                 changDuan.getChangeCiList().add(getChangCi(line));
+            } else if (matcher(line, LycConstant.TITLE_REG)) { //名称
+                changDuan.getChangeDuanQiTa().setTitle(getQitaContent(line, LycConstant.TITLE_START));
+            } else if (matcher(line, LycConstant.JUMU_REG)) {
+                changDuan.getChangeDuanQiTa().setJuMu(getQitaContent(line, LycConstant.JUMU_START));
+            } else if (matcher(line, LycConstant.OFFSET_REG)) {
+                String offset = getQitaContent(line, LycConstant.OFFSET_START);
+                changDuan.getChangeDuanQiTa().setOffset((Long.parseLong(offset) * 1000));
+            } else if (matcher(line, LycConstant.JUZHONG_REG)) {
+                changDuan.getChangeDuanQiTa().setJuZhong(getQitaContent(line, LycConstant.JUZHONG_START));
             }
         }
         ChangCiList changCiList = changDuan.getChangeCiList();
         for (int i = 0; i < changCiList.size(); i++) {
             if (i != changCiList.size() - 1) {
-                changCiList.get(i).setDelayMillis(getDelayMillis(changCiList.get(i + 1).getTime()) - getDelayMillis(changCiList.get(i).getTime()));
+                //时间间隔 = 后一句的时间-本句时间+时间补偿值（offset）,offset:一般表示唱词先于唱段声音出现
+                long delaymillis = getDelayMillis(changCiList.get(i + 1).getTime()) - getDelayMillis(changCiList.get(i).getTime()) + changDuan.getChangeDuanQiTa().getOffset();
+                changCiList.get(i).setDelayMillis(delaymillis);
             }
         }
         return changDuan;
