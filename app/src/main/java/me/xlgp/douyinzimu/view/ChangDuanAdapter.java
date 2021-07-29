@@ -1,5 +1,6 @@
 package me.xlgp.douyinzimu.view;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import me.xlgp.douyinzimu.R;
@@ -22,6 +24,19 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
     public ChangDuanAdapter(List<ChangDuan> changDuanList, ChangDuanObservable observable) {
         this.changDuanList = changDuanList;
         this.changDuanObservable = observable;
+    }
+
+    public ChangDuanAdapter(){
+        this(new ArrayList<>(), null);
+    }
+
+    public ChangDuanAdapter(ChangDuanObservable observable){
+        this(new ArrayList<>(), observable);
+    }
+
+    public void updateData(List<ChangDuan> list){
+        changDuanList = list;
+        notifyDataSetChanged();
     }
 
     @NonNull

@@ -149,7 +149,7 @@ public class PingLunHelper {
         return false;
     }
 
-    private static class pinglunCallback implements Callback {
+    private static class pinglunCallback implements Callback<Long> {
         private Context context;
         private long delayMillis = -1;
         private ChangCiList changCiList = null;
@@ -160,9 +160,9 @@ public class PingLunHelper {
         }
 
         @Override
-        public void call(Object object) {
+        public void call(Long delay) {
             if (changCiList.hasNext()) {
-                long delayMillis = object == null ? this.delayMillis : (long) object;
+                long delayMillis = delay == null ? this.delayMillis : delay;
                 new Handler(Looper.myLooper()).postDelayed(() -> {
                     openInputLayout((AccessibilityService) context);
                 }, delayMillis);

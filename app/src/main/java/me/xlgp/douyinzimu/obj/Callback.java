@@ -1,5 +1,5 @@
 package me.xlgp.douyinzimu.obj;
 
-public interface Callback {
-    void call(Object object);
+public interface Callback<T> {
+    void call(T t);
 }
