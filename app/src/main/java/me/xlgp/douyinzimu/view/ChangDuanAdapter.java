@@ -1,6 +1,5 @@
 package me.xlgp.douyinzimu.view;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,22 +18,22 @@ import me.xlgp.douyinzimu.obj.changduan.ChangDuan;
 
 public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.ViewHolder> {
     private List<ChangDuan> changDuanList;
-    private ChangDuanObservable changDuanObservable;
+    private ChangDuanObservable<ChangDuan> changDuanObservable;
 
     public ChangDuanAdapter(List<ChangDuan> changDuanList, ChangDuanObservable observable) {
         this.changDuanList = changDuanList;
         this.changDuanObservable = observable;
     }
 
-    public ChangDuanAdapter(){
+    public ChangDuanAdapter() {
         this(new ArrayList<>(), null);
     }
 
-    public ChangDuanAdapter(ChangDuanObservable observable){
+    public ChangDuanAdapter(ChangDuanObservable observable) {
         this(new ArrayList<>(), observable);
     }
 
-    public void updateData(List<ChangDuan> list){
+    public void updateData(List<ChangDuan> list) {
         changDuanList = list;
         notifyDataSetChanged();
     }
@@ -79,7 +78,7 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
             @Override
             public void onClick(View v) {
                 Toast.makeText(v.getContext(), changDuan.getChangeDuanQiTa().getTitle() + " - " + changDuan.getChangeDuanQiTa().getJuMu(), Toast.LENGTH_SHORT).show();
-                changDuanObservable.setChangDuan(changDuan);
+                changDuanObservable.setData(changDuan);
             }
         }
     }

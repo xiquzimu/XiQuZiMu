@@ -23,7 +23,7 @@ public class AllObserver {
 
         @Override
         public void update(Observable o, Object arg) {
-            ChangDuan changDuan = ((ChangDuanObservable) o).getChangDuan();
+            ChangDuan changDuan = ((ChangDuanObservable<ChangDuan>) o).getData();
             textView.setText(changDuan.getChangeDuanQiTa().getTitle() + " (" + changDuan.getChangeDuanQiTa().getJuMu() + ")");
         }
     }
@@ -35,7 +35,7 @@ public class AllObserver {
 
         @Override
         public void update(Observable o, Object arg) {
-            ChangDuan changDuan = ((ChangDuanObservable) o).getChangDuan();
+            ChangDuan changDuan = ((ChangDuanObservable<ChangDuan>) o).getData();
             PingLunService.getInstance().setChangeCiList(changDuan.getChangeCiList(0));
         }
     }

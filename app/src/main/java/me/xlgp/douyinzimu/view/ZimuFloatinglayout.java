@@ -13,6 +13,7 @@ import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.designpatterns.AllObserver;
 import me.xlgp.douyinzimu.designpatterns.ChangDuanObservable;
 import me.xlgp.douyinzimu.listener.FloatingMoveListener;
+import me.xlgp.douyinzimu.obj.changduan.ChangDuan;
 import me.xlgp.douyinzimu.service.FloatingService;
 import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
@@ -70,7 +71,7 @@ public class ZimuFloatinglayout extends View {
     }
 
     private ChangDuanObservable getChangDuanObservable() {
-        ChangDuanObservable observable = new ChangDuanObservable();
+        ChangDuanObservable<ChangDuan> observable = new ChangDuanObservable<>();
         observable.addObserver(new AllObserver.CurrentZimuItemObserver(this.rootLayout.findViewById(R.id.currentZimuTitleTextView)));
         observable.addObserver(new AllObserver.ChangeCiListObserver());
         return observable;

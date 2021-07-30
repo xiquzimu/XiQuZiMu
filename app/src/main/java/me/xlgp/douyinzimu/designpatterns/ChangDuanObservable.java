@@ -2,20 +2,20 @@ package me.xlgp.douyinzimu.designpatterns;
 
 import java.util.Observable;
 
-import me.xlgp.douyinzimu.obj.changduan.ChangDuan;
+public class ChangDuanObservable<T> extends Observable {
+    private T data;
 
-public class ChangDuanObservable extends Observable {
-    private ChangDuan changDuan;
-
-    public ChangDuan getChangDuan() {
-        return changDuan;
+    public T getData() {
+        return data;
     }
 
-    public void setChangDuan(ChangDuan changDuan) {
-        this.changDuan = changDuan;
+    public void setData(T data) {
+        this.data = data;
+        changeData();
+    }
+
+    protected void changeData() {
         setChanged();
         notifyObservers();
     }
-
-
 }
