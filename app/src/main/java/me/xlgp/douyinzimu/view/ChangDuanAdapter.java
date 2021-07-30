@@ -48,7 +48,7 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ChangDuanAdapter.ViewHolder holder, int position) {
         ChangDuan changDuan = changDuanList.get(position);
-        holder.setData(changDuan);
+        holder.setData(changDuan, position);
     }
 
     @Override
@@ -66,8 +66,8 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
             button.setOnClickListener(new changDuanListener());
         }
 
-        public void setData(ChangDuan changDuan) {
-            button.setText(changDuan.getChangeDuanQiTa().getTitle());
+        public void setData(ChangDuan changDuan, int position) {
+            button.setText(position + 1 + ". " + changDuan.getChangeDuanQiTa().getTitle());
             this.changDuan = changDuan;
         }
 

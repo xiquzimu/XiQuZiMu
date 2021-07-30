@@ -31,8 +31,8 @@ public class FloatingMoveListener implements View.OnTouchListener {
                 int movedY = nowY - y;
                 x = nowX;
                 y = nowY;
-                layoutParams.x = layoutParams.x + movedX;
-                layoutParams.y = layoutParams.y + movedY;
+                layoutParams.x += movedX;
+                layoutParams.y += movedY;
                 // 更新悬浮窗控件布局
                 windowManager.updateViewLayout(moveView, layoutParams);
                 break;

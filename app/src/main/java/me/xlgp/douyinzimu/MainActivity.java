@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Button openFloatingBtn = null;
     private Button openAccessibilitySettingBtn = null;
+    private ActivityResultLauncher<Intent> floatingLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> FloatingHelper.updateFloatingBtn(MainActivity.this, openFloatingBtn));
+    private ActivityResultLauncher<Intent> accessibilityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> AccessibilitySettingsHelper.updateAccessibilitySettingBtn(this, openAccessibilitySettingBtn));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +36,6 @@ public class MainActivity extends AppCompatActivity {
         FloatingHelper.updateFloatingBtn(this, openFloatingBtn);
     }
 
-    private ActivityResultLauncher<Intent> floatingLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> FloatingHelper.updateFloatingBtn(MainActivity.this, openFloatingBtn));
-
     public void onStartFloatingService(View view) {
         if (!FloatingHelper.enable(this)) {
             floatingLauncher.launch(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + MainActivity.this.getPackageName())));
@@ -43,8 +43,6 @@ public class MainActivity extends AppCompatActivity {
         }
         Toast.makeText(this, "已开启悬浮权限", Toast.LENGTH_SHORT).show();
     }
-
-    private ActivityResultLauncher<Intent> accessibilityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> AccessibilitySettingsHelper.updateAccessibilitySettingBtn(this, openAccessibilitySettingBtn));
 
     public void onOpenAccessibilitySetting(View view) {
         if (!AccessibilitySettingsHelper.isEnabled(this)) {

@@ -26,7 +26,7 @@ public class ZimuFloatinglayout extends View {
 
     public ZimuFloatinglayout(Context context, WindowManager.LayoutParams layoutParams) {
         super(context);
-        rootLayout = getFloatingLayout(R.layout.floating_zimu_layout);
+        rootLayout = getFloatingLayout(R.layout.zimu_floating_layout);
         this.layoutParams = layoutParams;
         initRecyclerView();
         onListener();

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -47,7 +48,7 @@ public class FloatingService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         if (!containView(TOOL_FLOATING_LAYOUT)) {
-            showFloatingWindow(R.layout.floating_layout);
+            showFloatingWindow(R.layout.tool_floating_layout);
         } else {
             Toast.makeText(this, "已启动悬浮窗", Toast.LENGTH_SHORT).show();
         }
@@ -59,7 +60,7 @@ public class FloatingService extends Service {
         return inflater.inflate(resource, null);
     }
 
-    private WindowManager.LayoutParams createLayoutParams() {
+    private WindowManager.LayoutParams createLayoutParams(int gravity) {
         // 设置LayoutParam
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
         layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
@@ -67,6 +68,7 @@ public class FloatingService extends Service {
         layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        layoutParams.gravity = gravity;
         layoutParams.x = 0;
         layoutParams.y = 0;
         return layoutParams;
@@ -104,7 +106,7 @@ public class FloatingService extends Service {
                 Toast.makeText(v.getContext(), "字幕列表已存在", Toast.LENGTH_SHORT).show();
                 return;
             }
-            WindowManager.LayoutParams zimulayoutParams = createLayoutParams();
+            WindowManager.LayoutParams zimulayoutParams = createLayoutParams(Gravity.RIGHT);
             View zimuLayout = new ZimuFloatinglayout(this, zimulayoutParams).getFloatingLayout();
             ((WindowManager) getSystemService(WINDOW_SERVICE)).addView(zimuLayout, zimulayoutParams);
             floatingLayoutMap.put(ZIMU_LIST_FLOATING_LAYOUT, zimuLayout);
@@ -115,7 +117,7 @@ public class FloatingService extends Service {
     private void showFloatingWindow(int resource) {
         if (FloatingHelper.enable(this)) {
             toolFloatingLayout = getFloatingLayout(resource);
-            WindowManager.LayoutParams layoutParams = createLayoutParams();
+            WindowManager.LayoutParams layoutParams = createLayoutParams(Gravity.LEFT);
             // 将悬浮窗控件添加到WindowManager
             ((WindowManager) getSystemService(WINDOW_SERVICE)).addView(toolFloatingLayout, layoutParams);
             viewListener(toolFloatingLayout, layoutParams);

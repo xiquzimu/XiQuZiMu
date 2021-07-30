@@ -5,6 +5,9 @@ import android.content.Context;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.service.DianZanService;
 
@@ -49,6 +52,9 @@ public class DianZanHelper {
 
 
     public static void dianZan(AccessibilityService service) {
-        new DianZanService(service).dianZan();
+        Observable.just("").map(o -> {
+            new DianZanService(service).dianZan();
+            return "";
+        }).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe();
     }
 }

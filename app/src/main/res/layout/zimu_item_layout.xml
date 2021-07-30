@@ -10,6 +10,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="0dp"
         android:background="#56C4C4C4"
+        android:ellipsize="end"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:singleLine="true"
         android:textAlignment="textStart"
         android:textColor="#FFFFFF" />
 

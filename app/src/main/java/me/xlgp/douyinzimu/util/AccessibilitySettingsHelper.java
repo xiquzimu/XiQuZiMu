@@ -25,6 +25,7 @@ public class AccessibilitySettingsHelper {
 
     /**
      * 是否可用，true:表示服务启动，可以使用
+     *
      * @param context context
      * @return bool
      */
