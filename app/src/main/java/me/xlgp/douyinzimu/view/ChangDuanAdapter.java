@@ -20,7 +20,7 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
     private List<ChangDuan> changDuanList;
     private ChangDuanObservable<ChangDuan> changDuanObservable;
 
-    public ChangDuanAdapter(List<ChangDuan> changDuanList, ChangDuanObservable observable) {
+    public ChangDuanAdapter(List<ChangDuan> changDuanList, ChangDuanObservable<ChangDuan> observable) {
         this.changDuanList = changDuanList;
         this.changDuanObservable = observable;
     }
@@ -29,7 +29,7 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
         this(new ArrayList<>(), null);
     }
 
-    public ChangDuanAdapter(ChangDuanObservable observable) {
+    public ChangDuanAdapter(ChangDuanObservable<ChangDuan> observable) {
         this(new ArrayList<>(), observable);
     }
 
@@ -42,8 +42,7 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
     @Override
     public ChangDuanAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.zimu_item_layout, parent, false);
-        final ViewHolder holder = new ViewHolder(view);
-        return holder;
+        return new ViewHolder(view);
     }
 
     @Override

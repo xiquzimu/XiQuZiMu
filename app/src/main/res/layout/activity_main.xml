@@ -6,30 +6,41 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/openAccessibilitySetting"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="onOpenAccessibilitySetting"
-        android:text="开启辅助功能权限"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/runBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.44" />
+        app:layout_constraintVertical_bias="0.8">
 
-    <Button
-        android:id="@+id/openFloatingServiceBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onStartFloatingService"
-        android:text="开启悬浮权限"
-        app:layout_constraintBottom_toTopOf="@+id/openAccessibilitySetting"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.837" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:text="@string/settingsTips"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/openFloatingServiceBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onStartFloatingService"
+            android:text="@string/no_openFloatingText" />
+
+        <Button
+            android:id="@+id/openAccessibilitySetting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onOpenAccessibilitySetting"
+            android:text="@string/NoApenaccesibilityText" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/runBtn"
@@ -38,12 +49,11 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:onClick="onRun"
-        android:text="运行"
+        android:text="@string/runFloatingServiceBtn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/openAccessibilitySetting"
-        app:layout_constraintVertical_bias="0.164" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

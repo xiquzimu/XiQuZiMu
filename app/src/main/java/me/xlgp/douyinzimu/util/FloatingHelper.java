@@ -4,20 +4,13 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.provider.Settings;
-import android.widget.Toast;
+import android.widget.Button;
 
+import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.service.FloatingService;
 
 public class FloatingHelper {
-
-    public static void open(Activity activity) {
-        if (!enable(activity)) {
-            Toast.makeText(activity, "当前无权限，请授权", Toast.LENGTH_SHORT);
-            activity.startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + activity.getPackageName())));
-        }
-    }
 
     public static boolean enable(Context context) {
         return Settings.canDrawOverlays(context);
@@ -29,6 +22,16 @@ public class FloatingHelper {
 
     public static ComponentName startService(Activity activity, Intent intent) {
         return activity.startService(intent);
+    }
+
+    public static void updateFloatingBtn(Context context, Button button) {
+        if (FloatingHelper.enable(context)) {
+            button.setText(R.string.openFloatingText);
+            button.setTextColor(context.getResources().getColor(R.color.white, null));
+        } else {
+            button.setText(R.string.no_openFloatingText);
+            button.setTextColor(context.getResources().getColor(R.color.red, null));
+        }
     }
 
 }

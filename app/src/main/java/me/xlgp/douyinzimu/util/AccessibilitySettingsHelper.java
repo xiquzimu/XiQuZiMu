@@ -1,35 +1,32 @@
 package me.xlgp.douyinzimu.util;
 
 import android.accessibilityservice.AccessibilityServiceInfo;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.provider.Settings;
 import android.view.accessibility.AccessibilityManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.List;
 
+import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.service.DouYinAccessibilityService;
 
 public class AccessibilitySettingsHelper {
 
-    public static void open(Activity activity) {
-        if (isEnabled(activity)) {
-            return;
-        }
-        try {
-            activity.startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
-        } catch (Exception e) {
-            activity.startActivity(new Intent(Settings.ACTION_SETTINGS));
-            e.printStackTrace();
+    public static void updateAccessibilitySettingBtn(Context context, Button button) {
+        if (AccessibilitySettingsHelper.isEnabled(context)) {
+            button.setText(R.string.ApenaccesibilityText);
+            button.setTextColor(context.getResources().getColor(R.color.white, null));
+        } else {
+            button.setText(R.string.NoApenaccesibilityText);
+            button.setTextColor(context.getResources().getColor(R.color.red, null));
         }
     }
 
     /**
      * 是否可用，true:表示服务启动，可以使用
-     *
-     * @return
+     * @param context context
+     * @return bool
      */
     public static boolean isEnabled(Context context) {
         String serviceClassName = DouYinAccessibilityService.class.getName();
@@ -43,7 +40,6 @@ public class AccessibilitySettingsHelper {
             if (enabledServiceList == null || enabledServiceList.isEmpty()) return false;
             for (AccessibilityServiceInfo service : enabledServiceList) {
                 if (serviceClassName.equals(service.getResolveInfo().serviceInfo.name)) {
-                    Toast.makeText(context, "服务已启动", Toast.LENGTH_SHORT).show();
                     return true;
                 }
             }
@@ -55,7 +51,7 @@ public class AccessibilitySettingsHelper {
                 }
             }
             if (!isExist) {
-                Toast.makeText(context, "系统查询不到本服务", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "系统查询不到辅助服务", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             Toast.makeText(context, "辅助服务异常", Toast.LENGTH_SHORT).show();

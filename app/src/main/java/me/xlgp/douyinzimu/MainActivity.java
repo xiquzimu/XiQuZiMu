@@ -1,10 +1,15 @@
 package me.xlgp.douyinzimu;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import me.xlgp.douyinzimu.util.AccessibilitySettingsHelper;
@@ -14,23 +19,36 @@ import me.xlgp.douyinzimu.util.StoragePermissionHelper;
 public class MainActivity extends AppCompatActivity {
     private Intent floatingIntent = null;
 
+    private Button openFloatingBtn = null;
+    private Button openAccessibilitySettingBtn = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        openFloatingBtn = findViewById(R.id.openFloatingServiceBtn);
+        openAccessibilitySettingBtn = findViewById(R.id.openAccessibilitySetting);
+
+        AccessibilitySettingsHelper.updateAccessibilitySettingBtn(this, openAccessibilitySettingBtn);
+        FloatingHelper.updateFloatingBtn(this, openFloatingBtn);
     }
+
+    private ActivityResultLauncher<Intent> floatingLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> FloatingHelper.updateFloatingBtn(MainActivity.this, openFloatingBtn));
 
     public void onStartFloatingService(View view) {
         if (!FloatingHelper.enable(this)) {
-            FloatingHelper.open(this);
+            floatingLauncher.launch(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + MainActivity.this.getPackageName())));
             return;
         }
         Toast.makeText(this, "已开启悬浮权限", Toast.LENGTH_SHORT).show();
     }
 
+    private ActivityResultLauncher<Intent> accessibilityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> AccessibilitySettingsHelper.updateAccessibilitySettingBtn(this, openAccessibilitySettingBtn));
+
     public void onOpenAccessibilitySetting(View view) {
         if (!AccessibilitySettingsHelper.isEnabled(this)) {
-            AccessibilitySettingsHelper.open(this);
+            accessibilityLauncher.launch(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
         }
     }
 
