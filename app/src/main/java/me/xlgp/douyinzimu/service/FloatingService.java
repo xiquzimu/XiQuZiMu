@@ -95,7 +95,9 @@ public class FloatingService extends Service {
                 return;
             } else if (!PingLunService.getInstance().hasChangeCi()) {
                 Toast.makeText(this, "请选择唱段", Toast.LENGTH_SHORT).show();
+                return;
             }
+            Toast.makeText(this, "开始评论", Toast.LENGTH_SHORT).show();
         });
         view.findViewById(R.id.pinglunListBtn).setOnClickListener(v -> { //打开字幕列表layout
             if (containView(ZIMU_LIST_FLOATING_LAYOUT)) {
