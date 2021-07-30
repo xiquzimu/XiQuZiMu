@@ -96,7 +96,7 @@ public class PingLunHelper {
      * @param
      * @return
      */
-    private static boolean input(AccessibilityService service, ChangCi changCi, Callback callback) {
+    private static boolean input(AccessibilityService service, ChangCi changCi, Callback<Long> callback) {
         AccessibilityNodeInfo node = null;
         try {
             node = service.getRootInActiveWindow().findFocus(AccessibilityNodeInfo.FOCUS_INPUT);

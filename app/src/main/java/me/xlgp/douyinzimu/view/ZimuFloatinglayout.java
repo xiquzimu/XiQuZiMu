@@ -70,7 +70,7 @@ public class ZimuFloatinglayout extends View {
         ChangDuanHelper.getChangDuanList(getContext()).subscribe(changDuanAdapter::updateData);
     }
 
-    private ChangDuanObservable getChangDuanObservable() {
+    private ChangDuanObservable<ChangDuan> getChangDuanObservable() {
         ChangDuanObservable<ChangDuan> observable = new ChangDuanObservable<>();
         observable.addObserver(new AllObserver.CurrentZimuItemObserver(this.rootLayout.findViewById(R.id.currentZimuTitleTextView)));
         observable.addObserver(new AllObserver.ChangeCiListObserver());

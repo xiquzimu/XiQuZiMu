@@ -47,7 +47,7 @@ class DianZanGestureDescription extends ClickGestureDescription {
 }
 
 class DianZanGestureResultCallback extends ClickGestureResultCallback {
-    public DianZanGestureResultCallback(Callback callback) {
+    public DianZanGestureResultCallback(Callback<Object> callback) {
         super(callback);
     }
 }

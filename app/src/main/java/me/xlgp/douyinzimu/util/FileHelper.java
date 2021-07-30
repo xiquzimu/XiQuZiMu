@@ -18,26 +18,6 @@ import java.util.Objects;
 public class FileHelper {
 
     /**
-     * 遍历 dirpath 下所有的文本文件及文件夹
-     *
-     * @param dirPath
-     * @return
-     */
-    public static HashMap getFileMap(String dirPath) {
-        HashMap map = new HashMap();
-        File[] files = new File(dirPath).listFiles();
-        if (files.length == 0) return map;
-        for (File pathname : files) {
-            if (pathname.isDirectory()) {
-                map.put(pathname.getName(), getFileMap(pathname.getAbsolutePath()));
-            } else if (pathname.isFile()) {
-                map.put(pathname.getName(), pathname.getAbsolutePath());
-            }
-        }
-        return map;
-    }
-
-    /**
      * 获取dirPath 下所有文本文件
      *
      * @param dirPath

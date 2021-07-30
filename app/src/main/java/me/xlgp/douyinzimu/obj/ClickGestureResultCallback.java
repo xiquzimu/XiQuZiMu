@@ -4,9 +4,9 @@ import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.GestureDescription;
 
 public class ClickGestureResultCallback extends AccessibilityService.GestureResultCallback {
-    private Callback callback;
+    private Callback<Object> callback;
 
-    public ClickGestureResultCallback(Callback callback) {
+    public ClickGestureResultCallback(Callback<Object> callback) {
         this.callback = callback;
     }
 
@@ -18,7 +18,7 @@ public class ClickGestureResultCallback extends AccessibilityService.GestureResu
     public void onCompleted(GestureDescription gestureDescription) {
         super.onCompleted(gestureDescription);
         if (callback != null) {
-            callback.call(null);
+            callback.call(new Object());
         }
     }
 
