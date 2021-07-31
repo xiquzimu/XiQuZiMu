@@ -18,7 +18,7 @@
             android:id="@+id/zimuListTitleBtn"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="#56DDDDDD"
+            android:background="@color/touming_btn"
             android:text="@string/zimu_list_title"
             android:textColor="#fff"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -51,29 +51,44 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#56DDDDDD"
-        android:orientation="vertical"
-        android:paddingHorizontal="6dp"
-        android:paddingVertical="4dp">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/currentZimuTitleTextView"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
             android:singleLine="true"
             android:text="@string/currentZimuTitle"
-            android:textColor="#FFFFFF" />
-    </LinearLayout>
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/clearCurrentZiMuBtn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/clearCurrentZiMuBtn"
+            android:layout_width="40dp"
+            android:layout_height="26dp"
+            android:background="@color/touming_btn"
+            android:text="@string/clearCurrentZiMuBtn"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/currentZimuTitleTextView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/zimu_recyclerview"
         android:layout_width="242dp"
-        android:layout_height="120dp">
+        android:layout_height="160dp">
 
     </androidx.recyclerview.widget.RecyclerView>
 
