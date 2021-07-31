@@ -67,7 +67,7 @@ public class ZimuFloatinglayout extends View {
     }
 
     private void initRecyclerView() {
-        recyclerView = this.rootLayout.findViewById(R.id.zimu_recyclerview);
+        recyclerView = this.rootLayout.findViewById(R.id.zimu_list_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         ChangDuanAdapter changDuanAdapter = new ChangDuanAdapter(getChangDuanObservable());

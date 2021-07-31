@@ -86,7 +86,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/zimu_recyclerview"
+        android:id="@+id/zimu_list_recyclerview"
         android:layout_width="242dp"
         android:layout_height="160dp">
 
