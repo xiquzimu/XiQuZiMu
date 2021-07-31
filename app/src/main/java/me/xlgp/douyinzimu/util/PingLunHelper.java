@@ -45,6 +45,7 @@ public class PingLunHelper {
     }
 
     public static boolean openInputLayout(AccessibilityService service) {
+        if (enablePingLun()){return false;}
         AccessibilityNodeInfo nodeInfo = service.getRootInActiveWindow();
 
         try {
