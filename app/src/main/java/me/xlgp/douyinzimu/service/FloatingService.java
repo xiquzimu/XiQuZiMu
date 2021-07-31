@@ -5,11 +5,13 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.os.Build;
 import android.os.IBinder;
-import android.view.Gravity;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.WindowMetrics;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -25,6 +27,7 @@ import java.util.Map;
 
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.listener.FloatingMoveListener;
+import me.xlgp.douyinzimu.obj.ClickGestureDescription;
 import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.util.FloatingHelper;
 import me.xlgp.douyinzimu.view.ZimuFloatinglayout;
@@ -60,7 +63,28 @@ public class FloatingService extends Service {
         return inflater.inflate(resource, null);
     }
 
-    private WindowManager.LayoutParams createLayoutParams(int gravity) {
+    private int getWidth(){
+        int width;
+        WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowMetrics windowMetrics = windowManager.getCurrentWindowMetrics();
+            WindowMetrics maxe = windowManager.getMaximumWindowMetrics();
+            maxe.getBounds().centerX();
+            width = windowMetrics.getBounds().centerX();
+        } else {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+            width = displayMetrics.widthPixels;
+        }
+        return width;
+    }
+
+    /**
+     *
+     * @param direction 方向，主要用于设置窗口位置，+1：靠右边，-1：靠左边
+     * @return WindowManager.LayoutParams
+     */
+    private WindowManager.LayoutParams createLayoutParams(int direction) {
         // 设置LayoutParam
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
         layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
@@ -68,8 +92,7 @@ public class FloatingService extends Service {
         layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        layoutParams.gravity = gravity;
-        layoutParams.x = 0;
+        layoutParams.x = (getWidth()) / 2 * direction;
         layoutParams.y = 0;
         return layoutParams;
     }
@@ -83,6 +106,7 @@ public class FloatingService extends Service {
         view.findViewById(R.id.moveLayoutBtn).setOnTouchListener(new FloatingMoveListener(view, layoutParams, windowManager));
         view.findViewById(R.id.closeFloatingBtn).setOnClickListener(v -> {
             closeFloatingWindow(null);
+            stopSelf();
         });
         ((SwitchMaterial) view.findViewById(R.id.pingLunSwitch)).setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -106,7 +130,7 @@ public class FloatingService extends Service {
                 Toast.makeText(v.getContext(), "字幕列表已存在", Toast.LENGTH_SHORT).show();
                 return;
             }
-            WindowManager.LayoutParams zimulayoutParams = createLayoutParams(Gravity.RIGHT);
+            WindowManager.LayoutParams zimulayoutParams = createLayoutParams(1);
             View zimuLayout = new ZimuFloatinglayout(this, zimulayoutParams).getFloatingLayout();
             ((WindowManager) getSystemService(WINDOW_SERVICE)).addView(zimuLayout, zimulayoutParams);
             floatingLayoutMap.put(ZIMU_LIST_FLOATING_LAYOUT, zimuLayout);
@@ -117,7 +141,7 @@ public class FloatingService extends Service {
     private void showFloatingWindow(int resource) {
         if (FloatingHelper.enable(this)) {
             toolFloatingLayout = getFloatingLayout(resource);
-            WindowManager.LayoutParams layoutParams = createLayoutParams(Gravity.LEFT);
+            WindowManager.LayoutParams layoutParams = createLayoutParams(-1);
             // 将悬浮窗控件添加到WindowManager
             ((WindowManager) getSystemService(WINDOW_SERVICE)).addView(toolFloatingLayout, layoutParams);
             viewListener(toolFloatingLayout, layoutParams);
@@ -128,14 +152,12 @@ public class FloatingService extends Service {
     public void closeFloatingWindow(View view) {
         WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         if (view == null) {
-            Iterator iter = floatingLayoutMap.entrySet().iterator();
-            while (iter.hasNext()) {
-                Map.Entry entry = (Map.Entry) iter.next();
-                windowManager.removeView((View) entry.getValue());
+            for (Map.Entry<String, View> entry : floatingLayoutMap.entrySet()) {
+                windowManager.removeView(entry.getValue());
             }
             floatingLayoutMap.clear();
         } else if (floatingLayoutMap.containsValue(view)) {
-            Collection collection = floatingLayoutMap.values();
+            Collection<View> collection = floatingLayoutMap.values();
             collection.remove(view);
             windowManager.removeView(view);
         }
