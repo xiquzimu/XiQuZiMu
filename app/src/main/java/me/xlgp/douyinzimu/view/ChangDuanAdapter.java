@@ -73,7 +73,6 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
 
         private class changDuanListener implements View.OnClickListener {
 
-
             @Override
             public void onClick(View v) {
                 Toast.makeText(v.getContext(), changDuan.getChangeDuanQiTa().getTitle() + " - " + changDuan.getChangeDuanQiTa().getJuMu(), Toast.LENGTH_SHORT).show();

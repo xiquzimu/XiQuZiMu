@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -18,7 +19,7 @@ public class AllObserver {
         if (o instanceof ChangDuanObservable) {
             observable = ChangDuanObservable.class.cast(o);
         }
-        if (observable.getData() instanceof ChangDuan){
+        if (observable.getData() instanceof ChangDuan) {
             return ChangDuan.class.cast(observable.getData());
         }
         return null;
@@ -37,7 +38,7 @@ public class AllObserver {
         @SuppressLint("SetTextI18n")
         @Override
         public void update(Observable o, Object arg) {
-            ChangDuan changDuan = getChangDuan(o);
+            ChangDuan changDuan = Objects.requireNonNull(getChangDuan(o));
             textView.setText(changDuan.getChangeDuanQiTa().getTitle() + " (" + changDuan.getChangeDuanQiTa().getJuMu() + ")");
         }
     }
@@ -49,7 +50,7 @@ public class AllObserver {
 
         @Override
         public void update(Observable o, Object arg) {
-            ChangDuan changDuan = getChangDuan(o);
+            ChangDuan changDuan = Objects.requireNonNull(getChangDuan(o));
             PingLunService.getInstance().setChangeCiList(changDuan.getChangeCiList(0));
         }
     }

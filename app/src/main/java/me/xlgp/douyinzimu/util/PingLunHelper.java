@@ -3,13 +3,15 @@ package me.xlgp.douyinzimu.util;
 import android.accessibilityservice.AccessibilityService;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.obj.Callback;
 import me.xlgp.douyinzimu.obj.PingLun;
@@ -140,7 +142,7 @@ public class PingLunHelper {
             }
             if (isInputLayout(context, event) && enablePingLun()) { //事件源：是否为douyin界面评论按钮发出的事件，douyin 界面的评论按钮
                 ChangCiList changCiList = PingLunService.getInstance().getChangeCiList();
-                input((AccessibilityService) context, changCiList.next(), new pinglunCallback(context, changCiList)); //输入评论内容，点击发送
+                input((AccessibilityService) context, changCiList.next(), new pinglunCallback(context)); //输入评论内容，点击发送
                 return true;
             }
         } catch (Exception e) {
@@ -152,22 +154,15 @@ public class PingLunHelper {
     private static class pinglunCallback implements Callback<Long> {
         private Context context;
         private long delayMillis = -1;
-        private ChangCiList changCiList = null;
 
-        public pinglunCallback(Context context, ChangCiList changCiList) {
+        public pinglunCallback(Context context) {
             this.context = context;
-            this.changCiList = changCiList;
         }
 
         @Override
         public void call(Long delay) {
-            if (changCiList.hasNext()) {
                 long delayMillis = delay == null ? this.delayMillis : delay;
-                new Handler(Looper.myLooper()).postDelayed(() -> {
-                    openInputLayout((AccessibilityService) context);
-                }, delayMillis);
-            }
+                Observable.timer(delayMillis, TimeUnit.MILLISECONDS).map(o -> openInputLayout((AccessibilityService) context)).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe();
         }
     }
-
 }

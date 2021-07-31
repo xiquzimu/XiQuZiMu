@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.ObservableTransformer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import me.xlgp.douyinzimu.constant.LycConstant;
 import me.xlgp.douyinzimu.obj.changduan.ChangCi;
@@ -23,6 +24,12 @@ import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuan;
 
 public class ChangDuanHelper {
+    public static ObservableTransformer<List<ChangDuan>, List<ChangDuan>> transformer() {
+        return upstream -> upstream.subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public static Observable<List<ChangDuan>> getChangDuanList(Context context) {
         return Observable.just("").map(s -> {
             //todo 唱段与唱词或许应该分开读取，现在是将文件名与文件内容同时扫描
@@ -32,7 +39,7 @@ public class ChangDuanHelper {
                 changDuanList.add(parse(FileHelper.readFile(file.getAbsolutePath())));
             }
             return changDuanList;
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+        }).compose(transformer());
     }
 
     /**

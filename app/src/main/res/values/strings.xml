@@ -12,7 +12,7 @@
     <string name="kaiOrShoue">开/收</string>
     <string name="dy_input_layout_text">说点什么...</string>
     <string name="zimu_list_title">唱段列表</string>
-    <string name="currentZimuTitle">当前无唱词</string>
+    <string name="currentZimuTitle">当前没有选择唱词</string>
     <string name="no_openFloatingText">开启悬浮权限</string>
     <string name="openFloatingText">已开启悬浮窗</string>
     <string name="NoApenaccesibilityText">开启辅助服务</string>

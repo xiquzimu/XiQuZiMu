@@ -21,13 +21,11 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.listener.FloatingMoveListener;
-import me.xlgp.douyinzimu.obj.ClickGestureDescription;
 import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.util.FloatingHelper;
 import me.xlgp.douyinzimu.view.ZimuFloatinglayout;
@@ -63,7 +61,7 @@ public class FloatingService extends Service {
         return inflater.inflate(resource, null);
     }
 
-    private int getWidth(){
+    private int getWidth() {
         int width;
         WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -80,7 +78,6 @@ public class FloatingService extends Service {
     }
 
     /**
-     *
      * @param direction 方向，主要用于设置窗口位置，+1：靠右边，-1：靠左边
      * @return WindowManager.LayoutParams
      */
@@ -104,10 +101,13 @@ public class FloatingService extends Service {
     private void viewListener(View view, WindowManager.LayoutParams layoutParams) {
         WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         view.findViewById(R.id.moveLayoutBtn).setOnTouchListener(new FloatingMoveListener(view, layoutParams, windowManager));
+
+        //关闭tool悬浮窗
         view.findViewById(R.id.closeFloatingBtn).setOnClickListener(v -> {
             closeFloatingWindow(null);
             stopSelf();
         });
+        //评论控制器
         ((SwitchMaterial) view.findViewById(R.id.pingLunSwitch)).setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 PingLun.getInstance().start();
@@ -115,6 +115,7 @@ public class FloatingService extends Service {
                 PingLun.getInstance().stop();
             }
         });
+        //开始评论
         view.findViewById(R.id.pingLunBtn).setOnClickListener(v -> {
             if (PingLun.getInstance().disabled()) {
                 Toast.makeText(this, "请开启评论功能", Toast.LENGTH_SHORT).show();
