@@ -20,4 +20,5 @@
     <string name="settingsTips">请先开启以下权限</string>
     <string name="runFloatingServiceBtn">运行</string>
     <string name="clearCurrentZiMuBtn">清除</string>
+    <string name="package_version" />
 </resources>
