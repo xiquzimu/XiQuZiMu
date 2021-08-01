@@ -1,6 +1,6 @@
 package me.xlgp.douyinzimu.obj;
 
-import android.view.Display;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -9,40 +9,23 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ZWindowManager implements WindowManager {
+public class ZWindowManager {
     WindowManager windowManager;
     Map<String, View> viewMap;
     private static ZWindowManager instance;
 
-    private ZWindowManager() {
+    private ZWindowManager(Context context) {
+        this.windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        this.viewMap = new HashMap<>();
     }
 
-    /**
-     * @param windowManager 可以为空，但是第一次不能为空，
-     * @return
-     */
-    public static ZWindowManager getInstance(WindowManager windowManager) {
+    public static ZWindowManager getInstance(Context context) {
         if (instance == null) {
-            instance = new ZWindowManager();
-            instance.windowManager = windowManager;
-        }
-        if (instance.viewMap == null) {
-            instance.viewMap = new HashMap<>();
+            instance = new ZWindowManager(context);
         }
         return instance;
     }
 
-    @Override
-    public Display getDefaultDisplay() {
-        return windowManager.getDefaultDisplay();
-    }
-
-    @Override
-    public void removeViewImmediate(View view) {
-        windowManager.removeViewImmediate(view);
-    }
-
-    @Override
     public void addView(View view, ViewGroup.LayoutParams params) {
         windowManager.addView(view, params);
     }
@@ -56,12 +39,6 @@ public class ZWindowManager implements WindowManager {
 
     }
 
-    @Override
-    public void updateViewLayout(View view, ViewGroup.LayoutParams params) {
-        windowManager.updateViewLayout(view, params);
-    }
-
-    @Override
     public void removeView(View view) {
         windowManager.removeView(view);
         Collection<View> collection = viewMap.values();

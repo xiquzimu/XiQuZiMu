@@ -125,7 +125,7 @@ public class FloatingService extends Service {
             }
             WindowManager.LayoutParams zimulayoutParams = createLayoutParams(1);
             View zimuLayout = new ZimuFloatinglayout(this, zimulayoutParams).getFloatingLayout();
-            ZWindowManager.getInstance(null).addView(zimuLayout, zimulayoutParams, ZIMU_LIST_FLOATING_LAYOUT);
+            ZWindowManager.getInstance(this).addView(zimuLayout, zimulayoutParams, ZIMU_LIST_FLOATING_LAYOUT);
 
         });
     }
@@ -136,13 +136,13 @@ public class FloatingService extends Service {
             toolFloatingLayout = getFloatingLayout(resource);
             WindowManager.LayoutParams layoutParams = createLayoutParams(-1);
             // 将悬浮窗控件添加到WindowManager
-            ZWindowManager.getInstance((WindowManager) getSystemService(WINDOW_SERVICE)).addView(toolFloatingLayout, layoutParams, TOOL_FLOATING_LAYOUT);
+            ZWindowManager.getInstance(this).addView(toolFloatingLayout, layoutParams, TOOL_FLOATING_LAYOUT);
             viewListener(toolFloatingLayout, layoutParams);
         }
     }
 
     public void closeFloatingWindow(View view) {
-        ZWindowManager zWindowManager = ZWindowManager.getInstance(null);
+        ZWindowManager zWindowManager = ZWindowManager.getInstance(this);
         if (view == null) {
             zWindowManager.removeAllView();
         } else {
@@ -152,7 +152,7 @@ public class FloatingService extends Service {
 
     @Override
     public void onDestroy() {
-        ZWindowManager zWindowManager = ZWindowManager.getInstance(null);
+        ZWindowManager zWindowManager = ZWindowManager.getInstance(this);
         zWindowManager.removeAllView();
     }
 }
