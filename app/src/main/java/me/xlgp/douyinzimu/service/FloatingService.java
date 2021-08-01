@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.DisplayMetrics;
@@ -19,14 +19,15 @@ import androidx.annotation.Nullable;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.listener.FloatingMoveListener;
+import me.xlgp.douyinzimu.obj.LayoutParamsWithPoint;
 import me.xlgp.douyinzimu.obj.PingLun;
+import me.xlgp.douyinzimu.obj.ZWindowManager;
 import me.xlgp.douyinzimu.util.FloatingHelper;
 import me.xlgp.douyinzimu.view.ZimuFloatinglayout;
 
@@ -82,16 +83,7 @@ public class FloatingService extends Service {
      * @return WindowManager.LayoutParams
      */
     private WindowManager.LayoutParams createLayoutParams(int direction) {
-        // 设置LayoutParam
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-        layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-        layoutParams.format = PixelFormat.TRANSPARENT;
-        layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        layoutParams.x = (getWidth()) / 2 * direction;
-        layoutParams.y = 0;
-        return layoutParams;
+        return new LayoutParamsWithPoint(new Point((getWidth()) / 2 * direction, 0));
     }
 
     private boolean containView(String key) {
@@ -133,8 +125,8 @@ public class FloatingService extends Service {
             }
             WindowManager.LayoutParams zimulayoutParams = createLayoutParams(1);
             View zimuLayout = new ZimuFloatinglayout(this, zimulayoutParams).getFloatingLayout();
-            ((WindowManager) getSystemService(WINDOW_SERVICE)).addView(zimuLayout, zimulayoutParams);
-            floatingLayoutMap.put(ZIMU_LIST_FLOATING_LAYOUT, zimuLayout);
+            ZWindowManager.getInstance(null).addView(zimuLayout, zimulayoutParams, ZIMU_LIST_FLOATING_LAYOUT);
+
         });
     }
 
@@ -144,31 +136,23 @@ public class FloatingService extends Service {
             toolFloatingLayout = getFloatingLayout(resource);
             WindowManager.LayoutParams layoutParams = createLayoutParams(-1);
             // 将悬浮窗控件添加到WindowManager
-            ((WindowManager) getSystemService(WINDOW_SERVICE)).addView(toolFloatingLayout, layoutParams);
+            ZWindowManager.getInstance((WindowManager) getSystemService(WINDOW_SERVICE)).addView(toolFloatingLayout, layoutParams, TOOL_FLOATING_LAYOUT);
             viewListener(toolFloatingLayout, layoutParams);
-            floatingLayoutMap.put(TOOL_FLOATING_LAYOUT, toolFloatingLayout);
         }
     }
 
     public void closeFloatingWindow(View view) {
-        WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        ZWindowManager zWindowManager = ZWindowManager.getInstance(null);
         if (view == null) {
-            for (Map.Entry<String, View> entry : floatingLayoutMap.entrySet()) {
-                windowManager.removeView(entry.getValue());
-            }
-            floatingLayoutMap.clear();
-        } else if (floatingLayoutMap.containsValue(view)) {
-            Collection<View> collection = floatingLayoutMap.values();
-            collection.remove(view);
-            windowManager.removeView(view);
+            zWindowManager.removeAllView();
+        } else {
+            zWindowManager.removeView(view);
         }
     }
 
     @Override
     public void onDestroy() {
-
-        WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        mFloatingViewList.forEach(windowManager::removeView);
-
+        ZWindowManager zWindowManager = ZWindowManager.getInstance(null);
+        zWindowManager.removeAllView();
     }
 }

@@ -1,5 +1,6 @@
 package me.xlgp.douyinzimu.view;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +64,7 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             button = itemView.findViewById(R.id.zimu_item_btn);
-            button.setOnClickListener(new changDuanListener());
+            button.setOnClickListener(new ChangDuanListener(itemView.getContext()));
         }
 
         public void setData(ChangDuan changDuan, int position) {
@@ -71,7 +72,12 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
             this.changDuan = changDuan;
         }
 
-        private class changDuanListener implements View.OnClickListener {
+        private class ChangDuanListener implements View.OnClickListener {
+            Context context;
+
+            public ChangDuanListener(Context context) {
+                this.context = context;
+            }
 
             @Override
             public void onClick(View v) {
