@@ -45,7 +45,9 @@ public class PingLunHelper {
     }
 
     public static boolean openInputLayout(AccessibilityService service) {
-        if (!enablePingLun()){return false;}
+        if (!enablePingLun()) {
+            return false;
+        }
         AccessibilityNodeInfo nodeInfo = service.getRootInActiveWindow();
 
         try {
@@ -162,8 +164,8 @@ public class PingLunHelper {
 
         @Override
         public void call(Long delay) {
-                long delayMillis = delay == null ? this.delayMillis : delay;
-                Observable.timer(delayMillis, TimeUnit.MILLISECONDS).map(o -> openInputLayout((AccessibilityService) context)).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe();
+            long delayMillis = delay == null ? this.delayMillis : delay;
+            Observable.timer(delayMillis, TimeUnit.MILLISECONDS).map(o -> openInputLayout((AccessibilityService) context)).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe();
         }
     }
 }

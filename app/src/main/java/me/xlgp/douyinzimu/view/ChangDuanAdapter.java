@@ -82,7 +82,7 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
             @Override
             public void onClick(View v) {
                 Toast.makeText(v.getContext(), changDuan.getChangeDuanQiTa().getTitle() + " - " + changDuan.getChangeDuanQiTa().getJuMu(), Toast.LENGTH_SHORT).show();
-                changDuanObservable.setData(changDuan);
+                changDuanObservable.setData(changDuan, v.getContext());
             }
         }
     }

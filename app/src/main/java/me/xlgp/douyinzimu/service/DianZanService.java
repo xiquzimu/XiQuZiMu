@@ -30,7 +30,7 @@ public class DianZanService {
     private Point getPoint() {
         Rect rect = new Rect();
         service.getRootInActiveWindow().getBoundsInScreen(rect);
-        return new Point(rect.centerX() / 2 - new Random().nextInt(10), rect.centerY()*2 / 3 - new Random().nextInt(10));
+        return new Point(rect.centerX() / 2 - new Random().nextInt(10), rect.centerY() * 2 / 3 - new Random().nextInt(10));
     }
 
     /**

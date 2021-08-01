@@ -6,10 +6,11 @@ import android.view.WindowManager;
 
 public class LayoutParamsWithPoint extends WindowManager.LayoutParams {
 
-    public LayoutParamsWithPoint(){
-        this(new Point(0,0));
+    public LayoutParamsWithPoint() {
+        this(new Point(0, 0));
     }
-    public LayoutParamsWithPoint(Point point){
+
+    public LayoutParamsWithPoint(Point point) {
         this.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
         this.format = PixelFormat.TRANSPARENT;
         this.width = WindowManager.LayoutParams.WRAP_CONTENT;

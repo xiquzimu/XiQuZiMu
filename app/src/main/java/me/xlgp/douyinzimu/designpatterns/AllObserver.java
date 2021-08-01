@@ -1,6 +1,7 @@
 package me.xlgp.douyinzimu.designpatterns;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,6 +11,7 @@ import java.util.Observer;
 
 import me.xlgp.douyinzimu.obj.changduan.ChangDuan;
 import me.xlgp.douyinzimu.service.PingLunService;
+import me.xlgp.douyinzimu.view.ZimuDetailFloatingLayout;
 
 public class AllObserver {
 
@@ -52,6 +54,8 @@ public class AllObserver {
         public void update(Observable o, Object arg) {
             ChangDuan changDuan = Objects.requireNonNull(getChangDuan(o));
             PingLunService.getInstance().setChangeCiList(changDuan.getChangeCiList(0));
+            //
+            new ZimuDetailFloatingLayout((Context) arg);
         }
     }
 }

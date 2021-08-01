@@ -13,10 +13,10 @@ import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.obj.changduan.ChangCi;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 
-public class ChangCiAdapter extends RecyclerView.Adapter<ChangCiAdapter.ViewHolder>{
+public class ChangCiAdapter extends RecyclerView.Adapter<ChangCiAdapter.ViewHolder> {
     private ChangCiList changCiList;
 
-    public ChangCiAdapter(ChangCiList changCiList){
+    public ChangCiAdapter(ChangCiList changCiList) {
         this.changCiList = changCiList;
     }
 
@@ -37,16 +37,16 @@ public class ChangCiAdapter extends RecyclerView.Adapter<ChangCiAdapter.ViewHold
         return changCiList.size();
     }
 
-    protected class ViewHolder extends RecyclerView.ViewHolder{
+    protected class ViewHolder extends RecyclerView.ViewHolder {
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
         }
 
-        public void setData(ChangCi changCi){
+        public void setData(ChangCi changCi) {
             Button button = itemView.findViewById(R.id.zimu_item_btn);
             button.setText(changCi.getContent());
-            button.setOnClickListener(v-> Log.i( "setData: ", changCi.getContent()));
+            button.setOnClickListener(v -> Log.i("setData: ", changCi.getContent()));
         }
 
     }

@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ZWindowManager {
+    private static ZWindowManager instance;
     WindowManager windowManager;
     Map<String, View> viewMap;
-    private static ZWindowManager instance;
 
     private ZWindowManager(Context context) {
         this.windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -30,6 +30,10 @@ public class ZWindowManager {
         windowManager.addView(view, params);
     }
 
+    public int count() {
+        return viewMap.size();
+    }
+
     public void addView(View view, ViewGroup.LayoutParams params, String key) {
         try {
             addView(view, params);
@@ -37,6 +41,14 @@ public class ZWindowManager {
         } catch (Exception e) {
         }
 
+    }
+
+    public boolean containView(String key) {
+        return viewMap.containsKey(key);
+    }
+
+    public boolean containView(View view) {
+        return viewMap.containsValue(view);
     }
 
     public void removeView(View view) {

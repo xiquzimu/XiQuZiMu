@@ -10,12 +10,16 @@ public class ChangDuanObservable<T> extends Observable {
     }
 
     public void setData(T data) {
-        this.data = data;
-        changeData();
+        setData(data, null);
     }
 
-    protected void changeData() {
+    public void setData(T data, Object arg) {
+        this.data = data;
+        changeData(arg);
+    }
+
+    protected void changeData(Object arg) {
         setChanged();
-        notifyObservers();
+        notifyObservers(arg);
     }
 }
