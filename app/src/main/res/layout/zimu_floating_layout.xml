@@ -5,55 +5,14 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="4dp"
     android:layout_marginBottom="4dp"
-    android:background="#3E5D5D5D"
+    android:background="@color/defualt_touming_bg"
     android:orientation="vertical"
     android:padding="8dp"
     android:textAlignment="textStart">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp">
-
-        <Button
-            android:id="@+id/zimuListTitleBtn"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@color/touming_btn"
-            android:text="@string/zimu_list_title"
-            android:textColor="#fff"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/closeFloatingBtn"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/closeFloatingBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="#56DDDDDD"
-            android:text="@string/closeFloating"
-            android:textColor="#F83737"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/kaiOrShouBtn"
-            app:layout_constraintStart_toEndOf="@+id/zimuListTitleBtn"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/kaiOrShouBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="#56DDDDDD"
-            android:text="@string/kaiOrShoue"
-            android:textColor="#FFFFFF"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/closeFloatingBtn"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/currentZimuTitleTextView"

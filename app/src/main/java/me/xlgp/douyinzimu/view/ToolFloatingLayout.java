@@ -23,18 +23,14 @@ public class ToolFloatingLayout extends BaseFloatingLayout {
 
     public ToolFloatingLayout(Context context) {
         super(context, R.layout.tool_floating_layout);
-        addView();
+        super.build(new LayoutParamsWithPoint(new Point(-getFullWidth() / 2, 0)), layoutName);
         viewListener();
-    }
-
-    public void addView() {
-        super.addViewToWindowManager(new LayoutParamsWithPoint(new Point(-getFullWidth() / 2, 0)), layoutName);
     }
 
     private void viewListener() {
         WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         View view = getCurrentLayout();
-        view.findViewById(R.id.moveLayoutBtn).setOnTouchListener(new FloatingMoveListener(view, (WindowManager.LayoutParams) view.getLayoutParams(), windowManager));
+        view.findViewById(R.id.moveLayoutBtn).setOnTouchListener(new FloatingMoveListener(view, getLayoutParams(), windowManager));
 
         //关闭tool悬浮窗
         view.findViewById(R.id.closeFloatingBtn).setOnClickListener(v -> {

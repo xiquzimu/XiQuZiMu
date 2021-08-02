@@ -10,20 +10,16 @@ import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.obj.LayoutParamsWithPoint;
 import me.xlgp.douyinzimu.service.PingLunService;
 
-public class ZimuDetailFloatingLayout extends BaseFloatingLayout {
+public class ZimuDetailFloatingLayout extends BasePenalLayout {
     private final String LAYOUT_NAME = "zimu_detail_layout";
     private View rootLayout;
     private RecyclerView recyclerView = null;
 
     public ZimuDetailFloatingLayout(Context context) {
         super(context, R.layout.zimu_detail_layout);
-        addView();
+        super.build(new LayoutParamsWithPoint(), LAYOUT_NAME);
         this.rootLayout = getCurrentLayout();
         initRecyclerView();
-    }
-
-    public void addView() {
-        super.addViewToWindowManager(new LayoutParamsWithPoint(), LAYOUT_NAME);
     }
 
     private void initRecyclerView() {
