@@ -13,6 +13,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import me.xlgp.douyinzimu.util.AccessibilitySettingsHelper;
 import me.xlgp.douyinzimu.util.FloatingHelper;
 import me.xlgp.douyinzimu.util.StoragePermissionHelper;
@@ -72,7 +75,11 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         floatingIntent = FloatingHelper.getFloatingIntent(this);
-        FloatingHelper.startService(this, floatingIntent);
+        Observable.just("").map(s -> {
+            return startService(floatingIntent);
+        }).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe();
+
     }
 
     @Override

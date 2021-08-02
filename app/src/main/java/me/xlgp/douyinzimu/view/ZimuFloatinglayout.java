@@ -16,7 +16,7 @@ import me.xlgp.douyinzimu.obj.changduan.ChangDuan;
 import me.xlgp.douyinzimu.service.PingLunService;
 import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
-public class ZimuFloatinglayout extends BasePenalLayout {
+public class ZimuFloatinglayout extends BasePanelLayout {
     RecyclerView recyclerView = null;
     private View rootLayout = null;
     private String layoutName = "zimuListFloatingLayout";
@@ -24,10 +24,14 @@ public class ZimuFloatinglayout extends BasePenalLayout {
     public ZimuFloatinglayout(Context context) {
         super(context, R.layout.zimu_floating_layout);
         super.build(new LayoutParamsWithPoint(new Point(getFullWidth() / 2, 0)), layoutName);
-        rootLayout = getCurrentLayout();
+        init();
         initRecyclerView();
         onListener();
+    }
 
+    private void init() {
+        rootLayout = getCurrentLayout();
+        setPanelTitle("唱段列表");
     }
 
     private void onListener() {

@@ -10,12 +10,6 @@ import android.view.WindowMetrics;
 
 import me.xlgp.douyinzimu.obj.ZWindowManager;
 
-class VView<T> extends View {
-    public VView(Context context) {
-        super(context);
-    }
-}
-
 public class BaseFloatingLayout<T extends View> extends View {
     private View currentLayout;
     private String layoutName;

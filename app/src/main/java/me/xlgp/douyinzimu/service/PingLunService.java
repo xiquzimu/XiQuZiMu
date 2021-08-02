@@ -1,11 +1,11 @@
 package me.xlgp.douyinzimu.service;
 
-import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
+import me.xlgp.douyinzimu.obj.changduan.ChangDuan;
 
 public class PingLunService {
 
     private static PingLunService instance = null;
-    private ChangCiList changCiList = null;
+    private ChangDuan changDuan = null;
 
     private PingLunService() {
 
@@ -16,19 +16,19 @@ public class PingLunService {
         return instance;
     }
 
-    public ChangCiList getChangeCiList() {
-        return changCiList;
+    public ChangDuan getChangDuan() {
+        return changDuan;
     }
 
-    public void setChangeCiList(ChangCiList changCiList) {
-        this.changCiList = changCiList;
+    public void setChangDuan(ChangDuan changDuan) {
+        this.changDuan = changDuan;
     }
 
     public void clear() {
-        changCiList = null;
+        changDuan = null;
     }
 
     public boolean hasChangeCi() {
-        return changCiList != null && changCiList.hasNext();
+        return changDuan != null && changDuan.getChangeCiList().hasNext();
     }
 }

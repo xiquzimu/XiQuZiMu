@@ -144,7 +144,7 @@ public class PingLunHelper {
                 return true;
             }
             if (isInputLayout(context, event) && enablePingLun()) { //事件源：是否为douyin界面评论按钮发出的事件，douyin 界面的评论按钮
-                ChangCiList changCiList = PingLunService.getInstance().getChangeCiList();
+                ChangCiList changCiList = PingLunService.getInstance().getChangDuan().getChangeCiList();
                 input((AccessibilityService) context, changCiList.next(), new pinglunCallback(context)); //输入评论内容，点击发送
                 return true;
             }

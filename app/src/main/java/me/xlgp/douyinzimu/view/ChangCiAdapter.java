@@ -1,6 +1,5 @@
 package me.xlgp.douyinzimu.view;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.obj.changduan.ChangCi;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
+import me.xlgp.douyinzimu.service.PingLunService;
 
 public class ChangCiAdapter extends RecyclerView.Adapter<ChangCiAdapter.ViewHolder> {
     private ChangCiList changCiList;
@@ -29,7 +29,7 @@ public class ChangCiAdapter extends RecyclerView.Adapter<ChangCiAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ChangCiAdapter.ViewHolder holder, int position) {
-        holder.setData(changCiList.get(position));
+        holder.setData(changCiList.get(position), position);
     }
 
     @Override
@@ -43,11 +43,12 @@ public class ChangCiAdapter extends RecyclerView.Adapter<ChangCiAdapter.ViewHold
             super(itemView);
         }
 
-        public void setData(ChangCi changCi) {
+        public void setData(ChangCi changCi, int position) {
             Button button = itemView.findViewById(R.id.zimu_item_btn);
-            button.setText(changCi.getContent());
-            button.setOnClickListener(v -> Log.i("setData: ", changCi.getContent()));
+            button.setText(position + 1 + ". " + changCi.getContent());
+            button.setOnClickListener(v -> {
+                PingLunService.getInstance().getChangDuan().getChangeCiList(position);
+            });
         }
-
     }
 }

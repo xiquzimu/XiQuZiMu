@@ -53,7 +53,7 @@ public class AllObserver {
         @Override
         public void update(Observable o, Object arg) {
             ChangDuan changDuan = Objects.requireNonNull(getChangDuan(o));
-            PingLunService.getInstance().setChangeCiList(changDuan.getChangeCiList(0));
+            PingLunService.getInstance().setChangDuan(changDuan);
             //
             new ZimuDetailFloatingLayout((Context) arg);
         }
