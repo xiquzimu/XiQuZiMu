@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,7 +15,7 @@ import java.util.Observer;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
 import me.xlgp.douyinzimu.obj.LayoutParamsWithPoint;
-import me.xlgp.douyinzimu.obj.changduan.ChangDuan;
+import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 import me.xlgp.douyinzimu.service.PingLunService;
 import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
@@ -52,7 +53,7 @@ public class ZimuFloatinglayout extends BasePanelLayout {
 
         ChangDuanAdapter changDuanAdapter = new ChangDuanAdapter(getChangDuanObservable());
         recyclerView.setAdapter(changDuanAdapter);
-        ChangDuanHelper.getChangDuanList(getContext()).subscribe(changDuanAdapter::updateData);
+        ChangDuanHelper.getChangDuanInfoList(getContext()).subscribe(changDuanAdapter::updateData);
     }
 
     private ChangDuanObservable getChangDuanObservable() {
@@ -61,8 +62,6 @@ public class ZimuFloatinglayout extends BasePanelLayout {
         observable.addObserver(new ChangeCiListObserver(getContext()));
         return observable;
     }
-
-    class ChangDuanObservable extends BaseObservable<ChangDuan>{}
 
     /**
      * 当先选中唱段观察者，
@@ -77,10 +76,13 @@ public class ZimuFloatinglayout extends BasePanelLayout {
         @Override
         public void update(Observable o, Object arg) {
             ChangDuanObservable observable = (ChangDuanObservable) o;
-            ChangDuan changDuan = observable.getData();
-            PingLunService.getInstance().setChangDuan(changDuan);
-            new ZimuDetailFloatingLayout(context);
+            ChangDuanInfo changDuanInfo = observable.getData();
+            Toast.makeText(context, "需要异步获取唱词" + changDuanInfo.getName(), Toast.LENGTH_SHORT).show();
+            new ZimuDetailFloatingLayout(context, changDuanInfo);
         }
+    }
+
+    class ChangDuanObservable extends BaseObservable<ChangDuanInfo> {
     }
 
     /**
@@ -96,8 +98,8 @@ public class ZimuFloatinglayout extends BasePanelLayout {
         @Override
         public void update(Observable o, Object arg) {
             ChangDuanObservable observable = (ChangDuanObservable) o;
-            ChangDuan changDuan = observable.getData();
-            textView.setText(changDuan.getChangeDuanQiTa().getTitle() + " (" + changDuan.getChangeDuanQiTa().getJuMu() + ")");
+            ChangDuanInfo changDuanInfo = observable.getData();
+            textView.setText(changDuanInfo.getName());
         }
     }
 }

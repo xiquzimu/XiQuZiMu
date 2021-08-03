@@ -16,12 +16,14 @@ import java.util.regex.Pattern;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.ObservableOnSubscribe;
 import io.reactivex.rxjava3.core.ObservableTransformer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import me.xlgp.douyinzimu.constant.LycConstant;
 import me.xlgp.douyinzimu.obj.changduan.ChangCi;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuan;
+import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 
 public class ChangDuanHelper {
     public static ObservableTransformer<List<ChangDuan>, List<ChangDuan>> transformer() {
@@ -30,16 +32,22 @@ public class ChangDuanHelper {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public static Observable<List<ChangDuan>> getChangDuanList(Context context) {
-        return Observable.<List<ChangDuan>>create(emitter -> {
-            //todo 唱段与唱词或许应该分开读取，现在是将文件名与文件内容同时扫描
-            List<File> fileList = loadFileList(context);
-            List<ChangDuan> changDuanList = new ArrayList<>();
-            for (File file : Objects.requireNonNull(fileList)) {
-                changDuanList.add(parse(FileHelper.readFile(file.getAbsolutePath())));
+    public static Observable<ChangDuan> getChangDuan(ChangDuanInfo changDuanInfo) {
+        return Observable.create((ObservableOnSubscribe<ChangDuan>) emitter -> emitter.onNext(parse(FileHelper.readFile(changDuanInfo.getFile().getAbsolutePath())))).subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public static Observable<List<ChangDuanInfo>> getChangDuanInfoList(Context context) {
+        return Observable.create((ObservableOnSubscribe<List<File>>) emitter -> emitter.onNext(loadFileList(context))).subscribeOn(Schedulers.io()).map(files -> {
+            List<ChangDuanInfo> changDuanInfoList = new ArrayList<>();
+            for (File file : files) {
+                ChangDuanInfo changDuanInfo = new ChangDuanInfo();
+                changDuanInfo.setFile(file);
+                changDuanInfo.setPath(file.getPath());
+                changDuanInfo.setName(file.getName());
+                changDuanInfoList.add(changDuanInfo);
             }
-            emitter.onNext(changDuanList);
-        }).compose(transformer());
+            return changDuanInfoList;
+        }).unsubscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
     /**

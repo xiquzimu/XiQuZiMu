@@ -8,7 +8,6 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -19,26 +18,37 @@ import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.obj.changduan.ChangCi;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuan;
+import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 import me.xlgp.douyinzimu.service.PingLunService;
+import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
 public class ZimuDetailFloatingLayout extends BasePanelLayout {
     private final String LAYOUT_NAME = "zimu_detail_layout";
     private RecyclerView recyclerView = null;
     private View rootLayout;
+    private ChangDuanInfo changDuanInfo;
 
     public ZimuDetailFloatingLayout(Context context) {
-        super(context, R.layout.zimu_detail_layout);
-        super.build(new LayoutParamsWithPoint(), LAYOUT_NAME);
-        init();
-        onViewListener();
-        initRecyclerView();
+        this(context, null);
     }
 
-    private void init() {
-        ChangDuan changDuan = Objects.requireNonNull(PingLunService.getInstance().getChangDuan());
+    public ZimuDetailFloatingLayout(Context context, ChangDuanInfo changDuanInfo) {
+        super(context, R.layout.zimu_detail_layout);
+        super.build(new LayoutParamsWithPoint(), LAYOUT_NAME);
+        init(changDuanInfo);
+        onViewListener();
+        initRecyclerView();
+
+    }
+
+    private void init(ChangDuanInfo changDuanInfo) {
+        this.rootLayout = getCurrentLayout();
+        this.changDuanInfo = changDuanInfo;
+    }
+
+    private void asyncInit(ChangDuan changDuan) {
         setPanelTitle(changDuan.getChangeDuanQiTa().getTitle());
         setChangCiListObservable();
-        this.rootLayout = getCurrentLayout();
     }
 
     private void setChangCiListObservable() {
@@ -64,8 +74,20 @@ public class ZimuDetailFloatingLayout extends BasePanelLayout {
     private void initRecyclerView() {
         recyclerView = this.rootLayout.findViewById(R.id.zimu_detail_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        ChangCiAdapter changCiAdapter = new ChangCiAdapter(PingLunService.getInstance().getChangDuan().getChangeCiList(0), getChangCiObservable());
+
+        ChangCiAdapter changCiAdapter = new ChangCiAdapter(getChangCiObservable());
         recyclerView.setAdapter(changCiAdapter);
+
+        asyncGetChangDuan(changDuanInfo, changCiAdapter);
+    }
+
+    private void asyncGetChangDuan(ChangDuanInfo changDuanInfo, ChangCiAdapter changCiAdapter) {
+        //异步获取唱词
+        ChangDuanHelper.getChangDuan(changDuanInfo).subscribe(changDuan -> {
+            PingLunService.getInstance().setChangDuan(changDuan);
+            changCiAdapter.updateData(changDuan.getChangeCiList(0));
+            asyncInit(changDuan);
+        });
     }
 
     private void updateTitleView(String text) {

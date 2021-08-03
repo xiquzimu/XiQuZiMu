@@ -23,6 +23,10 @@ public class ChangCiAdapter extends RecyclerView.Adapter<ChangCiAdapter.ViewHold
         this.changCiObservable = changCiObservable;
     }
 
+    public ChangCiAdapter(ZimuDetailFloatingLayout.ChangCiObservable changCiObservable) {
+        this(new ChangCiList(), changCiObservable);
+    }
+
     @NonNull
     @Override
     public ChangCiAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -38,6 +42,11 @@ public class ChangCiAdapter extends RecyclerView.Adapter<ChangCiAdapter.ViewHold
     @Override
     public int getItemCount() {
         return changCiList.size();
+    }
+
+    public void updateData(ChangCiList changCiList) {
+        this.changCiList = changCiList;
+        notifyDataSetChanged();
     }
 
     protected class ViewHolder extends RecyclerView.ViewHolder {
