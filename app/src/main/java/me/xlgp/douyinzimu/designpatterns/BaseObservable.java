@@ -2,7 +2,7 @@ package me.xlgp.douyinzimu.designpatterns;
 
 import java.util.Observable;
 
-public class ChangDuanObservable<T> extends Observable {
+public class BaseObservable<T> extends Observable {
     private T data;
 
     public T getData() {
@@ -10,16 +10,12 @@ public class ChangDuanObservable<T> extends Observable {
     }
 
     public void setData(T data) {
-        setData(data, null);
-    }
-
-    public void setData(T data, Object arg) {
         this.data = data;
-        changeData(arg);
+        changeData();
     }
 
-    protected void changeData(Object arg) {
+    protected void changeData() {
         setChanged();
-        notifyObservers(arg);
+        notifyObservers(data);
     }
 }
