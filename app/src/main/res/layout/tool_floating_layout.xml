@@ -47,16 +47,6 @@
         android:textSize="12sp" />
 
     <Button
-        android:id="@+id/pingLunBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#88FFFFFF"
-        android:minWidth="60dp"
-        android:minHeight="40dp"
-        android:text="@string/pinglunBtn"
-        android:textColor="#FFFFFF" />
-
-    <Button
         android:id="@+id/dianzanBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

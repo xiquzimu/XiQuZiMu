@@ -9,15 +9,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import me.xlgp.douyinzimu.R;
+import me.xlgp.douyinzimu.designpatterns.BaseObservable;
 import me.xlgp.douyinzimu.obj.changduan.ChangCi;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 import me.xlgp.douyinzimu.service.PingLunService;
 
 public class ChangCiAdapter extends RecyclerView.Adapter<ChangCiAdapter.ViewHolder> {
     private ChangCiList changCiList;
+    private BaseObservable<ChangCi> changCiObservable;
 
-    public ChangCiAdapter(ChangCiList changCiList) {
+    public ChangCiAdapter(ChangCiList changCiList, BaseObservable<ChangCi> changCiObservable) {
         this.changCiList = changCiList;
+        this.changCiObservable = changCiObservable;
     }
 
     @NonNull
@@ -47,7 +50,10 @@ public class ChangCiAdapter extends RecyclerView.Adapter<ChangCiAdapter.ViewHold
             Button button = itemView.findViewById(R.id.zimu_item_btn);
             button.setText(position + 1 + ". " + changCi.getContent());
             button.setOnClickListener(v -> {
+                // 设置当前唱词
                 PingLunService.getInstance().getChangDuan().getChangeCiList(position);
+                //重新触发评论功能
+                changCiObservable.setData(changCi);
             });
         }
     }

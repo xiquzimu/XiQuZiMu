@@ -14,7 +14,6 @@ import me.xlgp.douyinzimu.obj.LayoutParamsWithPoint;
 import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.obj.ZWindowManager;
 import me.xlgp.douyinzimu.service.FloatingService;
-import me.xlgp.douyinzimu.service.PingLunService;
 
 public class ToolFloatingLayout extends BaseFloatingLayout {
 
@@ -44,17 +43,6 @@ public class ToolFloatingLayout extends BaseFloatingLayout {
             } else {
                 PingLun.getInstance().stop();
             }
-        });
-        //开始评论
-        view.findViewById(R.id.pingLunBtn).setOnClickListener(v -> {
-            if (PingLun.getInstance().disabled()) {
-                Toast.makeText(getContext(), "请开启评论功能", Toast.LENGTH_SHORT).show();
-                return;
-            } else if (!PingLunService.getInstance().hasChangeCi()) {
-                Toast.makeText(getContext(), "请选择唱段", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Toast.makeText(getContext(), "开始评论", Toast.LENGTH_SHORT).show();
         });
         view.findViewById(R.id.pinglunListBtn).setOnClickListener(v -> { //打开字幕列表layout
             if (ZWindowManager.getInstance(getContext()).containView(zimuFloatinglayout)) {

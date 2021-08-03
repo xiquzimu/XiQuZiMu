@@ -14,14 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.xlgp.douyinzimu.R;
-import me.xlgp.douyinzimu.designpatterns.ChangDuanObservable;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuan;
 
 public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.ViewHolder> {
     private List<ChangDuan> changDuanList;
-    private ChangDuanObservable<ChangDuan> changDuanObservable;
+    private ZimuFloatinglayout.ChangDuanObservable changDuanObservable;
 
-    public ChangDuanAdapter(List<ChangDuan> changDuanList, ChangDuanObservable<ChangDuan> observable) {
+    public ChangDuanAdapter(List<ChangDuan> changDuanList, ZimuFloatinglayout.ChangDuanObservable observable) {
         this.changDuanList = changDuanList;
         this.changDuanObservable = observable;
     }
@@ -30,7 +29,7 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
         this(new ArrayList<>(), null);
     }
 
-    public ChangDuanAdapter(ChangDuanObservable<ChangDuan> observable) {
+    public ChangDuanAdapter(ZimuFloatinglayout.ChangDuanObservable observable) {
         this(new ArrayList<>(), observable);
     }
 
@@ -82,7 +81,7 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
             @Override
             public void onClick(View v) {
                 Toast.makeText(v.getContext(), changDuan.getChangeDuanQiTa().getTitle() + " - " + changDuan.getChangeDuanQiTa().getJuMu(), Toast.LENGTH_SHORT).show();
-                changDuanObservable.setData(changDuan, v.getContext());
+                changDuanObservable.setData(changDuan);
             }
         }
     }
