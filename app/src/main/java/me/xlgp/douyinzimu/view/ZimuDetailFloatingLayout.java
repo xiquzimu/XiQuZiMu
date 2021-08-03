@@ -17,12 +17,14 @@ import me.xlgp.douyinzimu.designpatterns.BaseObservable;
 import me.xlgp.douyinzimu.obj.LayoutParamsWithPoint;
 import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.obj.changduan.ChangCi;
+import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuan;
 import me.xlgp.douyinzimu.service.PingLunService;
 
 public class ZimuDetailFloatingLayout extends BasePanelLayout {
     private final String LAYOUT_NAME = "zimu_detail_layout";
     private RecyclerView recyclerView = null;
+    private View rootLayout;
 
     public ZimuDetailFloatingLayout(Context context) {
         super(context, R.layout.zimu_detail_layout);
@@ -35,11 +37,19 @@ public class ZimuDetailFloatingLayout extends BasePanelLayout {
     private void init() {
         ChangDuan changDuan = Objects.requireNonNull(PingLunService.getInstance().getChangDuan());
         setPanelTitle(changDuan.getChangeDuanQiTa().getTitle());
+        setChangCiListObservable();
+        this.rootLayout = getCurrentLayout();
+    }
+
+    private void setChangCiListObservable() {
+        ChangCiList.ChangCiListObservable changCiListObservable = new ChangCiList.ChangCiListObservable();
+        changCiListObservable.addObserver(new ZimuDetailFloatingLayout.ChangCiListObservar());
+        PingLunService.getInstance().getChangDuan().getChangeCiList().setChangCiListObservable(changCiListObservable);
     }
 
     private void onViewListener() {
         //开始评论
-        this.getCurrentLayout().findViewById(R.id.startPinglunBtn).setOnClickListener(v -> {
+        this.rootLayout.findViewById(R.id.startPinglunBtn).setOnClickListener(v -> {
             if (PingLun.getInstance().disabled()) {
                 Toast.makeText(getContext(), "请开启评论功能", Toast.LENGTH_SHORT).show();
                 return;
@@ -52,32 +62,43 @@ public class ZimuDetailFloatingLayout extends BasePanelLayout {
     }
 
     private void initRecyclerView() {
-        recyclerView = this.getCurrentLayout().findViewById(R.id.zimu_detail_recyclerview);
+        recyclerView = this.rootLayout.findViewById(R.id.zimu_detail_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         ChangCiAdapter changCiAdapter = new ChangCiAdapter(PingLunService.getInstance().getChangDuan().getChangeCiList(0), getChangCiObservable());
         recyclerView.setAdapter(changCiAdapter);
     }
 
+    private void updateTitleView(String text) {
+        ((TextView) rootLayout.findViewById(R.id.currentZimuTitleTextView)).setText(text);
+    }
+
     private ChangCiObservable getChangCiObservable() {
         ChangCiObservable changCiObservable = new ChangCiObservable();
-        changCiObservable.addObserver(new ChangCiObservar(this.getCurrentLayout()));
+        changCiObservable.addObserver(new ChangCiObservar());
         return changCiObservable;
     }
 
     class ChangCiObservable extends BaseObservable<ChangCi> {
     }
 
-    class ChangCiObservar implements Observer {
-        private View view;
+    class ChangCiListObservar implements Observer {
+        @Override
+        public void update(Observable o, Object arg) {
+            ChangCiList.ChangCiListObservable observable = (ChangCiList.ChangCiListObservable) o;
+            updateTitleView(observable.getData().getContent());
+        }
+    }
 
-        public ChangCiObservar(View view) {
-            this.view = view;
+    class ChangCiObservar implements Observer {
+
+        public ChangCiObservar() {
+
         }
 
         @Override
         public void update(Observable o, Object arg) {
             ChangCiObservable observable = (ChangCiObservable) o;
-            ((TextView) view.findViewById(R.id.currentZimuTitleTextView)).setText(String.valueOf(observable.getData().getContent()));
+            updateTitleView(observable.getData().getContent());
         }
     }
 }
