@@ -75,8 +75,8 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         floatingIntent = FloatingHelper.getFloatingIntent(this);
-        Observable.just("").map(s -> {
-            return startService(floatingIntent);
+        Observable.create(emitter -> {
+            emitter.onNext(startService(floatingIntent));
         }).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe();
 

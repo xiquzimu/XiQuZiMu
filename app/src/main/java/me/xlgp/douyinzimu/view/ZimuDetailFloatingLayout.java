@@ -32,7 +32,7 @@ public class ZimuDetailFloatingLayout extends BasePanelLayout {
         recyclerView = this.getCurrentLayout().findViewById(R.id.zimu_detail_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        ChangCiAdapter changCiAdapter = new ChangCiAdapter(PingLunService.getInstance().getChangDuan().getChangeCiList());
+        ChangCiAdapter changCiAdapter = new ChangCiAdapter(PingLunService.getInstance().getChangDuan().getChangeCiList(0));
         recyclerView.setAdapter(changCiAdapter);
     }
 }

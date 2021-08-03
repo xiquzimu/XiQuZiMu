@@ -20,16 +20,8 @@ public class ChangDuan {
         return changeDuanQiTa;
     }
 
-    public void setChangeDuanQiTa(ChangeDuanQiTa changeDuanQiTa) {
-        this.changeDuanQiTa = changeDuanQiTa;
-    }
-
     public ChangCiList getChangeCiList() {
         return changCiList;
-    }
-
-    public void setChangeCiList(ChangCiList changCiList) {
-        this.changCiList = changCiList;
     }
 
     public ChangCiList getChangeCiList(int cursor) {

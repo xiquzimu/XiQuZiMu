@@ -31,14 +31,14 @@ public class ChangDuanHelper {
     }
 
     public static Observable<List<ChangDuan>> getChangDuanList(Context context) {
-        return Observable.just("").map(s -> {
+        return Observable.<List<ChangDuan>>create(emitter -> {
             //todo 唱段与唱词或许应该分开读取，现在是将文件名与文件内容同时扫描
             List<File> fileList = loadFileList(context);
             List<ChangDuan> changDuanList = new ArrayList<>();
             for (File file : Objects.requireNonNull(fileList)) {
                 changDuanList.add(parse(FileHelper.readFile(file.getAbsolutePath())));
             }
-            return changDuanList;
+            emitter.onNext(changDuanList);
         }).compose(transformer());
     }
 
@@ -85,6 +85,7 @@ public class ChangDuanHelper {
                 changCiList.get(i).setDelayMillis(delaymillis);
             }
         }
+        changCiList.setCursor(0); // 唱词初始化
         return changDuan;
     }
 
