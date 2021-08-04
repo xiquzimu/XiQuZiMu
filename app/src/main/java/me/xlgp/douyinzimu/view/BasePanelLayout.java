@@ -14,12 +14,11 @@ import me.xlgp.douyinzimu.service.FloatingService;
 /**
  * 基本面板
  */
-public class BasePanelLayout extends BaseFloatingLayout<LinearLayout> {
+public class BasePanelLayout extends BaseFloatingLayout {
     private LinearLayout rootLayout;
     private boolean isShou = false;
     private int shouHeight;
-    private String panelTitle;
-    private int resource;
+    private final int resource;
 
     public BasePanelLayout(@NonNull Context context, int resource, WindowManager.LayoutParams layoutParams) {
         super(context, R.layout.base_panel_layout, layoutParams);
@@ -43,13 +42,9 @@ public class BasePanelLayout extends BaseFloatingLayout<LinearLayout> {
         init();
     }
 
-    public String getPanelTitle() {
-        return panelTitle;
-    }
-
     public void setPanelTitle(String panelTitle) {
-        this.panelTitle = panelTitle == null ? "悬浮窗口" : panelTitle;
-        ((Button) rootLayout.findViewById(R.id.titleBtn)).setText(this.panelTitle);
+        String title = panelTitle == null ? "悬浮窗口" : panelTitle;
+        ((Button) rootLayout.findViewById(R.id.titleBtn)).setText(title);
     }
 
     private int getShouHeight() {
@@ -58,10 +53,6 @@ public class BasePanelLayout extends BaseFloatingLayout<LinearLayout> {
             shouHeight = getPanelTitleHeight();
         }
         return shouHeight;
-    }
-
-    public void setShouHeight(int shouHeight) {
-        this.shouHeight = shouHeight;
     }
 
     public int getPanelTitleHeight() {

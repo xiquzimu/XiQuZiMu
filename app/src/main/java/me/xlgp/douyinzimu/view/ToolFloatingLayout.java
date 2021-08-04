@@ -17,11 +17,11 @@ import me.xlgp.douyinzimu.service.FloatingService;
 
 public class ToolFloatingLayout extends BaseFloatingLayout {
 
-    private String layoutName = "ToolFloatingLayout";
     private String zimuFloatinglayout;
 
     public ToolFloatingLayout(Context context) {
         super(context, R.layout.tool_floating_layout);
+        String layoutName = "ToolFloatingLayout";
         super.build(new LayoutParamsWithPoint(new Point(-getFullWidth() / 2, 0)), layoutName);
         viewListener();
     }

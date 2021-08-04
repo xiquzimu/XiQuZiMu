@@ -12,27 +12,24 @@ import androidx.annotation.RequiresApi;
 
 import me.xlgp.douyinzimu.obj.ZWindowManager;
 
-public class BaseFloatingLayout<T extends View> extends View {
+public class BaseFloatingLayout {
     private View currentLayout;
     private String layoutName;
+    private final Context context;
     private WindowManager.LayoutParams layoutParams;
-
-    public BaseFloatingLayout(Context context) {
-        this(context, null, null);
-    }
 
     public BaseFloatingLayout(Context context, Integer resource) {
         this(context, resource, null);
     }
 
     public BaseFloatingLayout(Context context, Integer resource, WindowManager.LayoutParams layoutParams) {
-        super(context);
+        this.context = context;
         inflateLayout(resource);
         this.layoutParams = layoutParams;
     }
 
     protected View inflateLayout(int resource) {
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         currentLayout = inflater.inflate(resource, null);
         return currentLayout;
     }
@@ -40,18 +37,18 @@ public class BaseFloatingLayout<T extends View> extends View {
     public View getCurrentLayout() {
         return currentLayout;
     }
+    public Context getContext(){return  context;}
 
     protected void build(WindowManager.LayoutParams layoutParams, String key) {
-        ZWindowManager.getInstance(getContext()).addView(currentLayout, layoutParams, key);
+        ZWindowManager.getInstance(this.context).addView(currentLayout, layoutParams, key);
         this.layoutName = key;
         this.layoutParams = layoutParams;
     }
 
     protected void build(WindowManager.LayoutParams layoutParams) {
-        build(layoutParams, "floatinglayout" + ZWindowManager.getInstance(getContext()).count());
+        build(layoutParams, "floatinglayout" + ZWindowManager.getInstance(this.context).count());
     }
 
-    @Override
     public WindowManager.LayoutParams getLayoutParams() {
         return layoutParams;
     }
@@ -63,12 +60,11 @@ public class BaseFloatingLayout<T extends View> extends View {
     /**
      * 获取屏幕width
      *
-     * @return
+     * @return width
      */
-    @RequiresApi(Build.VERSION_CODES.R)
     protected int getFullWidth() {
         int width;
-        WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        WindowManager windowManager = (WindowManager) this.context.getSystemService(Context.WINDOW_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowMetrics windowMetrics = windowManager.getCurrentWindowMetrics();
             width = windowMetrics.getBounds().width();
