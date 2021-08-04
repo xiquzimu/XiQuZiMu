@@ -49,7 +49,7 @@ public class ToolFloatingLayout extends BaseFloatingLayout {
                 Toast.makeText(v.getContext(), "字幕列表已存在", Toast.LENGTH_SHORT).show();
                 return;
             }
-            zimuFloatinglayout = new ZimuFloatinglayout(getContext()).getLayoutName();
+            zimuFloatinglayout = new ZimuMainFloatingLayout(getContext()).getLayoutName();
         });
     }
 }
