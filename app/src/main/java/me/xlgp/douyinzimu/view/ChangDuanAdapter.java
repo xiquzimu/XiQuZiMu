@@ -18,9 +18,9 @@ import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 
 public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.ViewHolder> {
     private List<ChangDuanInfo> changDuanInfoList;
-    private ZimuFloatinglayout.ChangDuanObservable changDuanObservable;
+    private ZimuListFloatinglayout.ChangDuanObservable changDuanObservable;
 
-    public ChangDuanAdapter(List<ChangDuanInfo> changDuanInfoList, ZimuFloatinglayout.ChangDuanObservable observable) {
+    public ChangDuanAdapter(List<ChangDuanInfo> changDuanInfoList, ZimuListFloatinglayout.ChangDuanObservable observable) {
         this.changDuanInfoList = changDuanInfoList;
         this.changDuanObservable = observable;
     }
@@ -29,7 +29,7 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
         this(new ArrayList<>(), null);
     }
 
-    public ChangDuanAdapter(ZimuFloatinglayout.ChangDuanObservable observable) {
+    public ChangDuanAdapter(ZimuListFloatinglayout.ChangDuanObservable observable) {
         this(new ArrayList<>(), observable);
     }
 

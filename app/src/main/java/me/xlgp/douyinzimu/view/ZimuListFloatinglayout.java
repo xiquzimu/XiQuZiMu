@@ -19,24 +19,17 @@ import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 import me.xlgp.douyinzimu.service.PingLunService;
 import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
-public class ZimuFloatinglayout extends BasePanelLayout {
+public class ZimuListFloatinglayout {
     RecyclerView recyclerView = null;
     private View rootLayout = null;
     private String layoutName = "zimuListFloatingLayout";
     private Context context;
 
-    public ZimuFloatinglayout(Context context) {
-        super(context, R.layout.zimu_floating_layout);
-        super.build(new LayoutParamsWithPoint(new Point(getFullWidth() / 2, 0)), layoutName);
-        init();
+    public ZimuListFloatinglayout(View view) {
+        rootLayout = view;
+        this.context = view.getContext();
         initRecyclerView();
         onListener();
-    }
-
-    private void init() {
-        rootLayout = getCurrentLayout();
-        setPanelTitle("唱段列表");
-        this.context = context;
     }
 
     private void onListener() {
@@ -49,17 +42,23 @@ public class ZimuFloatinglayout extends BasePanelLayout {
 
     private void initRecyclerView() {
         recyclerView = this.rootLayout.findViewById(R.id.zimu_list_recyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         ChangDuanAdapter changDuanAdapter = new ChangDuanAdapter(getChangDuanObservable());
         recyclerView.setAdapter(changDuanAdapter);
-        ChangDuanHelper.getChangDuanInfoList(getContext()).subscribe(changDuanAdapter::updateData);
+        ChangDuanHelper.getChangDuanInfoList(context).subscribe(list ->{
+            if (list == null || list.size() == 0){
+                Toast.makeText(context,"无数据可更新", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            changDuanAdapter.updateData(list);
+        });
     }
 
     private ChangDuanObservable getChangDuanObservable() {
         ChangDuanObservable observable = new ChangDuanObservable();
         observable.addObserver(new CurrentZimuItemObserver(this.rootLayout.findViewById(R.id.currentZimuTitleTextView)));
-        observable.addObserver(new ChangeCiListObserver(getContext()));
+        observable.addObserver(new ChangeCiListObserver(context));
         return observable;
     }
 
