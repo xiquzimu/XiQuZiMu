@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowMetrics;
 
+import androidx.annotation.RequiresApi;
+
 import me.xlgp.douyinzimu.obj.ZWindowManager;
 
 public class BaseFloatingLayout<T extends View> extends View {
@@ -63,6 +65,7 @@ public class BaseFloatingLayout<T extends View> extends View {
      *
      * @return
      */
+    @RequiresApi(Build.VERSION_CODES.R)
     protected int getFullWidth() {
         int width;
         WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
