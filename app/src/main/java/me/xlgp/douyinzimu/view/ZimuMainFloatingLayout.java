@@ -34,7 +34,7 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
     }
 
     private void init() {
-        viewPager2 = (ViewPager2) getCurrentLayout();
+        viewPager2 = (ViewPager2) getCurrentLayout().findViewById(R.id.zimu_viewpager2_layout);
         viewPager2.setAdapter(new ZimuMainFloatingAdapter());
         setPanelTitle("字幕列表");
     }
@@ -65,8 +65,7 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
 
         @Override
         public void onBindViewHolder(@NonNull ZimuMainFloatingLayout.ZimuMainFloatingAdapter.ViewHolder holder, int position) {
-            Log.i(TAG, "onBindViewHolder: " + position);
-            holder.setData(holder.getItemViewType() + " - " + position, position);
+            holder.setData();
         }
 
         @Override
@@ -93,7 +92,7 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
                 this.viewType = viewType;
             }
 
-            public void setData(String string, int position) {
+            public void setData() {
                 if (viewType == LIST) {
                     new ZimuListFloatinglayout(itemView, new ChangDuanObservable());
                 }
