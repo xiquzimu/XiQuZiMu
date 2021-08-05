@@ -3,8 +3,6 @@ package me.xlgp.douyinzimu.util;
 import android.content.Context;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,7 +14,6 @@ import java.util.regex.Pattern;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableOnSubscribe;
-import io.reactivex.rxjava3.core.ObservableTransformer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import me.xlgp.douyinzimu.constant.LycConstant;
 import me.xlgp.douyinzimu.obj.changduan.ChangCi;
@@ -25,11 +22,6 @@ import me.xlgp.douyinzimu.obj.changduan.ChangDuan;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 
 public class ChangDuanHelper {
-    public static ObservableTransformer<List<ChangDuan>, List<ChangDuan>> transformer() {
-        return upstream -> upstream.subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
 
     public static Observable<ChangDuan> getChangDuan(ChangDuanInfo changDuanInfo) {
         return Observable.create((ObservableOnSubscribe<ChangDuan>) emitter -> emitter.onNext(parse(FileHelper.readFile(changDuanInfo.getFile().getAbsolutePath())))).subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
@@ -49,6 +41,7 @@ public class ChangDuanHelper {
         }).unsubscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
+
     /**
      * 从存储中加载唱段名称
      *
@@ -56,9 +49,8 @@ public class ChangDuanHelper {
      * @return
      */
     public static List<File> loadFileList(Context context) {
-        Path path = Paths.get(FileHelper.getExternalFileRootDir(context.getExternalFilesDir(null)), context.getPackageName());
         List<File> fileList = new ArrayList<>();
-        FileHelper.getFileList(path.toString(), fileList);
+        FileHelper.getFileList(FileHelper.getSourceDir(context), fileList);
         return fileList;
     }
 

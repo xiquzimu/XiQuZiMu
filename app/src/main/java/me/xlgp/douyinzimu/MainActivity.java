@@ -17,6 +17,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import me.xlgp.douyinzimu.util.AccessibilitySettingsHelper;
+import me.xlgp.douyinzimu.util.FileHelper;
 import me.xlgp.douyinzimu.util.FloatingHelper;
 import me.xlgp.douyinzimu.util.StoragePermissionHelper;
 
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
         FloatingHelper.updateFloatingBtn(this, openFloatingBtn);
 
         initPackageVersion();
+
+        FileHelper.asyncMakeSourceDir(this);
     }
 
     private void initPackageVersion() {

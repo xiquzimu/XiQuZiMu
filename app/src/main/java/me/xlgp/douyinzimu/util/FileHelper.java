@@ -1,5 +1,7 @@
 package me.xlgp.douyinzimu.util;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Environment;
 
 import java.io.BufferedOutputStream;
@@ -10,9 +12,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class FileHelper {
 
@@ -76,6 +83,16 @@ public class FileHelper {
         return lineList;
     }
 
+    public static void asyncMakeSourceDir(Activity activity) {
+        Observable.create(emitter -> {
+            try {
+                emitter.onNext(FileHelper.mkdir(getSourceDir(activity)));
+            } catch (Exception e) {
+            }
+        }).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe();
+    }
+
     public static boolean mkdir(String dirPath) {
         if (isStorageMounted(null)) {
             File dir = new File(dirPath);
@@ -89,6 +106,15 @@ public class FileHelper {
             return true;
         }
         return false;
+    }
+
+    public static String getSourceDir(Context context) {
+        String rootDir = FileHelper.getExternalFileRootDir(context.getExternalFilesDir(null));
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            return Paths.get(rootDir, context.getPackageName()).toString();
+        } else {
+            return rootDir + "/" + context.getPackageName();
+        }
     }
 
     public static void save(byte[] bytes, String filePath) {
