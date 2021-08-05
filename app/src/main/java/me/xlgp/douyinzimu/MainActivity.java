@@ -17,6 +17,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import me.xlgp.douyinzimu.util.AccessibilitySettingsHelper;
+import me.xlgp.douyinzimu.util.AppHelper;
 import me.xlgp.douyinzimu.util.FileHelper;
 import me.xlgp.douyinzimu.util.FloatingHelper;
 import me.xlgp.douyinzimu.util.StoragePermissionHelper;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onStartFloatingService(View view) {
+        AppHelper.setTopApp(this);
         if (!FloatingHelper.enable(this)) {
             floatingLauncher.launch(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + MainActivity.this.getPackageName())));
             return;
@@ -61,7 +63,9 @@ public class MainActivity extends AppCompatActivity {
     public void onOpenAccessibilitySetting(View view) {
         if (!AccessibilitySettingsHelper.isEnabled(this)) {
             accessibilityLauncher.launch(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+            return;
         }
+        Toast.makeText(this, "已开启无障碍服务", Toast.LENGTH_SHORT).show();
     }
 
     public void onRun(View view) {

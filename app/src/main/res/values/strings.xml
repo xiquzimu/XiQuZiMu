@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">DouYinZiMu</string>
     <string name="app_zh_name">抖音字幕</string>
-    <string name="accessibility_service_label">抖音字幕辅助服务</string>
-    <string name="accessibility_service_description">抖音字幕需要辅助服务</string>
+    <string name="accessibility_service_label">抖音字幕</string>
+    <string name="accessibility_service_description">开启辅助服务，用于快速地自动评论。\n\n提示：打开辅助功能时可能会收到系统的警示提醒。\n\n承诺：抖音字幕不会有侵害用户利益行为，不会收集用户任何信息，请放心开启。</string>
     <string name="pinglunBtn">评论</string>
     <string name="pinglunSwitch">评论</string>
     <string name="pinglinList">列表</string>
