@@ -6,7 +6,7 @@ public class LycConstant {
     public static final int TITLE_START = 4;
     //时间间隔，其单位是毫秒，正值表示整体提前，负值相反。这是用于总体调整显示快慢的
     public static final String OFFSET_REG = "^\\[offset:\\d*\\]$";
-    public static final int OFFSET_START = 9;
+    public static final int OFFSET_START = 8;
     //剧种，包括黄梅戏，越剧，京剧等
     public static final String JUZHONG_REG = "^\\[jz:.*\\]$";
     public static final int JUZHONG_START = 4;

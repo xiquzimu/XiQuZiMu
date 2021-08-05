@@ -11,11 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Observable;
 import java.util.Observer;
 
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.disposables.Disposable;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
 import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.obj.changduan.ChangCi;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
+import me.xlgp.douyinzimu.obj.changduan.ChangDuan;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 import me.xlgp.douyinzimu.service.PingLunService;
 import me.xlgp.douyinzimu.util.ChangDuanHelper;
@@ -83,10 +86,28 @@ public class ZimuDetailFloatingLayout {
             Toast.makeText(context, "请选择唱段", Toast.LENGTH_SHORT).show();
             return;
         }
-        ChangDuanHelper.getChangDuan(changDuanInfo).subscribe(changDuan -> {
-            PingLunService.getInstance().setChangDuan(changDuan);
-            changCiAdapter.updateData(changDuan.getChangeCiList(0));
-            setChangCiListObservable();
+        ChangDuanHelper.getChangDuan(changDuanInfo).subscribe(new io.reactivex.rxjava3.core.Observer<ChangDuan>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull ChangDuan changDuan) {
+                PingLunService.getInstance().setChangDuan(changDuan);
+                changCiAdapter.updateData(changDuan.getChangeCiList(0));
+                setChangCiListObservable();
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                Toast.makeText(context, "加载唱词失败", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
         });
     }
 
