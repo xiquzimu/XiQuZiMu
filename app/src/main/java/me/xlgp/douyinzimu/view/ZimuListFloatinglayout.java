@@ -1,7 +1,6 @@
 package me.xlgp.douyinzimu.view;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,20 +13,20 @@ import java.util.Observer;
 
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
-import me.xlgp.douyinzimu.obj.LayoutParamsWithPoint;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 import me.xlgp.douyinzimu.service.PingLunService;
 import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
 public class ZimuListFloatinglayout {
+    private final View rootLayout;
+    private final Context context;
     RecyclerView recyclerView = null;
-    private View rootLayout = null;
-    private String layoutName = "zimuListFloatingLayout";
-    private Context context;
+    private ZimuMainFloatingLayout.ChangDuanObservable changDuanObservable;
 
-    public ZimuListFloatinglayout(View view) {
+    public ZimuListFloatinglayout(View view, ZimuMainFloatingLayout.ChangDuanObservable changDuanObservable) {
         rootLayout = view;
         this.context = view.getContext();
+        this.changDuanObservable = changDuanObservable;
         initRecyclerView();
         onListener();
     }
@@ -46,9 +45,9 @@ public class ZimuListFloatinglayout {
 
         ChangDuanAdapter changDuanAdapter = new ChangDuanAdapter(getChangDuanObservable());
         recyclerView.setAdapter(changDuanAdapter);
-        ChangDuanHelper.getChangDuanInfoList(context).subscribe(list ->{
-            if (list == null || list.size() == 0){
-                Toast.makeText(context,"无数据可更新", Toast.LENGTH_SHORT).show();
+        ChangDuanHelper.getChangDuanInfoList(context).subscribe(list -> {
+            if (list == null || list.size() == 0) {
+                Toast.makeText(context, "无数据可更新", Toast.LENGTH_SHORT).show();
                 return;
             }
             changDuanAdapter.updateData(list);
@@ -58,7 +57,7 @@ public class ZimuListFloatinglayout {
     private ChangDuanObservable getChangDuanObservable() {
         ChangDuanObservable observable = new ChangDuanObservable();
         observable.addObserver(new CurrentZimuItemObserver(this.rootLayout.findViewById(R.id.currentZimuTitleTextView)));
-        observable.addObserver(new ChangeCiListObserver(context));
+        observable.addObserver(new ChangeCiListObserver(changDuanObservable));
         return observable;
     }
 
@@ -66,29 +65,28 @@ public class ZimuListFloatinglayout {
      * 当先选中唱段观察者，
      */
     private static class ChangeCiListObserver implements Observer {
-        private Context context;
+        ZimuMainFloatingLayout.ChangDuanObservable changDuanObservable;
 
-        public ChangeCiListObserver(Context context) {
-            this.context = context;
+        private ChangeCiListObserver(ZimuMainFloatingLayout.ChangDuanObservable changDuanObservable) {
+            this.changDuanObservable = changDuanObservable;
         }
 
         @Override
         public void update(Observable o, Object arg) {
             ChangDuanObservable observable = (ChangDuanObservable) o;
             ChangDuanInfo changDuanInfo = observable.getData();
-            Toast.makeText(context, "需要异步获取唱词" + changDuanInfo.getName(), Toast.LENGTH_SHORT).show();
-            new ZimuDetailFloatingLayout(context, changDuanInfo);
+            changDuanObservable.setData(changDuanInfo);
         }
     }
 
-    class ChangDuanObservable extends BaseObservable<ChangDuanInfo> {
+    static class ChangDuanObservable extends BaseObservable<ChangDuanInfo> {
     }
 
     /**
      * 当前选中的唱段观察者
      */
-    private class CurrentZimuItemObserver implements Observer {
-        private TextView textView;
+    private static class CurrentZimuItemObserver implements Observer {
+        private final TextView textView;
 
         public CurrentZimuItemObserver(TextView textView) {
             this.textView = textView;

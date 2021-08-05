@@ -41,7 +41,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/zimu_detail_recyclerview"
-        android:layout_width="242dp"
-        android:layout_height="360dp" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
 

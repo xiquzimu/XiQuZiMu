@@ -2,33 +2,41 @@ package me.xlgp.douyinzimu.view;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import me.xlgp.douyinzimu.R;
+import me.xlgp.douyinzimu.designpatterns.BaseObservable;
 import me.xlgp.douyinzimu.obj.LayoutParamsWithPoint;
+import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 
 import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
 
 public class ZimuMainFloatingLayout extends BasePanelLayout {
     private ViewPager2 viewPager2;
+    private ZimuDetailFloatingLayout zimuDetailFloatingLayout;
 
     public ZimuMainFloatingLayout(@NonNull Context context) {
         super(context, R.layout.zimu_viewpager2_layout);
-        super.build(new LayoutParamsWithPoint(new Point(getFullWidth(),0)), this.getClass().getName());
+        super.build(new LayoutParamsWithPoint(new Point(getFullWidth(), 0)), this.getClass().getName());
         init();
     }
 
     private void init() {
         viewPager2 = (ViewPager2) getCurrentLayout();
         viewPager2.setAdapter(new ZimuMainFloatingAdapter());
+        setPanelTitle("字幕列表");
     }
 
 
@@ -47,8 +55,7 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             if (viewType == LIST) {
-                View view = inflateLayout(parent, R.layout.zimu_floating_layout);
-                return new ViewHolder(view, viewType);
+                return new ViewHolder(inflateLayout(parent, R.layout.zimu_floating_layout), viewType);
             }
             if (viewType == DETAIL) {
                 return new ViewHolder(inflateLayout(parent, R.layout.zimu_detail_layout), viewType);
@@ -76,25 +83,40 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
 
         protected class ViewHolder extends RecyclerView.ViewHolder {
             private int viewType;
+
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
             }
 
-            public ViewHolder(@NonNull View itemView, int viewType){
+            public ViewHolder(@NonNull View itemView, int viewType) {
                 this(itemView);
                 this.viewType = viewType;
             }
 
             public void setData(String string, int position) {
-
                 if (viewType == LIST) {
-                    new ZimuListFloatinglayout(itemView);
-                    TextView textView = itemView.findViewById(R.id.currentZimuTitleTextView);
-                    textView.setText(string);
+                    new ZimuListFloatinglayout(itemView, new ChangDuanObservable());
                 }
                 if (viewType == DETAIL) {
-                    Log.i(TAG, "setData: " + string);
+                    zimuDetailFloatingLayout = new ZimuDetailFloatingLayout(itemView);
                 }
+            }
+        }
+    }
+
+    class ChangDuanObservable extends BaseObservable<ChangDuanInfo> {
+        public ChangDuanObservable() {
+            this.addObserver(new ChangeDuanObserver());
+        }
+    }
+
+    private class ChangeDuanObserver implements Observer {
+        @Override
+        public void update(Observable o, Object arg) {
+            boolean bool = viewPager2.performAccessibilityAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD, new Bundle());
+            if (bool) {
+                ChangDuanObservable changDuanObservable = (ChangDuanObservable) o;
+                zimuDetailFloatingLayout.asyncGetChangDuan(changDuanObservable.getData());
             }
         }
     }

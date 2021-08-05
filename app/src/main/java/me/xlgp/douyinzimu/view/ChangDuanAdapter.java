@@ -1,11 +1,9 @@
 package me.xlgp.douyinzimu.view;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -63,26 +61,13 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             button = itemView.findViewById(R.id.zimu_item_btn);
-            button.setOnClickListener(new ChangDuanListener(itemView.getContext()));
+            //当点击唱段时，通知观察者
+            button.setOnClickListener(v -> changDuanObservable.setData(changDuanInfo));
         }
 
         public void setData(ChangDuanInfo changDuanInfo, int position) {
             button.setText(position + 1 + ". " + changDuanInfo.getName());
             this.changDuanInfo = changDuanInfo;
-        }
-
-        private class ChangDuanListener implements View.OnClickListener {
-            Context context;
-
-            public ChangDuanListener(Context context) {
-                this.context = context;
-            }
-
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(v.getContext(), changDuanInfo.getName() + " - " + changDuanInfo.getName(), Toast.LENGTH_SHORT).show();
-                changDuanObservable.setData(changDuanInfo);
-            }
         }
     }
 }

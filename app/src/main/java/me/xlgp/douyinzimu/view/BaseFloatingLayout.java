@@ -8,14 +8,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowMetrics;
 
-import androidx.annotation.RequiresApi;
-
 import me.xlgp.douyinzimu.obj.ZWindowManager;
 
 public class BaseFloatingLayout {
+    private final Context context;
     private View currentLayout;
     private String layoutName;
-    private final Context context;
     private WindowManager.LayoutParams layoutParams;
 
     public BaseFloatingLayout(Context context, Integer resource) {
@@ -37,7 +35,10 @@ public class BaseFloatingLayout {
     public View getCurrentLayout() {
         return currentLayout;
     }
-    public Context getContext(){return  context;}
+
+    public Context getContext() {
+        return context;
+    }
 
     protected void build(WindowManager.LayoutParams layoutParams, String key) {
         ZWindowManager.getInstance(this.context).addView(currentLayout, layoutParams, key);

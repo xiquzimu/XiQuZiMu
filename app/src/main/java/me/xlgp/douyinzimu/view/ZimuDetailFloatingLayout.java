@@ -13,42 +13,34 @@ import java.util.Observer;
 
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
-import me.xlgp.douyinzimu.obj.LayoutParamsWithPoint;
 import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.obj.changduan.ChangCi;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
-import me.xlgp.douyinzimu.obj.changduan.ChangDuan;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 import me.xlgp.douyinzimu.service.PingLunService;
 import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
-public class ZimuDetailFloatingLayout extends BasePanelLayout {
-    private final String LAYOUT_NAME = "zimu_detail_layout";
+public class ZimuDetailFloatingLayout {
     private RecyclerView recyclerView = null;
     private View rootLayout;
+    private Context context;
     private ChangDuanInfo changDuanInfo;
+    private ChangCiAdapter changCiAdapter;
 
-    public ZimuDetailFloatingLayout(Context context) {
-        this(context, null);
+    public ZimuDetailFloatingLayout(View view) {
+        this(view, null);
     }
 
-    public ZimuDetailFloatingLayout(Context context, ChangDuanInfo changDuanInfo) {
-        super(context, R.layout.zimu_detail_layout);
-        super.build(new LayoutParamsWithPoint(), LAYOUT_NAME);
-        init(changDuanInfo);
+    public ZimuDetailFloatingLayout(View view, ChangDuanInfo changDuanInfo) {
+        init(view, changDuanInfo);
         onViewListener();
         initRecyclerView();
-
     }
 
-    private void init(ChangDuanInfo changDuanInfo) {
-        this.rootLayout = getCurrentLayout();
+    private void init(View view, ChangDuanInfo changDuanInfo) {
         this.changDuanInfo = changDuanInfo;
-    }
-
-    private void asyncInit(ChangDuan changDuan) {
-        setPanelTitle(changDuan.getChangeDuanQiTa().getTitle());
-        setChangCiListObservable();
+        this.rootLayout = view;
+        this.context = view.getContext();
     }
 
     private void setChangCiListObservable() {
@@ -61,32 +53,40 @@ public class ZimuDetailFloatingLayout extends BasePanelLayout {
         //开始评论
         this.rootLayout.findViewById(R.id.startPinglunBtn).setOnClickListener(v -> {
             if (PingLun.getInstance().disabled()) {
-                Toast.makeText(getContext(), "请开启评论功能", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "请开启评论功能", Toast.LENGTH_SHORT).show();
                 return;
             } else if (!PingLunService.getInstance().hasChangeCi()) {
-                Toast.makeText(getContext(), "请选择唱段", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "请选择唱段", Toast.LENGTH_SHORT).show();
                 return;
             }
-            Toast.makeText(getContext(), "开始评论", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "开始评论", Toast.LENGTH_SHORT).show();
         });
     }
 
     private void initRecyclerView() {
         recyclerView = this.rootLayout.findViewById(R.id.zimu_detail_recyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        ChangCiAdapter changCiAdapter = new ChangCiAdapter(getChangCiObservable());
+        changCiAdapter = new ChangCiAdapter(getChangCiObservable());
         recyclerView.setAdapter(changCiAdapter);
 
-        asyncGetChangDuan(changDuanInfo, changCiAdapter);
+        asyncGetChangDuan(changDuanInfo);
     }
 
-    private void asyncGetChangDuan(ChangDuanInfo changDuanInfo, ChangCiAdapter changCiAdapter) {
+    public void asyncGetChangDuan(ChangDuanInfo changDuanInfo) {
         //异步获取唱词
+        if (changCiAdapter == null) {
+            Toast.makeText(context, "唱词列表初始化异常", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (changDuanInfo == null) {
+            Toast.makeText(context, "请选择唱段", Toast.LENGTH_SHORT).show();
+            return;
+        }
         ChangDuanHelper.getChangDuan(changDuanInfo).subscribe(changDuan -> {
             PingLunService.getInstance().setChangDuan(changDuan);
             changCiAdapter.updateData(changDuan.getChangeCiList(0));
-            asyncInit(changDuan);
+            setChangCiListObservable();
         });
     }
 

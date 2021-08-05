@@ -15,10 +15,10 @@ import me.xlgp.douyinzimu.service.FloatingService;
  * 基本面板
  */
 public class BasePanelLayout extends BaseFloatingLayout {
+    private final int resource;
     private LinearLayout rootLayout;
     private boolean isShou = false;
     private int shouHeight;
-    private final int resource;
 
     public BasePanelLayout(@NonNull Context context, int resource, WindowManager.LayoutParams layoutParams) {
         super(context, R.layout.base_panel_layout, layoutParams);
