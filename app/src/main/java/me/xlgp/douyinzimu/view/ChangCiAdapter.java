@@ -1,5 +1,6 @@
 package me.xlgp.douyinzimu.view;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,7 @@ import me.xlgp.douyinzimu.service.PingLunService;
 
 public class ChangCiAdapter extends RecyclerView.Adapter<ChangCiAdapter.ViewHolder> {
     private ChangCiList changCiList;
-    private BaseObservable<ChangCi> changCiObservable;
+    private final BaseObservable<ChangCi> changCiObservable;
 
     public ChangCiAdapter(ChangCiList changCiList, BaseObservable<ChangCi> changCiObservable) {
         this.changCiList = changCiList;
@@ -55,9 +56,10 @@ public class ChangCiAdapter extends RecyclerView.Adapter<ChangCiAdapter.ViewHold
             super(itemView);
         }
 
+        @SuppressLint("SetTextI18n")
         public void setData(ChangCi changCi, int position) {
             Button button = itemView.findViewById(R.id.zimu_item_btn);
-            button.setText(position + 1 + ". " + changCi.getContent());
+            button.setText((position + 1) + ". " + changCi.getContent());
             button.setOnClickListener(v -> {
                 // 设置当前唱词
                 PingLunService.getInstance().getChangDuan().getChangeCiList(position);

@@ -36,7 +36,6 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
         setPanelTitle("字幕列表");
     }
 
-
     private class ZimuMainFloatingAdapter extends RecyclerView.Adapter<ZimuMainFloatingAdapter.ViewHolder> {
 
         private final static int LIST = 0;
@@ -51,7 +50,7 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            if (viewType == LIST) {
+            if (viewType == LIST) { //唱段列表
                 return new ViewHolder(inflateLayout(parent, R.layout.zimu_floating_layout), viewType);
             }
             if (viewType == DETAIL) {
@@ -109,10 +108,12 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
     private class ChangeDuanObserver implements Observer {
         @Override
         public void update(Observable o, Object arg) {
+            //滑动切换到唱词列表
             boolean bool = viewPager2.performAccessibilityAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD, new Bundle());
             if (bool) {
                 ChangDuanObservable changDuanObservable = (ChangDuanObservable) o;
-                zimuDetailFloatingLayout.asyncGetChangDuan(changDuanObservable.getData());
+                //切换成功后
+                zimuDetailFloatingLayout.asyncRun(changDuanObservable.getData());
             }
         }
     }

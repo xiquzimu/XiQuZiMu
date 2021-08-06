@@ -18,15 +18,20 @@ import me.xlgp.douyinzimu.service.FloatingService;
 public class ToolFloatingLayout extends BaseFloatingLayout {
 
     private String zimuFloatinglayout;
+    private SwitchMaterial switchMaterial;
 
     public ToolFloatingLayout(Context context) {
         super(context, R.layout.tool_floating_layout);
         String layoutName = "ToolFloatingLayout";
         super.build(new LayoutParamsWithPoint(new Point(-getFullWidth() / 2, 0)), layoutName);
-        viewListener();
+
+        this.switchMaterial = getCurrentLayout().findViewById(R.id.pingLunSwitch);
+        PingLun.getInstance().change(switchMaterial.isChecked());
+
+        onViewListener();
     }
 
-    private void viewListener() {
+    private void onViewListener() {
         WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         View view = getCurrentLayout();
         view.findViewById(R.id.moveLayoutBtn).setOnTouchListener(new FloatingMoveListener(view, getLayoutParams(), windowManager));
@@ -38,11 +43,7 @@ public class ToolFloatingLayout extends BaseFloatingLayout {
         });
         //评论控制器
         ((SwitchMaterial) view.findViewById(R.id.pingLunSwitch)).setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                PingLun.getInstance().start();
-            } else {
-                PingLun.getInstance().stop();
-            }
+            PingLun.getInstance().change(isChecked);
         });
         view.findViewById(R.id.pinglunListBtn).setOnClickListener(v -> { //打开字幕列表layout
             if (ZWindowManager.getInstance(getContext()).containView(zimuFloatinglayout)) {

@@ -4,7 +4,6 @@ public class PingLun {
 
     private static PingLun instance = null;
     private final int STARTED = 1;
-    private final int RUNNING = 1;
     private final int STOPPED = 0;
     private int STATUS;
 
@@ -19,6 +18,14 @@ public class PingLun {
         return instance;
     }
 
+    public void change(boolean checked) {
+        if (checked) {
+            instance.start();
+        } else {
+            instance.stop();
+        }
+    }
+
     public void start() {
         STATUS = STARTED;
     }
@@ -29,13 +36,5 @@ public class PingLun {
 
     public void stop() {
         STATUS = STOPPED;
-    }
-
-    public void change() {
-        STATUS = STATUS == STOPPED ? STARTED : STOPPED;
-    }
-
-    public boolean isRun() {
-        return STATUS == RUNNING;
     }
 }

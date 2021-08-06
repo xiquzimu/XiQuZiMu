@@ -14,6 +14,7 @@
             android:id="@+id/currentZimuTitleTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="#56E8E8E8"
             android:ellipsize="marquee"
             android:paddingStart="6dp"
             android:paddingEnd="6dp"

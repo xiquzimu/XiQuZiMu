@@ -39,6 +39,7 @@
 
         android:width="60dp"
         android:background="#88FFFFFF"
+        android:checked="true"
         android:minHeight="40dp"
         android:text="@string/pinglunSwitch"
         android:textAlignment="viewEnd"
