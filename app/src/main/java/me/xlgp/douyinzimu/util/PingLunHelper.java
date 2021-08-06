@@ -126,15 +126,16 @@ public class PingLunHelper {
      */
     public static boolean pingLun(AccessibilityService service, AccessibilityEvent event) {
         try {
-            ChangCiList changCiList = PingLunService.getInstance().getChangDuan().getChangeCiList();
             //事件源：即判断该事件是否为douyinzimu app中评论按钮发出的事件，douyinzimu 的评论按钮
             if (PingLunHelper.isEnabled(service, event) && enablePingLun()) {
+                ChangCiList changCiList = PingLunService.getInstance().getChangDuan().getChangeCiList();
                 //点击评论按钮，打开输入界面
                 asyncOpenInputLayout(service, changCiList.current().getDelayMillis());
                 return true;
             }
             //事件源：是否为douyin界面评论按钮发出的事件，douyin 界面的评论按钮
             if (isInputLayout(service, event) && enablePingLun()) {
+                ChangCiList changCiList = PingLunService.getInstance().getChangDuan().getChangeCiList();
                 input(service, changCiList.next(), new PinglunCallback(service)); //输入评论内容，点击发送
                 return true;
             }

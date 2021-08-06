@@ -33,6 +33,8 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
     private void init() {
         viewPager2 = getCurrentLayout().findViewById(R.id.zimu_viewpager2_layout);
         viewPager2.setAdapter(new ZimuMainFloatingAdapter());
+        //懒加载，主要防止选择唱段后第二个layout还没有造成 zimuDetailFloatingLayout 为null情况
+        viewPager2.setOffscreenPageLimit(2);
         setPanelTitle("字幕列表");
     }
 
@@ -52,16 +54,14 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             if (viewType == LIST) { //唱段列表
                 return new ViewHolder(inflateLayout(parent, R.layout.zimu_floating_layout), viewType);
-            }
-            if (viewType == DETAIL) {
+            } else {
                 return new ViewHolder(inflateLayout(parent, R.layout.zimu_detail_layout), viewType);
             }
-            return new ViewHolder(null, viewType);
         }
 
         @Override
         public void onBindViewHolder(@NonNull ZimuMainFloatingLayout.ZimuMainFloatingAdapter.ViewHolder holder, int position) {
-            holder.setData();
+
         }
 
         @Override
@@ -77,7 +77,6 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
         }
 
         protected class ViewHolder extends RecyclerView.ViewHolder {
-            private int viewType;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -85,10 +84,6 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
 
             public ViewHolder(@NonNull View itemView, int viewType) {
                 this(itemView);
-                this.viewType = viewType;
-            }
-
-            public void setData() {
                 if (viewType == LIST) {
                     new ZimuListFloatinglayout(itemView, new ChangDuanObservable());
                 }
@@ -113,7 +108,9 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
             if (bool) {
                 ChangDuanObservable changDuanObservable = (ChangDuanObservable) o;
                 //切换成功后
-                zimuDetailFloatingLayout.asyncRun(changDuanObservable.getData());
+                if (zimuDetailFloatingLayout != null) {
+                    zimuDetailFloatingLayout.asyncRun(changDuanObservable.getData());
+                }
             }
         }
     }
