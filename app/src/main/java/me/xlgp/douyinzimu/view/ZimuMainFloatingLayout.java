@@ -3,7 +3,6 @@ package me.xlgp.douyinzimu.view;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +20,6 @@ import me.xlgp.douyinzimu.designpatterns.BaseObservable;
 import me.xlgp.douyinzimu.obj.LayoutParamsWithPoint;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 
-import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
-
 public class ZimuMainFloatingLayout extends BasePanelLayout {
     private ViewPager2 viewPager2;
     private ZimuDetailFloatingLayout zimuDetailFloatingLayout;
@@ -34,7 +31,7 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
     }
 
     private void init() {
-        viewPager2 = (ViewPager2) getCurrentLayout().findViewById(R.id.zimu_viewpager2_layout);
+        viewPager2 = getCurrentLayout().findViewById(R.id.zimu_viewpager2_layout);
         viewPager2.setAdapter(new ZimuMainFloatingAdapter());
         setPanelTitle("字幕列表");
     }

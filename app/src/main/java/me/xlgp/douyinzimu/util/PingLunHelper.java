@@ -7,6 +7,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -21,13 +22,10 @@ import me.xlgp.douyinzimu.service.PingLunService;
 
 public class PingLunHelper {
 
-    public static boolean check(Context context, AccessibilityEvent event) {
+    public static boolean check(AccessibilityService context, AccessibilityEvent event) {
         AccessibilityNodeInfo src = event.getSource();
         String pinglun = context.getString(R.string.pinglunBtn);
-        if (src != null && pinglun.equals(src.getText())) {
-            return true;
-        }
-        return false;
+        return src != null && pinglun.equals(src.getText());
     }
 
     /**
@@ -35,13 +33,9 @@ public class PingLunHelper {
      * １:先判断事件源是否是douyinzimu　app的评论按钮;
      * 2:再判断评论按钮能否响应
      * ３：最后判断当前屏幕是否是douyin
-     *
-     * @param context
-     * @param event
-     * @return
      */
-    public static boolean isEnabled(Context context, AccessibilityEvent event) {
-        return check(context, event) && AppHelper.isDouYinWindows((AccessibilityService) context);
+    public static boolean isEnabled(AccessibilityService service, AccessibilityEvent event) {
+        return check(service, event) && AppHelper.isDouYinWindows(service);
     }
 
     public static boolean openInputLayout(AccessibilityService service) {
@@ -73,22 +67,17 @@ public class PingLunHelper {
         if (event.getText().isEmpty()) {
             return false;
         }
-        if (context.getString(R.string.dy_input_layout_text).equals(event.getText().get(0))) {
-            return true;
-        }
-        return false;
+        return context.getString(R.string.dy_input_layout_text).contentEquals(event.getText().get(0));
     }
 
     /**
      * 获取发送按钮
-     *
-     * @param inputNodeInfo
-     * @return
      */
     private static AccessibilityNodeInfo getSendNodeByInputNode(AccessibilityNodeInfo inputNodeInfo) {
         try {
             return inputNodeInfo.getParent().getParent().getParent().getChild(2);
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -96,23 +85,22 @@ public class PingLunHelper {
     /**
      * 输入评论内容
      *
-     * @param
-     * @param service
-     * @param
-     * @return
+     * @param service  AccessibilityService
+     * @param changCi  唱词
+     * @param callback 回调
      */
-    private static boolean input(AccessibilityService service, ChangCi changCi, Callback<Long> callback) {
+    private static void input(AccessibilityService service, ChangCi changCi, Callback<Long> callback) {
         AccessibilityNodeInfo node = null;
         try {
             node = service.getRootInActiveWindow().findFocus(AccessibilityNodeInfo.FOCUS_INPUT);
-            if (node == null) return false;
+            if (node == null) return;
             //输入数据
             Bundle arguments = new Bundle();
             arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, changCi.getContent());
             boolean setTextSuccess = node.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
             if (setTextSuccess) {
                 //发送事件
-                boolean sendSuccess = getSendNodeByInputNode(node).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                boolean sendSuccess = Objects.requireNonNull(getSendNodeByInputNode(node)).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 if (sendSuccess) { //发送成功之后，回调
                     callback.call(changCi.getDelayMillis());
                 }
@@ -122,7 +110,6 @@ public class PingLunHelper {
         } finally {
             if (node != null) node.recycle();
         }
-        return true;
     }
 
     private static boolean enablePingLun() {
@@ -137,15 +124,18 @@ public class PingLunHelper {
      * 2：douyin界面输入框输入内容
      * 3：点击发送按钮
      */
-    public static boolean pingLun(Context context, AccessibilityEvent event) {
+    public static boolean pingLun(AccessibilityService service, AccessibilityEvent event) {
         try {
-            if (PingLunHelper.isEnabled(context, event) && enablePingLun()) { //事件源：即判断该事件是否为douyinzimu app中评论按钮发出的事件，douyinzimu 的评论按钮
-                openInputLayout((AccessibilityService) context); //点击评论按钮，打开输入界面
+            ChangCiList changCiList = PingLunService.getInstance().getChangDuan().getChangeCiList();
+            //事件源：即判断该事件是否为douyinzimu app中评论按钮发出的事件，douyinzimu 的评论按钮
+            if (PingLunHelper.isEnabled(service, event) && enablePingLun()) {
+                //点击评论按钮，打开输入界面
+                asyncOpenInputLayout(service, changCiList.current().getDelayMillis());
                 return true;
             }
-            if (isInputLayout(context, event) && enablePingLun()) { //事件源：是否为douyin界面评论按钮发出的事件，douyin 界面的评论按钮
-                ChangCiList changCiList = PingLunService.getInstance().getChangDuan().getChangeCiList();
-                input((AccessibilityService) context, changCiList.next(), new pinglunCallback(context)); //输入评论内容，点击发送
+            //事件源：是否为douyin界面评论按钮发出的事件，douyin 界面的评论按钮
+            if (isInputLayout(service, event) && enablePingLun()) {
+                input(service, changCiList.next(), new PinglunCallback(service)); //输入评论内容，点击发送
                 return true;
             }
         } catch (Exception e) {
@@ -154,18 +144,21 @@ public class PingLunHelper {
         return false;
     }
 
-    private static class pinglunCallback implements Callback<Long> {
-        private Context context;
-        private long delayMillis = -1;
+    private static void asyncOpenInputLayout(AccessibilityService service, long delayMillis) {
+        Observable.timer(delayMillis, TimeUnit.MILLISECONDS).map(o -> openInputLayout(service)).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe();
+    }
 
-        public pinglunCallback(Context context) {
-            this.context = context;
+    private static class PinglunCallback implements Callback<Long> {
+        private final AccessibilityService service;
+
+        public PinglunCallback(AccessibilityService service) {
+            this.service = service;
         }
 
         @Override
         public void call(Long delay) {
-            long delayMillis = delay == null ? this.delayMillis : delay;
-            Observable.timer(delayMillis, TimeUnit.MILLISECONDS).map(o -> openInputLayout((AccessibilityService) context)).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe();
+            long delayMillis = delay == null ? -1 : delay;
+            asyncOpenInputLayout(service, delayMillis);
         }
     }
 }
