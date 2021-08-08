@@ -10,10 +10,10 @@ import androidx.annotation.Nullable;
 
 import me.xlgp.douyinzimu.obj.ZWindowManager;
 import me.xlgp.douyinzimu.util.FloatingHelper;
-import me.xlgp.douyinzimu.view.ToolFloatingLayout;
+import me.xlgp.douyinzimu.view.ZimuMainFloatingLayout;
 
 public class FloatingService extends Service {
-    private String toolFloatingLayout = null;
+    private String floatingLayout = null;
 
     @Nullable
     @Override
@@ -24,8 +24,8 @@ public class FloatingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        if (FloatingHelper.enable(this) && !ZWindowManager.getInstance(this).containView(toolFloatingLayout)) {
-            toolFloatingLayout = new ToolFloatingLayout(this).getLayoutName();
+        if (FloatingHelper.enable(this) && !ZWindowManager.getInstance(this).containView(floatingLayout)) {
+            floatingLayout = new ZimuMainFloatingLayout(this).getLayoutName();
         } else {
             Toast.makeText(this, "已启动悬浮窗", Toast.LENGTH_SHORT).show();
         }

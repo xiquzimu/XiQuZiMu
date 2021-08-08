@@ -12,16 +12,6 @@ import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.service.DianZanService;
 
 public class DianZanHelper {
-    private Context context;
-
-    public DianZanHelper() {
-
-    }
-
-    public DianZanHelper(Context context) {
-        this.context = context;
-    }
-
     /**
      * 主要验证当前事件源是否是点赞按钮发出的
      *
@@ -31,10 +21,7 @@ public class DianZanHelper {
     public static boolean check(Context context, AccessibilityEvent event) {
         AccessibilityNodeInfo src = event.getSource();
         String zan = context.getString(R.string.dianzan);
-        if (src != null && zan.equals(src.getText())) {
-            return true;
-        }
-        return false;
+        return src != null && zan.equals(src.getText());
     }
 
     /**

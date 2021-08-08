@@ -62,7 +62,7 @@ public class ChangCiAdapter extends RecyclerView.Adapter<ChangCiAdapter.ViewHold
             button.setText((position + 1) + ". " + changCi.getContent());
             button.setOnClickListener(v -> {
                 // 设置当前唱词
-                PingLunService.getInstance().getChangDuan().getChangeCiList(position);
+                PingLunService.getInstance(null).getChangDuan().getChangeCiList(position);
                 //重新触发评论功能
                 changCiObservable.setData(changCi);
             });

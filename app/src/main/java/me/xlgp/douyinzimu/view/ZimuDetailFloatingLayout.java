@@ -1,13 +1,15 @@
 package me.xlgp.douyinzimu.view;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -30,7 +32,7 @@ public class ZimuDetailFloatingLayout {
     private View rootLayout;
     private Context context;
     private ChangCiAdapter changCiAdapter;
-    private Button pingLunBtn;
+    private SwitchMaterial switchMaterial;
 
     public ZimuDetailFloatingLayout(View view) {
         init(view);
@@ -41,25 +43,29 @@ public class ZimuDetailFloatingLayout {
     private void init(View view) {
         this.rootLayout = view;
         this.context = view.getContext();
-        this.pingLunBtn = this.rootLayout.findViewById(R.id.startPinglunBtn);
+        this.switchMaterial = this.rootLayout.findViewById(R.id.pingLunSwitchMaterial);
     }
 
     private void setChangCiListObservable() {
         ChangCiList.ChangCiListObservable changCiListObservable = new ChangCiList.ChangCiListObservable();
         changCiListObservable.addObserver(new ZimuDetailFloatingLayout.ChangCiListObservar());
-        PingLunService.getInstance().getChangDuan().getChangeCiList().setChangCiListObservable(changCiListObservable);
+        PingLunService.getInstance(null).getChangDuan().getChangeCiList().setChangCiListObservable(changCiListObservable);
     }
 
     private void onViewListener() {
-        //开始评论
-        pingLunBtn.setOnClickListener(v -> {
+        //选择评论
+        switchMaterial.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            PingLun.getInstance().change(isChecked);
+            Log.i("switchMaterial", "onViewListener: " + System.currentTimeMillis());
+            PingLunService pingLunService = PingLunService.getInstance(null);
             if (PingLun.getInstance().disabled()) {
-                Toast.makeText(context, "请开启评论功能", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "评论已关闭", Toast.LENGTH_SHORT).show();
                 return;
-            } else if (!PingLunService.getInstance().hasChangeCi()) {
-                Toast.makeText(context, "请选择唱段", Toast.LENGTH_SHORT).show();
+            } else if (!PingLunService.getInstance(null).hasChangeCi()) {
+                Toast.makeText(context, "没有选择唱段", Toast.LENGTH_SHORT).show();
                 return;
             }
+            pingLunService.start(pingLunService.getChangDuan().getChangeCiList().current().getDelayMillis());
             Toast.makeText(context, "开始评论", Toast.LENGTH_SHORT).show();
         });
     }
@@ -76,7 +82,10 @@ public class ZimuDetailFloatingLayout {
      * 获取唱词并初始化唱词后是否立即评论
      */
     public void asyncRun(ChangDuanInfo changDuanInfo) {
-        asyncGetChangDuan(changDuanInfo, o -> pingLunBtn.performClick());
+        asyncGetChangDuan(changDuanInfo, o -> {
+            switchMaterial.setChecked(false);
+            switchMaterial.setChecked(true);
+        });
     }
 
     public void asyncGetChangDuan(ChangDuanInfo changDuanInfo, Callback<Object> callback) {
@@ -102,6 +111,9 @@ public class ZimuDetailFloatingLayout {
         return changCiObservable;
     }
 
+    static class ChangCiObservable extends BaseObservable<ChangCi> {
+    }
+
     class ChangDuanObserve implements io.reactivex.rxjava3.core.Observer<ChangDuan> {
         private final Callback<Object> callback;
 
@@ -116,7 +128,7 @@ public class ZimuDetailFloatingLayout {
 
         @Override
         public void onNext(@NonNull ChangDuan changDuan) {
-            PingLunService.getInstance().setChangDuan(changDuan);
+            PingLunService.getInstance(null).setChangDuan(changDuan);
             changCiAdapter.updateData(changDuan.getChangeCiList(0));
             setChangCiListObservable();
             if (callback != null) callback.call(null);
@@ -131,9 +143,6 @@ public class ZimuDetailFloatingLayout {
         public void onComplete() {
 
         }
-    }
-
-    static class ChangCiObservable extends BaseObservable<ChangCi> {
     }
 
     class ChangCiListObservar implements Observer {
@@ -153,6 +162,8 @@ public class ZimuDetailFloatingLayout {
         @Override
         public void update(Observable o, Object arg) {
             ChangCiObservable observable = (ChangCiObservable) o;
+            //点击当前唱词应立即执行
+            PingLunService.getInstance(null).start(0);
             updateTitleView(observable.getData().getContent());
         }
     }

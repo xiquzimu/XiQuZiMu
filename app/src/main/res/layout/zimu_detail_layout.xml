@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:theme="@style/Theme.DouYinZiMu">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -12,31 +14,29 @@
         <TextView
             android:id="@+id/currentZimuTitleTextView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="#2A404040"
+            android:layout_height="0dp"
+            android:background="@color/black_touming_bg"
             android:ellipsize="marquee"
+            android:gravity="center_vertical"
             android:paddingStart="6dp"
             android:paddingEnd="6dp"
             android:singleLine="true"
             android:text="@string/currentZimuTitle"
             android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/startPinglunBtn"
+            app:layout_constraintEnd_toStartOf="@id/pingLunSwitchMaterial"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/startPinglunBtn"
-            android:layout_width="40dp"
-            android:layout_height="30dp"
-            android:background="@color/touming_btn"
-            android:text="@string/pinglunBtn"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/pingLunSwitchMaterial"
+            android:layout_width="48dp"
+            android:layout_height="40dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/currentZimuTitleTextView"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TextContrastCheck" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

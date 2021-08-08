@@ -10,6 +10,11 @@ import static android.view.accessibility.AccessibilityEvent.TYPE_VIEW_CLICKED;
 
 public class DouYinAccessibilityService extends AccessibilityService {
 
+    private PingLunService pingLunService;
+
+    public DouYinAccessibilityService() {
+        pingLunService = PingLunService.getInstance(this);
+    }
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -20,7 +25,7 @@ public class DouYinAccessibilityService extends AccessibilityService {
                     return;
                 }
                 if (PingLunHelper.pingLun(this, event)) {
-                    return;
+                    pingLunService.run();
                 }
                 break;
         }

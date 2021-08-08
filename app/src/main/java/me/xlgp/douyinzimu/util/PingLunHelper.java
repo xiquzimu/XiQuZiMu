@@ -8,39 +8,25 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import me.xlgp.douyinzimu.R;
+import me.xlgp.douyinzimu.exception.NotFoundDouYinException;
 import me.xlgp.douyinzimu.obj.Callback;
-import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.obj.changduan.ChangCi;
-import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 import me.xlgp.douyinzimu.service.PingLunService;
 
 public class PingLunHelper {
 
-    public static boolean check(AccessibilityService context, AccessibilityEvent event) {
-        AccessibilityNodeInfo src = event.getSource();
-        String pinglun = context.getString(R.string.pinglunBtn);
-        return src != null && pinglun.equals(src.getText());
-    }
-
     /**
-     * 判断能否评论，
-     * １:先判断事件源是否是douyinzimu　app的评论按钮;
-     * 2:再判断评论按钮能否响应
-     * ３：最后判断当前屏幕是否是douyin
+     * 点击抖音界面 "说点什么..." view,调出输入框
      */
-    public static boolean isEnabled(AccessibilityService service, AccessibilityEvent event) {
-        return check(service, event) && AppHelper.isDouYinWindows(service);
-    }
 
-    public static boolean openInputLayout(AccessibilityService service) {
-        if (!enablePingLun()) {
-            return false;
+    public static void openInputLayout(AccessibilityService service) {
+        if (!AppHelper.isDouYinWindows(service)) {
+            throw new NotFoundDouYinException("获取抖音界面失败");
+        }
+        if (!PingLunService.getInstance(null).enablePingLun()) {
+            return;
         }
         AccessibilityNodeInfo nodeInfo = service.getRootInActiveWindow();
 
@@ -50,7 +36,7 @@ public class PingLunHelper {
                 for (AccessibilityNodeInfo node : nodeInfoList) {
                     if (node.getParent().isClickable()) {
                         node.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                        return true;
+                        return;
                     }
                 }
             }
@@ -59,15 +45,14 @@ public class PingLunHelper {
         } finally {
             if (nodeInfo != null) nodeInfo.recycle();
         }
-        return false;
     }
 
     //评论按钮
-    private static boolean isInputLayout(Context context, AccessibilityEvent event) {
-        if (event.getText().isEmpty()) {
+    private static boolean isInputLayout(Context context, List<CharSequence> list) {
+        if (list.isEmpty()) {
             return false;
         }
-        return context.getString(R.string.dy_input_layout_text).contentEquals(event.getText().get(0));
+        return context.getString(R.string.dy_input_layout_text).contentEquals(list.get(0));
     }
 
     /**
@@ -89,7 +74,7 @@ public class PingLunHelper {
      * @param changCi  唱词
      * @param callback 回调
      */
-    private static void input(AccessibilityService service, ChangCi changCi, Callback<Long> callback) {
+    public static void input(AccessibilityService service, ChangCi changCi, Callback<Long> callback) {
         AccessibilityNodeInfo node = null;
         try {
             node = service.getRootInActiveWindow().findFocus(AccessibilityNodeInfo.FOCUS_INPUT);
@@ -112,10 +97,6 @@ public class PingLunHelper {
         }
     }
 
-    private static boolean enablePingLun() {
-        return !PingLun.getInstance().disabled() && PingLunService.getInstance().hasChangeCi();
-    }
-
     /**
      * 评论事件
      * 包括多个事件，
@@ -125,41 +106,6 @@ public class PingLunHelper {
      * 3：点击发送按钮
      */
     public static boolean pingLun(AccessibilityService service, AccessibilityEvent event) {
-        try {
-            //事件源：即判断该事件是否为douyinzimu app中评论按钮发出的事件，douyinzimu 的评论按钮
-            if (PingLunHelper.isEnabled(service, event) && enablePingLun()) {
-                ChangCiList changCiList = PingLunService.getInstance().getChangDuan().getChangeCiList();
-                //点击评论按钮，打开输入界面
-                asyncOpenInputLayout(service, changCiList.current().getDelayMillis());
-                return true;
-            }
-            //事件源：是否为douyin界面评论按钮发出的事件，douyin 界面的评论按钮
-            if (isInputLayout(service, event) && enablePingLun()) {
-                ChangCiList changCiList = PingLunService.getInstance().getChangDuan().getChangeCiList();
-                input(service, changCiList.next(), new PinglunCallback(service)); //输入评论内容，点击发送
-                return true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    private static void asyncOpenInputLayout(AccessibilityService service, long delayMillis) {
-        Observable.timer(delayMillis, TimeUnit.MILLISECONDS).map(o -> openInputLayout(service)).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe();
-    }
-
-    private static class PinglunCallback implements Callback<Long> {
-        private final AccessibilityService service;
-
-        public PinglunCallback(AccessibilityService service) {
-            this.service = service;
-        }
-
-        @Override
-        public void call(Long delay) {
-            long delayMillis = delay == null ? -1 : delay;
-            asyncOpenInputLayout(service, delayMillis);
-        }
+        return isInputLayout(service, event.getText());
     }
 }
