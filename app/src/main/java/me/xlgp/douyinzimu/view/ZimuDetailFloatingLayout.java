@@ -49,7 +49,7 @@ public class ZimuDetailFloatingLayout {
     private void setChangCiListObservable() {
         ChangCiList.ChangCiListObservable changCiListObservable = new ChangCiList.ChangCiListObservable();
         changCiListObservable.addObserver(new ZimuDetailFloatingLayout.ChangCiListObservar());
-        PingLunService.getInstance(null).getChangDuan().getChangeCiList().setChangCiListObservable(changCiListObservable);
+        PingLunService.getInstance().getChangDuan().getChangeCiList().setChangCiListObservable(changCiListObservable);
     }
 
     private void onViewListener() {
@@ -57,11 +57,11 @@ public class ZimuDetailFloatingLayout {
         switchMaterial.setOnCheckedChangeListener((buttonView, isChecked) -> {
             PingLun.getInstance().change(isChecked);
             Log.i("switchMaterial", "onViewListener: " + System.currentTimeMillis());
-            PingLunService pingLunService = PingLunService.getInstance(null);
+            PingLunService pingLunService = PingLunService.getInstance();
             if (PingLun.getInstance().disabled()) {
                 Toast.makeText(context, "评论已关闭", Toast.LENGTH_SHORT).show();
                 return;
-            } else if (!PingLunService.getInstance(null).hasChangeCi()) {
+            } else if (!PingLunService.getInstance().hasChangeCi()) {
                 Toast.makeText(context, "没有选择唱段", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -128,7 +128,7 @@ public class ZimuDetailFloatingLayout {
 
         @Override
         public void onNext(@NonNull ChangDuan changDuan) {
-            PingLunService.getInstance(null).setChangDuan(changDuan);
+            PingLunService.getInstance().setChangDuan(changDuan);
             changCiAdapter.updateData(changDuan.getChangeCiList(0));
             setChangCiListObservable();
             if (callback != null) callback.call(null);
@@ -163,7 +163,7 @@ public class ZimuDetailFloatingLayout {
         public void update(Observable o, Object arg) {
             ChangCiObservable observable = (ChangCiObservable) o;
             //点击当前唱词应立即执行
-            PingLunService.getInstance(null).start(0);
+            PingLunService.getInstance().start(0);
             updateTitleView(observable.getData().getContent());
         }
     }

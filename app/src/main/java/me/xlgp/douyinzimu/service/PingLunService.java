@@ -21,19 +21,20 @@ public class PingLunService {
     private static PingLunService instance = null;
     private ChangDuan changDuan = null;
     private DouYinAccessibilityService douYinAccessibilityService;
+    //todo 此处应该重构
+    private long count = 0; //记录线程数量，用于判断即将执行的线程是不是当前应当执行的线程
 
-    public static PingLunService getInstance(DouYinAccessibilityService douYinAccessibilityService) {
+    public static PingLunService getInstance() {
         if (instance == null) {
             instance = new PingLunService();
-        }
-        if (douYinAccessibilityService != null) {
-            instance.douYinAccessibilityService = douYinAccessibilityService;
         }
         return instance;
     }
 
-    //todo 此处应该重构
-    private long count = 0; //记录线程数量，用于判断即将执行的线程是不是当前应当执行的线程
+    public PingLunService builder(DouYinAccessibilityService douYinAccessibilityService) {
+        this.douYinAccessibilityService = douYinAccessibilityService;
+        return this;
+    }
 
     public void start(long delayMillis) {
         count++;

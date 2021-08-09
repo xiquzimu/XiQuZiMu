@@ -16,8 +16,8 @@ import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 import me.xlgp.douyinzimu.service.PingLunService;
 
 public class ChangCiAdapter extends RecyclerView.Adapter<ChangCiAdapter.ViewHolder> {
-    private ChangCiList changCiList;
     private final BaseObservable<ChangCi> changCiObservable;
+    private ChangCiList changCiList;
 
     public ChangCiAdapter(ChangCiList changCiList, BaseObservable<ChangCi> changCiObservable) {
         this.changCiList = changCiList;
@@ -62,7 +62,7 @@ public class ChangCiAdapter extends RecyclerView.Adapter<ChangCiAdapter.ViewHold
             button.setText((position + 1) + ". " + changCi.getContent());
             button.setOnClickListener(v -> {
                 // 设置当前唱词
-                PingLunService.getInstance(null).getChangDuan().getChangeCiList(position);
+                PingLunService.getInstance().getChangDuan().getChangeCiList(position);
                 //重新触发评论功能
                 changCiObservable.setData(changCi);
             });

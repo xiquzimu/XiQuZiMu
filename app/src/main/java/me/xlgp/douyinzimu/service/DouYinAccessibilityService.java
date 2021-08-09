@@ -1,19 +1,19 @@
 package me.xlgp.douyinzimu.service;
 
+import static android.view.accessibility.AccessibilityEvent.TYPE_VIEW_CLICKED;
+
 import android.accessibilityservice.AccessibilityService;
 import android.view.accessibility.AccessibilityEvent;
 
 import me.xlgp.douyinzimu.util.DianZanHelper;
 import me.xlgp.douyinzimu.util.PingLunHelper;
 
-import static android.view.accessibility.AccessibilityEvent.TYPE_VIEW_CLICKED;
-
 public class DouYinAccessibilityService extends AccessibilityService {
 
     private PingLunService pingLunService;
 
     public DouYinAccessibilityService() {
-        pingLunService = PingLunService.getInstance(this);
+        pingLunService = PingLunService.getInstance().builder(this);
     }
 
     @Override

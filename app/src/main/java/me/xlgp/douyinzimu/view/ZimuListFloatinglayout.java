@@ -33,7 +33,7 @@ public class ZimuListFloatinglayout {
 
     private void onListener() {
         this.rootLayout.findViewById(R.id.clearCurrentZiMuBtn).setOnClickListener(v -> { //清除当前唱段
-            PingLunService.getInstance(null).clear();
+            PingLunService.getInstance().clear();
             TextView textView = this.rootLayout.findViewById(R.id.currentZimuTitleTextView);
             textView.setText(R.string.currentZimuTitle);
         });
