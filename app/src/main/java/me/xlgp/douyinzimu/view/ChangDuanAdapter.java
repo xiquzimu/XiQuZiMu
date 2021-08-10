@@ -12,13 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.xlgp.douyinzimu.R;
+import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 
 public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.ViewHolder> {
     private final ZimuListFloatinglayout.ChangDuanObservable changDuanObservable;
-    private List<ChangDuanInfo> changDuanInfoList;
+    private List<ChangDuan> changDuanInfoList;
 
-    public ChangDuanAdapter(List<ChangDuanInfo> changDuanInfoList, ZimuListFloatinglayout.ChangDuanObservable observable) {
+    public ChangDuanAdapter(List<ChangDuan> changDuanInfoList, ZimuListFloatinglayout.ChangDuanObservable observable) {
         this.changDuanInfoList = changDuanInfoList;
         this.changDuanObservable = observable;
     }
@@ -27,7 +28,7 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
         this(new ArrayList<>(), observable);
     }
 
-    public void updateData(List<ChangDuanInfo> list) {
+    public void updateData(List<ChangDuan> list) {
         changDuanInfoList = list;
         notifyDataSetChanged();
     }
@@ -41,7 +42,7 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ChangDuanAdapter.ViewHolder holder, int position) {
-        ChangDuanInfo changDuanInfo = changDuanInfoList.get(position);
+        ChangDuan changDuanInfo = changDuanInfoList.get(position);
         holder.setData(changDuanInfo, position);
     }
 
@@ -55,7 +56,7 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
         private final TextView subTitleView;
         private final TextView noView;
 
-        private ChangDuanInfo changDuanInfo;
+        private ChangDuan changDuanInfo;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -66,11 +67,11 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
             itemView.setOnClickListener(v -> changDuanObservable.setData(changDuanInfo));
         }
 
-        public void setData(ChangDuanInfo changDuanInfo, int position) {
+        public void setData(ChangDuan changDuanInfo, int position) {
             noView.setText(String.valueOf(position + 1));
             titleView.setText(changDuanInfo.getName());
             //todo 设置剧种和剧目
-            subTitleView.setText("剧种：剧目");
+            subTitleView.setText(changDuanInfo.getJuZhong() + " " + changDuanInfo.getJuMu());
             this.changDuanInfo = changDuanInfo;
         }
     }

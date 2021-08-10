@@ -17,6 +17,7 @@ import java.util.Observer;
 
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
+import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.obj.LayoutParamsWithPoint;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 

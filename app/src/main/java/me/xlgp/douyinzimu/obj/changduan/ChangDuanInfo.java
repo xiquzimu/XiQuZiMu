@@ -1,33 +1,37 @@
 package me.xlgp.douyinzimu.obj.changduan;
 
-import java.io.File;
 
+import me.xlgp.douyinzimu.model.ChangDuan;
+
+/**
+ * 唱词：内容，时间，时间间隔，
+ * 唱段
+ * 额外信息：名称，剧目，
+ * 唱词列表，
+ */
 public class ChangDuanInfo {
-    private File file;
-    private String name;
-    private String path;
+    private ChangDuan changDuan;
+    private ChangCiList changCiList;
 
-    public String getName() {
-        return name;
+    public ChangDuanInfo() {
+        changCiList = new ChangCiList();
+        changDuan = new ChangDuan();
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public ChangDuan getChangDuan() {
+        return changDuan;
     }
 
-    public File getFile() {
-        return file;
+    public void setChangDuan(ChangDuan changDuan) {
+        this.changDuan = changDuan;
     }
 
-    public void setFile(File file) {
-        this.file = file;
+    public ChangCiList getChangeCiList() {
+        return changCiList;
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
+    public ChangCiList getChangeCiList(int cursor) {
+        changCiList.setCursor(cursor);
+        return changCiList;
     }
 }

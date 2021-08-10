@@ -13,13 +13,13 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import me.xlgp.douyinzimu.exception.NotFoundDouYinException;
 import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
-import me.xlgp.douyinzimu.obj.changduan.ChangDuan;
+import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 import me.xlgp.douyinzimu.util.PingLunHelper;
 
 public class PingLunService {
 
     private static PingLunService instance = null;
-    private ChangDuan changDuan = null;
+    private ChangDuanInfo changDuanInfo = null;
     private DouYinAccessibilityService douYinAccessibilityService;
     //todo 此处应该重构
     private long count = 0; //记录线程数量，用于判断即将执行的线程是不是当前应当执行的线程
@@ -45,20 +45,20 @@ public class PingLunService {
         }
     }
 
-    public ChangDuan getChangDuan() {
-        return changDuan;
+    public void setChangDuanInfo(ChangDuanInfo changDuanInfo) {
+        this.changDuanInfo = changDuanInfo;
     }
 
-    public void setChangDuan(ChangDuan changDuan) {
-        this.changDuan = changDuan;
+    public ChangDuanInfo getChangDuanInfo() {
+        return changDuanInfo;
     }
 
     public void clear() {
-        changDuan = null;
+        changDuanInfo = null;
     }
 
     public boolean hasChangeCi() {
-        return changDuan != null && changDuan.getChangeCiList().hasNext();
+        return changDuanInfo != null && changDuanInfo.getChangeCiList().hasNext();
     }
 
     public boolean enablePingLun() {
@@ -67,7 +67,7 @@ public class PingLunService {
 
     public void run() {
         if (enablePingLun()) {
-            ChangCiList changCiList = changDuan.getChangeCiList();
+            ChangCiList changCiList = changDuanInfo.getChangeCiList();
             PingLunHelper.input(douYinAccessibilityService, changCiList.next(), this::start);
         }
     }

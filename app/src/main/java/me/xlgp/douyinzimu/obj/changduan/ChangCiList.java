@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
+import me.xlgp.douyinzimu.model.ChangCi;
 
 public class ChangCiList extends ArrayList<ChangCi> {
     private ListIterator<ChangCi> listIterator = null;

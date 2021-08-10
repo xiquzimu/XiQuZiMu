@@ -11,21 +11,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Consumer;
 import me.xlgp.douyinzimu.R;
+import me.xlgp.douyinzimu.dao.ChangCiDao;
+import me.xlgp.douyinzimu.db.AppDatabase;
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
+import me.xlgp.douyinzimu.model.ChangCi;
 import me.xlgp.douyinzimu.obj.Callback;
 import me.xlgp.douyinzimu.obj.PingLun;
-import me.xlgp.douyinzimu.obj.changduan.ChangCi;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
-import me.xlgp.douyinzimu.obj.changduan.ChangDuan;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 import me.xlgp.douyinzimu.service.PingLunService;
-import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
 public class ZimuDetailFloatingLayout {
     private RecyclerView recyclerView = null;
@@ -49,7 +51,7 @@ public class ZimuDetailFloatingLayout {
     private void setChangCiListObservable() {
         ChangCiList.ChangCiListObservable changCiListObservable = new ChangCiList.ChangCiListObservable();
         changCiListObservable.addObserver(new ZimuDetailFloatingLayout.ChangCiListObservar());
-        PingLunService.getInstance().getChangDuan().getChangeCiList().setChangCiListObservable(changCiListObservable);
+        PingLunService.getInstance().getChangDuanInfo().getChangeCiList().setChangCiListObservable(changCiListObservable);
     }
 
     private void onViewListener() {
@@ -65,7 +67,7 @@ public class ZimuDetailFloatingLayout {
                 Toast.makeText(context, "没有选择唱段", Toast.LENGTH_SHORT).show();
                 return;
             }
-            pingLunService.start(pingLunService.getChangDuan().getChangeCiList().current().getDelayMillis());
+            pingLunService.start(pingLunService.getChangDuanInfo().getChangeCiList().current().getDelayMillis());
             Toast.makeText(context, "开始评论", Toast.LENGTH_SHORT).show();
         });
     }
@@ -98,7 +100,20 @@ public class ZimuDetailFloatingLayout {
             Toast.makeText(context, "请选择唱段", Toast.LENGTH_SHORT).show();
             return;
         }
-        ChangDuanHelper.getChangDuan(changDuanInfo).subscribe(new ChangDuanObserve(callback));
+
+        ChangCiDao changCiDao = AppDatabase.getInstance(context).changCiDao();
+        changCiDao.listByChangDuanId(changDuanInfo.getChangDuan().getId()).subscribe(new Consumer<List<me.xlgp.douyinzimu.model.ChangCi>>() {
+            @Override
+            public void accept(List<me.xlgp.douyinzimu.model.ChangCi> changCis) throws Throwable {
+                PingLunService.getInstance().setChangDuanInfo(changDuanInfo);
+                ChangCiList changCiList = new ChangCiList();
+                for (int i = 0; i < changCis.size(); i++) {
+                    changCiList.add(changCis.get(i));
+                }
+                changCiAdapter.updateData(changCiList);
+                setChangCiListObservable();
+            }
+        });
     }
 
     private void updateTitleView(String text) {
@@ -114,7 +129,7 @@ public class ZimuDetailFloatingLayout {
     static class ChangCiObservable extends BaseObservable<ChangCi> {
     }
 
-    class ChangDuanObserve implements io.reactivex.rxjava3.core.Observer<ChangDuan> {
+    class ChangDuanObserve implements io.reactivex.rxjava3.core.Observer<ChangDuanInfo> {
         private final Callback<Object> callback;
 
         public ChangDuanObserve(Callback<Object> callback) {
@@ -127,8 +142,8 @@ public class ZimuDetailFloatingLayout {
         }
 
         @Override
-        public void onNext(@NonNull ChangDuan changDuan) {
-            PingLunService.getInstance().setChangDuan(changDuan);
+        public void onNext(@NonNull ChangDuanInfo changDuan) {
+            PingLunService.getInstance().setChangDuanInfo(changDuan);
             changCiAdapter.updateData(changDuan.getChangeCiList(0));
             setChangCiListObservable();
             if (callback != null) callback.call(null);

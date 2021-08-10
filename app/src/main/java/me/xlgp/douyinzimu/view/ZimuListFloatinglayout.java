@@ -12,10 +12,12 @@ import java.util.Observable;
 import java.util.Observer;
 
 import me.xlgp.douyinzimu.R;
+import me.xlgp.douyinzimu.dao.ChangDuanDao;
+import me.xlgp.douyinzimu.db.AppDatabase;
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
+import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 import me.xlgp.douyinzimu.service.PingLunService;
-import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
 public class ZimuListFloatinglayout {
     private final View rootLayout;
@@ -45,7 +47,9 @@ public class ZimuListFloatinglayout {
 
         ChangDuanAdapter changDuanAdapter = new ChangDuanAdapter(getChangDuanObservable());
         recyclerView.setAdapter(changDuanAdapter);
-        ChangDuanHelper.getChangDuanInfoList(context).subscribe(list -> {
+
+        ChangDuanDao changDuanDao = AppDatabase.getInstance(context).changDuanDao();
+        changDuanDao.list().subscribe(list -> {
             if (list == null || list.size() == 0) {
                 Toast.makeText(context, "无数据可更新", Toast.LENGTH_SHORT).show();
                 return;
@@ -74,12 +78,13 @@ public class ZimuListFloatinglayout {
         @Override
         public void update(Observable o, Object arg) {
             ChangDuanObservable observable = (ChangDuanObservable) o;
-            ChangDuanInfo changDuanInfo = observable.getData();
+            ChangDuanInfo changDuanInfo = new ChangDuanInfo();
+            changDuanInfo.setChangDuan(observable.getData());
             changDuanObservable.setData(changDuanInfo);
         }
     }
 
-    static class ChangDuanObservable extends BaseObservable<ChangDuanInfo> {
+    static class ChangDuanObservable extends BaseObservable<ChangDuan> {
     }
 
     /**
@@ -95,8 +100,11 @@ public class ZimuListFloatinglayout {
         @Override
         public void update(Observable o, Object arg) {
             ChangDuanObservable observable = (ChangDuanObservable) o;
-            ChangDuanInfo changDuanInfo = observable.getData();
-            textView.setText(changDuanInfo.getName());
+
+            ChangDuanInfo changDuanInfo = new ChangDuanInfo();
+            changDuanInfo.setChangDuan(observable.getData());
+            PingLunService.getInstance().setChangDuanInfo(changDuanInfo);
+            textView.setText(observable.getData().getName());
         }
     }
 }

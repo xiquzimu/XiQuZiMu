@@ -11,35 +11,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.ObservableOnSubscribe;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-import me.xlgp.douyinzimu.constant.LycConstant;
 import me.xlgp.douyinzimu.obj.changduan.ChangCi;
-import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
-import me.xlgp.douyinzimu.obj.changduan.ChangDuan;
-import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 
 public class ChangDuanHelper {
 
-    public static Observable<ChangDuan> getChangDuan(ChangDuanInfo changDuanInfo) {
-        return Observable.create((ObservableOnSubscribe<ChangDuan>) emitter -> emitter.onNext(parse(FileHelper.readFile(changDuanInfo.getFile().getAbsolutePath())))).subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public static Observable<List<ChangDuanInfo>> getChangDuanInfoList(Context context) {
-        return Observable.create((ObservableOnSubscribe<List<File>>) emitter -> emitter.onNext(loadFileList(context))).subscribeOn(Schedulers.io()).map(files -> {
-            List<ChangDuanInfo> changDuanInfoList = new ArrayList<>();
-            for (File file : files) {
-                ChangDuanInfo changDuanInfo = new ChangDuanInfo();
-                changDuanInfo.setFile(file);
-                changDuanInfo.setPath(file.getPath());
-                changDuanInfo.setName(file.getName());
-                changDuanInfoList.add(changDuanInfo);
-            }
-            return changDuanInfoList;
-        }).unsubscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
-    }
 
 
     /**
@@ -54,39 +29,6 @@ public class ChangDuanHelper {
         return fileList;
     }
 
-    /**
-     * 从存储中或网络中获取lrc文件后，格式化为 ChangDuan对象
-     *
-     * @param list
-     * @return
-     */
-    public static ChangDuan parse(List<String> list) {
-        ChangDuan changDuan = new ChangDuan();
-        for (String line : list) {
-            if (matcher(line, LycConstant.TIME_REG)) { //唱词
-                changDuan.getChangeCiList().add(getChangCi(line));
-            } else if (matcher(line, LycConstant.TITLE_REG)) { //名称
-                changDuan.getChangeDuanQiTa().setTitle(getQitaContent(line, LycConstant.TITLE_START));
-            } else if (matcher(line, LycConstant.JUMU_REG)) {
-                changDuan.getChangeDuanQiTa().setJuMu(getQitaContent(line, LycConstant.JUMU_START));
-            } else if (matcher(line, LycConstant.OFFSET_REG)) {
-                String offset = getQitaContent(line, LycConstant.OFFSET_START);
-                changDuan.getChangeDuanQiTa().setOffset((Long.parseLong(offset) * 1000));
-            } else if (matcher(line, LycConstant.JUZHONG_REG)) {
-                changDuan.getChangeDuanQiTa().setJuZhong(getQitaContent(line, LycConstant.JUZHONG_START));
-            }
-        }
-        ChangCiList changCiList = changDuan.getChangeCiList();
-        for (int i = 0; i < changCiList.size(); i++) {
-            if (i != changCiList.size() - 1) {
-                //时间间隔 = 后一句的时间-本句时间+时间补偿值（offset）,offset:一般表示唱词先于唱段声音出现
-                long delaymillis = getDelayMillis(changCiList.get(i + 1).getTime()) - getDelayMillis(changCiList.get(i).getTime()) + changDuan.getChangeDuanQiTa().getOffset();
-                changCiList.get(i).setDelayMillis(delaymillis);
-            }
-        }
-        changCiList.setCursor(0); // 唱词初始化
-        return changDuan;
-    }
 
     private static String getQitaContent(String line, int beginIndex) {
         return line.substring(beginIndex, line.length() - 1).trim();
@@ -98,7 +40,7 @@ public class ChangDuanHelper {
         return changCi;
     }
 
-    private static long getDelayMillis(String time) {
+    public static long getDelayMillis(String time) {
         SimpleDateFormat format = new SimpleDateFormat("mm:ss.SSS");
         try {
             Date date = format.parse(time);
