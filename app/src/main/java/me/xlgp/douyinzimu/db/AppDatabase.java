@@ -6,6 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import me.xlgp.douyinzimu.constant.AppConstant;
 import me.xlgp.douyinzimu.dao.ChangCiDao;
 import me.xlgp.douyinzimu.dao.ChangDuanDao;
 import me.xlgp.douyinzimu.model.ChangCi;
@@ -19,15 +20,18 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract ChangCiDao changCiDao();
     public abstract ChangDuanDao changDuanDao();
 
-    public static AppDatabase getInstance(Context context) {
+    public static AppDatabase getInstance() {
+        return instance;
+    }
+
+    public static void build(Context context){
         if (instance == null){
             synchronized (AppDatabase.class){
                 if (instance == null){
                     instance = Room.databaseBuilder(context,
-                            AppDatabase.class, "xiqu.db").build();
+                            AppDatabase.class, AppConstant.SQLITE_DB_NAME).build();
                 }
             }
         }
-        return instance;
     }
 }

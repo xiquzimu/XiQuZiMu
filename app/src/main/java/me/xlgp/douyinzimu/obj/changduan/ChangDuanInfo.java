@@ -26,6 +26,10 @@ public class ChangDuanInfo {
         this.changDuan = changDuan;
     }
 
+    public void setChangCiList(ChangCiList changCiList) {
+        this.changCiList = changCiList;
+    }
+
     public ChangCiList getChangeCiList() {
         return changCiList;
     }

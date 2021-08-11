@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.dao.ChangCiDao;
 import me.xlgp.douyinzimu.db.AppDatabase;
@@ -101,19 +101,18 @@ public class ZimuDetailFloatingLayout {
             return;
         }
 
-        ChangCiDao changCiDao = AppDatabase.getInstance(context).changCiDao();
-        changCiDao.listByChangDuanId(changDuanInfo.getChangDuan().getId()).subscribe(new Consumer<List<me.xlgp.douyinzimu.model.ChangCi>>() {
-            @Override
-            public void accept(List<me.xlgp.douyinzimu.model.ChangCi> changCis) throws Throwable {
-                PingLunService.getInstance().setChangDuanInfo(changDuanInfo);
-                ChangCiList changCiList = new ChangCiList();
-                for (int i = 0; i < changCis.size(); i++) {
-                    changCiList.add(changCis.get(i));
-                }
-                changCiAdapter.updateData(changCiList);
-                setChangCiListObservable();
-            }
-        });
+        ChangCiDao changCiDao = AppDatabase.getInstance().changCiDao();
+        changCiDao.listByChangDuanId(changDuanInfo.getChangDuan().getId())
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(changCis -> {
+                    PingLunService.getInstance().setChangDuanInfo(changDuanInfo);
+                    ChangCiList changCiList = new ChangCiList();
+                    changCiList.addAll(changCis);
+                    changDuanInfo.setChangCiList(changCiList);
+                    changCiAdapter.updateData(changCiList);
+                    setChangCiListObservable();
+                    callback.call(true);
+                });
     }
 
     private void updateTitleView(String text) {

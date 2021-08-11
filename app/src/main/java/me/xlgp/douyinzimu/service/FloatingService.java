@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import me.xlgp.douyinzimu.db.AppDatabase;
 import me.xlgp.douyinzimu.obj.ZWindowManager;
 import me.xlgp.douyinzimu.util.FloatingHelper;
 import me.xlgp.douyinzimu.view.ZimuMainFloatingLayout;
@@ -23,7 +24,7 @@ public class FloatingService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        AppDatabase.build(this);
         if (FloatingHelper.enable(this) && !ZWindowManager.getInstance(this).containView(floatingLayout)) {
             floatingLayout = new ZimuMainFloatingLayout(this).getLayoutName();
         } else {

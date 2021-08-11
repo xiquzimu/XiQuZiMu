@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Observable;
 import java.util.Observer;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.dao.ChangDuanDao;
 import me.xlgp.douyinzimu.db.AppDatabase;
@@ -48,8 +50,8 @@ public class ZimuListFloatinglayout {
         ChangDuanAdapter changDuanAdapter = new ChangDuanAdapter(getChangDuanObservable());
         recyclerView.setAdapter(changDuanAdapter);
 
-        ChangDuanDao changDuanDao = AppDatabase.getInstance(context).changDuanDao();
-        changDuanDao.list().subscribe(list -> {
+        ChangDuanDao changDuanDao = AppDatabase.getInstance().changDuanDao();
+        changDuanDao.list().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(list -> {
             if (list == null || list.size() == 0) {
                 Toast.makeText(context, "无数据可更新", Toast.LENGTH_SHORT).show();
                 return;
