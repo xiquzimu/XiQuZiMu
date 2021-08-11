@@ -105,10 +105,10 @@ public class ZimuDetailFloatingLayout {
         changCiDao.listByChangDuanId(changDuanInfo.getChangDuan().getId())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(changCis -> {
-                    PingLunService.getInstance().setChangDuanInfo(changDuanInfo);
                     ChangCiList changCiList = new ChangCiList();
                     changCiList.addAll(changCis);
                     changDuanInfo.setChangCiList(changCiList);
+                    PingLunService.getInstance().setChangDuanInfo(changDuanInfo);
                     changCiAdapter.updateData(changCiList);
                     setChangCiListObservable();
                     callback.call(true);

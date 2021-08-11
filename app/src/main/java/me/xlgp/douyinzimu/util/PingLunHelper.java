@@ -8,7 +8,12 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
+import javax.crypto.interfaces.PBEKey;
+
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Observable;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.exception.NotFoundDouYinException;
 import me.xlgp.douyinzimu.model.ChangCi;
@@ -55,18 +60,36 @@ public class PingLunHelper {
         return context.getString(R.string.dy_input_layout_text).contentEquals(list.get(0));
     }
 
+
+    private static boolean isSendAccessibilityNodeInfo(AccessibilityNodeInfo nodeInfo) {
+        if (nodeInfo == null) return false;
+
+        if ("android.widget.ImageView".equals(nodeInfo.getClassName()) && "发送".equals(nodeInfo.getContentDescription()))
+            return true;
+        return false;
+    }
+
     /**
      * 获取发送按钮
      */
-    private static AccessibilityNodeInfo getSendNodeByInputNode(AccessibilityNodeInfo inputNodeInfo) {
+    private static AccessibilityNodeInfo getSendNodeByInputNode(AccessibilityNodeInfo rootNodeInfo) {
         try {
-            return inputNodeInfo.getParent().getParent().getParent().getChild(2);
-        } catch (Exception e) {
+            AccessibilityNodeInfo actionNode = rootNodeInfo.findFocus(AccessibilityNodeInfo.ACTION_FOCUS);
+            AccessibilityNodeInfo node;
+
+            //抖音version >= v17.2.0
+            node = actionNode.getParent().getParent().getParent().getChild(1);
+            if (isSendAccessibilityNodeInfo(node)) return node;
+
+            //抖音version <= v17.1.0
+            node = actionNode.getParent().getParent().getParent().getChild(2);
+            if (isSendAccessibilityNodeInfo(node)) return node;
+
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
         return null;
     }
-
     /**
      * 输入评论内容
      *
@@ -76,19 +99,21 @@ public class PingLunHelper {
      */
     public static void input(AccessibilityService service, ChangCi changCi, Callback<Long> callback) {
         AccessibilityNodeInfo node = null;
+
         try {
             node = service.getRootInActiveWindow().findFocus(AccessibilityNodeInfo.FOCUS_INPUT);
-            if (node == null) return;
             //输入数据
             Bundle arguments = new Bundle();
             arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, changCi.getContent());
-            boolean setTextSuccess = node.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
+            boolean setTextSuccess = Objects.requireNonNull(node).performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
             if (setTextSuccess) {
-                //发送事件
-                boolean sendSuccess = Objects.requireNonNull(getSendNodeByInputNode(node)).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                if (sendSuccess) { //发送成功之后，回调
-                    callback.call(changCi.getDelayMillis());
-                }
+                // 延时发送，等待发送按钮出现，　douyin 17.2.0 版本中发送按钮默认隐藏了，只有输入内容后大概延时120ms后显示
+                Observable.timer(200, TimeUnit.MILLISECONDS).subscribe(aLong -> {
+                    boolean sendSuccess = Objects.requireNonNull(getSendNodeByInputNode(service.getRootInActiveWindow())).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    if (sendSuccess) { //发送成功之后，回调
+                        callback.call(changCi.getDelayMillis());
+                    }
+                });
             }
         } catch (Exception e) {
             e.printStackTrace();
