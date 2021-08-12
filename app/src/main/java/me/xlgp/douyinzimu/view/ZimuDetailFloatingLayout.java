@@ -1,7 +1,6 @@
 package me.xlgp.douyinzimu.view;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,7 +57,6 @@ public class ZimuDetailFloatingLayout {
         //选择评论
         switchMaterial.setOnCheckedChangeListener((buttonView, isChecked) -> {
             PingLun.getInstance().change(isChecked);
-            Log.i("switchMaterial", "onViewListener: " + System.currentTimeMillis());
             PingLunService pingLunService = PingLunService.getInstance();
             if (PingLun.getInstance().disabled()) {
                 Toast.makeText(context, "评论已关闭", Toast.LENGTH_SHORT).show();
@@ -107,7 +105,9 @@ public class ZimuDetailFloatingLayout {
                 .subscribe(changCis -> {
                     ChangCiList changCiList = new ChangCiList();
                     changCiList.addAll(changCis);
+                    changCiList.setCursor(0);
                     changDuanInfo.setChangCiList(changCiList);
+
                     PingLunService.getInstance().setChangDuanInfo(changDuanInfo);
                     changCiAdapter.updateData(changCiList);
                     setChangCiListObservable();
