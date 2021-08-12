@@ -26,7 +26,7 @@ public class ChangDuanHelper {
     public static Observable<List<ChangDuanInfo>> getChangDuanInfoList(Context context) {
         return Observable.create((ObservableOnSubscribe<List<File>>) emitter -> emitter.onNext(loadFileList(context))).subscribeOn(Schedulers.io()).map(files -> {
             List<ChangDuanInfo> list = new ArrayList<>();
-            files.forEach(file->{
+            files.forEach(file -> {
                 list.add(parse(FileHelper.readFile(file.getAbsolutePath())));
             });
             return list;

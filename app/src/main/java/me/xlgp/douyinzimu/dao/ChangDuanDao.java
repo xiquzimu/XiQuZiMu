@@ -10,7 +10,7 @@ import io.reactivex.rxjava3.core.Single;
 import me.xlgp.douyinzimu.model.ChangDuan;
 
 @Dao
-public interface ChangDuanDao extends IDao<ChangDuan>{
+public interface ChangDuanDao extends IDao<ChangDuan> {
 
     @Query("select * from changduan")
     Flowable<List<ChangDuan>> list();

@@ -24,7 +24,7 @@ public class ChangDuan {
      */
     private Integer offset;
 
-    public ChangDuan(){
+    public ChangDuan() {
         //默认提前2s
         this.offset = -2;
     }

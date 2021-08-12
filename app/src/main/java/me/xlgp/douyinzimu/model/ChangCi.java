@@ -44,12 +44,12 @@ public class ChangCi {
         this.changDuanId = changDuanId;
     }
 
-    public void setShowTime(String showTime) {
-        this.showTime = showTime;
-    }
-
     public String getShowTime() {
         return showTime;
+    }
+
+    public void setShowTime(String showTime) {
+        this.showTime = showTime;
     }
 
     public long getDelayMillis() {

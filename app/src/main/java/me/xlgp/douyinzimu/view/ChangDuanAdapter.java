@@ -13,7 +13,6 @@ import java.util.List;
 
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.model.ChangDuan;
-import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 
 public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.ViewHolder> {
     private final ZimuListFloatinglayout.ChangDuanObservable changDuanObservable;

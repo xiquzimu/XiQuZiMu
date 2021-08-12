@@ -45,12 +45,12 @@ public class PingLunService {
         }
     }
 
-    public void setChangDuanInfo(ChangDuanInfo changDuanInfo) {
-        this.changDuanInfo = changDuanInfo;
-    }
-
     public ChangDuanInfo getChangDuanInfo() {
         return changDuanInfo;
+    }
+
+    public void setChangDuanInfo(ChangDuanInfo changDuanInfo) {
+        this.changDuanInfo = changDuanInfo;
     }
 
     public void clear() {
@@ -93,6 +93,8 @@ public class PingLunService {
                 if (e instanceof NotFoundDouYinException) {
                     Toast.makeText(douYinAccessibilityService, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
+                Toast.makeText(douYinAccessibilityService, "评论时出错", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
             }
         }
 

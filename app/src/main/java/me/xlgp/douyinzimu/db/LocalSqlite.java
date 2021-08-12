@@ -1,6 +1,5 @@
 package me.xlgp.douyinzimu.db;
 
-import android.content.Context;
 import android.content.res.AssetManager;
 
 import java.io.File;
@@ -10,17 +9,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.ObservableEmitter;
-import io.reactivex.rxjava3.core.ObservableOnSubscribe;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import me.xlgp.douyinzimu.constant.AppConstant;
 
 public class LocalSqlite {
     private String DB_PATH = "/data/data/me.xlgp.douyinzimu/databases/";
 
-    public void cloneDataAsync(AssetManager assetManager){
+    public void cloneDataAsync(AssetManager assetManager) {
         Observable.create(emitter -> cloneData(assetManager)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
     }
 

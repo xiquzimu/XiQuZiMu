@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
-
 import me.xlgp.douyinzimu.model.ChangCi;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 import me.xlgp.douyinzimu.service.PingLunService;

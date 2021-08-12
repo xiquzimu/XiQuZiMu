@@ -141,10 +141,10 @@ public class FileHelper {
         FileInputStream fis = null;
         FileOutputStream fos = null;
         try {
-            fis= new FileInputStream(context.getDatabasePath("xiqu.db"));
+            fis = new FileInputStream(context.getDatabasePath("xiqu.db"));
             fos = new FileOutputStream(FileHelper.getSourceDir(context) + "/xiqu.db");
             byte[] bytes = new byte[1024];
-            while (fis.read(bytes) != -1){
+            while (fis.read(bytes) != -1) {
                 fos.write(bytes);
             }
             fos.flush();
@@ -153,7 +153,7 @@ public class FileHelper {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (fis != null){
+            if (fis != null) {
                 try {
                     fis.close();
                 } catch (IOException e) {

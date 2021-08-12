@@ -16,6 +16,7 @@
         android:paddingRight="6dp"
         android:singleLine="true"
         android:textAlignment="textStart"
-        android:textColor="#FFFFFF" />
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
 
 </LinearLayout>
