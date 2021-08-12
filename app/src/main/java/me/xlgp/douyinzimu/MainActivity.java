@@ -16,12 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import me.xlgp.douyinzimu.db.AppDatabase;
 import me.xlgp.douyinzimu.db.LocalSqlite;
 import me.xlgp.douyinzimu.util.AccessibilitySettingsHelper;
-import me.xlgp.douyinzimu.util.FileHelper;
 import me.xlgp.douyinzimu.util.FloatingHelper;
-import me.xlgp.douyinzimu.util.StoragePermissionHelper;
 
 public class MainActivity extends AppCompatActivity {
     private Intent floatingIntent = null;
@@ -75,10 +72,6 @@ public class MainActivity extends AppCompatActivity {
         }
         if (!FloatingHelper.enable(this)) {
             Toast.makeText(this, "请开启悬浮权限", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!StoragePermissionHelper.check(this)) { //是否有存储文件读取权限
-            StoragePermissionHelper.request(this);
             return;
         }
         floatingIntent = FloatingHelper.getFloatingIntent(this);
