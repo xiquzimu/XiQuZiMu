@@ -6,12 +6,15 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Objects;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
@@ -83,9 +86,14 @@ public class MainActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread()).subscribe();
     }
 
-    public void onFetch(View view){
+    public void onFetch(View view) {
         AppDatabase.build(this);
-        new ChangDuanService().update("红灯响炮千家醉－祝福.lrc", throwable -> {
+        String title = ((EditText) findViewById(R.id.editTextChangDuanTitle)).getText().toString();
+        if ("".equals(title)) {
+            Toast.makeText(this, "请输入唱段名称", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        new ChangDuanService().update(Objects.requireNonNull(title.trim()), throwable -> {
             throwable.printStackTrace();
             Toast.makeText(MainActivity.this, "更新失败", Toast.LENGTH_SHORT).show();
         });

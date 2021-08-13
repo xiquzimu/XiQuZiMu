@@ -31,7 +31,7 @@ public class ChangDuanService {
     public void save(ChangDuanInfo changDuanInfo, Consumer<Object> nextConsumer, Consumer<Throwable> errorConsumer) {
 
         Disposable disposable = Observable.just(changDuanInfo)
-                .filter(changDuanInfo12 -> changDuanInfo12.getChangDuan() != null && changDuanInfo12.getChangeCiList() != null)
+                .filter(changDuanInfo12 -> changDuanInfo12.getChangDuan() != null && changDuanInfo12.getChangeCiList().size() > 0)
                 .map(changDuanInfo1 -> {
                     AppDatabase db = AppDatabase.getInstance();
                     long id = db.changDuanDao().insert(changDuanInfo1.getChangDuan());
