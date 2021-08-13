@@ -22,4 +22,5 @@
     <string name="clearCurrentZiMuBtn">清除</string>
     <string name="package_version" />
     <string name="floatingTitle">悬浮窗口</string>
+    <string name="fetchChangDuan">更新唱段</string>
 </resources>

@@ -22,7 +22,6 @@ import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 
 public class ChangDuanHelper {
 
-
     public static Observable<List<ChangDuanInfo>> getChangDuanInfoList(Context context) {
         return Observable.create((ObservableOnSubscribe<List<File>>) emitter -> emitter.onNext(loadFileList(context))).subscribeOn(Schedulers.io()).map(files -> {
             List<ChangDuanInfo> list = new ArrayList<>();

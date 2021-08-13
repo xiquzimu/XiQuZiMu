@@ -16,7 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import me.xlgp.douyinzimu.db.AppDatabase;
 import me.xlgp.douyinzimu.db.LocalSqlite;
+import me.xlgp.douyinzimu.service.ChangDuanService;
 import me.xlgp.douyinzimu.util.AccessibilitySettingsHelper;
 import me.xlgp.douyinzimu.util.FloatingHelper;
 
@@ -79,7 +81,14 @@ public class MainActivity extends AppCompatActivity {
             emitter.onNext(startService(floatingIntent));
         }).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe();
+    }
 
+    public void onFetch(View view){
+        AppDatabase.build(this);
+        new ChangDuanService().update("红灯响炮千家醉－祝福.lrc", throwable -> {
+            throwable.printStackTrace();
+            Toast.makeText(MainActivity.this, "更新失败", Toast.LENGTH_SHORT).show();
+        });
     }
 
     @Override
