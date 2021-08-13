@@ -11,8 +11,10 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.Disposable;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.exception.NotFoundDouYinException;
+import me.xlgp.douyinzimu.exception.NotFoundNodeException;
 import me.xlgp.douyinzimu.model.ChangCi;
 import me.xlgp.douyinzimu.obj.Callback;
 import me.xlgp.douyinzimu.service.PingLunService;
@@ -69,7 +71,7 @@ public class PingLunHelper {
     /**
      * 获取发送按钮
      */
-    private static AccessibilityNodeInfo getSendNodeByInputNode(AccessibilityNodeInfo rootNodeInfo) {
+    private static AccessibilityNodeInfo getSendNodeByInputNode(AccessibilityNodeInfo rootNodeInfo) throws Exception {
         try {
             AccessibilityNodeInfo actionNode = rootNodeInfo.findFocus(AccessibilityNodeInfo.ACTION_FOCUS);
             AccessibilityNodeInfo node;
@@ -77,15 +79,46 @@ public class PingLunHelper {
             //抖音version >= v17.2.0
             node = actionNode.getParent().getParent().getParent().getChild(1);
             if (isSendAccessibilityNodeInfo(node)) return node;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new NotFoundNodeException("没有找到发送按钮");
+        }
 
+        try {
+            AccessibilityNodeInfo actionNode = rootNodeInfo.findFocus(AccessibilityNodeInfo.ACTION_FOCUS);
+            AccessibilityNodeInfo node;
             //抖音version <= v17.1.0
             node = actionNode.getParent().getParent().getParent().getChild(2);
             if (isSendAccessibilityNodeInfo(node)) return node;
 
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new NotFoundNodeException("没有找到发送按钮");
         }
-        return null;
+        throw new Exception("获取发送按钮异常");
+    }
+
+    /**
+     * @param service  　service
+     * @param changCi  　内容
+     * @param callback 回调
+     * @param delay    延时时间 ms
+     * @param fisrt    用于标记第一次调用
+     */
+    public static void handleSend(AccessibilityService service, ChangCi changCi, Callback<Long> callback, int delay, final boolean fisrt) {
+        // 延时发送，等待发送按钮出现，　douyin 17.2.0 版本中发送按钮默认隐藏了，只有输入内容后大概延时120ms后显示
+        Disposable disposable = Observable.timer(delay, TimeUnit.MILLISECONDS).subscribe(aLong -> {
+            try {
+                boolean sendSuccess = Objects.requireNonNull(getSendNodeByInputNode(service.getRootInActiveWindow())).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                if (sendSuccess) { //发送成功之后，回调
+                    callback.call(changCi.getDelayMillis());
+                }
+            } catch (NotFoundNodeException e) {
+                //若 第一次调用后发送按钮仍没显示，则再调用一次
+                if (!fisrt) return;
+                handleSend(service, changCi, callback, 100, false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     /**
@@ -105,13 +138,7 @@ public class PingLunHelper {
             arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, changCi.getContent());
             boolean setTextSuccess = Objects.requireNonNull(node).performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
             if (setTextSuccess) {
-                // 延时发送，等待发送按钮出现，　douyin 17.2.0 版本中发送按钮默认隐藏了，只有输入内容后大概延时120ms后显示
-                Observable.timer(200, TimeUnit.MILLISECONDS).subscribe(aLong -> {
-                    boolean sendSuccess = Objects.requireNonNull(getSendNodeByInputNode(service.getRootInActiveWindow())).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                    if (sendSuccess) { //发送成功之后，回调
-                        callback.call(changCi.getDelayMillis());
-                    }
-                });
+                handleSend(service, changCi, callback, 200, true);
             }
         } catch (Exception e) {
             e.printStackTrace();

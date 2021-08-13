@@ -23,7 +23,7 @@ public class HttpURLConnectionUtil {
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(consumer);
     }
 
-    public static List<String> doGetList(String httpUrl){
+    public static List<String> doGetList(String httpUrl) {
         List<String> list = new ArrayList<>();
         doGet(httpUrl, list);
         return list;
