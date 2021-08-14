@@ -11,21 +11,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
+import me.xlgp.douyinzimu.designpatterns.ChangDuanData;
 import me.xlgp.douyinzimu.model.ChangCi;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 import me.xlgp.douyinzimu.service.PingLunService;
 
 public class ChangCiAdapter extends RecyclerView.Adapter<ChangCiAdapter.ViewHolder> {
-    private final BaseObservable<ChangCi> changCiObservable;
-    private ChangCiList changCiList;
 
-    public ChangCiAdapter(ChangCiList changCiList, BaseObservable<ChangCi> changCiObservable) {
+    private ChangCiList changCiList;
+    private ChangDuanData changDuanData;
+    private BaseObservable<ChangCi> changCiBaseObservable;
+
+    public ChangCiAdapter(ChangCiList changCiList, BaseObservable<ChangCi> changCiBaseObservable) {
         this.changCiList = changCiList;
-        this.changCiObservable = changCiObservable;
+        this.changCiBaseObservable = changCiBaseObservable;
+        this.changDuanData = ChangDuanData.getInstance();
+        this.changDuanData.observe((o, arg) -> updateData(((ChangDuanData) o).getData().getChangeCiList()));
     }
 
-    public ChangCiAdapter(ZimuDetailFloatingLayout.ChangCiObservable changCiObservable) {
-        this(new ChangCiList(), changCiObservable);
+    public ChangCiAdapter(BaseObservable<ChangCi> changCiBaseObservable) {
+        this(new ChangCiList(), changCiBaseObservable);
     }
 
     @NonNull
@@ -52,19 +57,20 @@ public class ChangCiAdapter extends RecyclerView.Adapter<ChangCiAdapter.ViewHold
 
     protected class ViewHolder extends RecyclerView.ViewHolder {
 
+        Button button = itemView.findViewById(R.id.zimu_item_btn);
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
         }
 
         @SuppressLint("SetTextI18n")
         public void setData(me.xlgp.douyinzimu.model.ChangCi changCi, int position) {
-            Button button = itemView.findViewById(R.id.zimu_item_btn);
+
             button.setText((position + 1) + ". " + changCi.getContent());
             button.setOnClickListener(v -> {
                 // 设置当前唱词
                 PingLunService.getInstance().getChangDuanInfo().getChangeCiList(position);
-                //重新触发评论功能
-                changCiObservable.setData(changCi);
+                changCiBaseObservable.setData(changCi);
             });
         }
     }

@@ -13,19 +13,16 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import java.util.Observable;
 import java.util.Observer;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import me.xlgp.douyinzimu.R;
-import me.xlgp.douyinzimu.dao.ChangCiDao;
-import me.xlgp.douyinzimu.db.AppDatabase;
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
+import me.xlgp.douyinzimu.designpatterns.ChangDuanData;
 import me.xlgp.douyinzimu.model.ChangCi;
+import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.obj.Callback;
 import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
+import me.xlgp.douyinzimu.service.ChangCiService;
 import me.xlgp.douyinzimu.service.PingLunService;
 
 public class ZimuDetailFloatingLayout {
@@ -34,6 +31,8 @@ public class ZimuDetailFloatingLayout {
     private Context context;
     private ChangCiAdapter changCiAdapter;
     private SwitchMaterial switchMaterial;
+    private ChangDuanData changDuanData;
+
 
     public ZimuDetailFloatingLayout(View view) {
         init(view);
@@ -44,13 +43,8 @@ public class ZimuDetailFloatingLayout {
     private void init(View view) {
         this.rootLayout = view;
         this.context = view.getContext();
+        changDuanData = ChangDuanData.getInstance();
         this.switchMaterial = this.rootLayout.findViewById(R.id.pingLunSwitchMaterial);
-    }
-
-    private void setChangCiListObservable() {
-        ChangCiList.ChangCiListObservable changCiListObservable = new ChangCiList.ChangCiListObservable();
-        changCiListObservable.addObserver(new ZimuDetailFloatingLayout.ChangCiListObservar());
-        PingLunService.getInstance().getChangDuanInfo().getChangeCiList().setChangCiListObservable(changCiListObservable);
     }
 
     private void onViewListener() {
@@ -74,111 +68,66 @@ public class ZimuDetailFloatingLayout {
         recyclerView = this.rootLayout.findViewById(R.id.zimu_detail_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        changCiAdapter = new ChangCiAdapter(getChangCiObservable());
+        changCiAdapter = new ChangCiAdapter(new ChangCiObservable(new ChangCiObserve()));
+
         recyclerView.setAdapter(changCiAdapter);
     }
 
     /**
      * 获取唱词并初始化唱词后是否立即评论
      */
-    public void asyncRun(ChangDuanInfo changDuanInfo) {
-        asyncGetChangDuan(changDuanInfo, o -> {
+    public void asyncRun(ChangDuan changDuan) {
+        asyncGetChangDuan(changDuan, o -> {
             switchMaterial.setChecked(false);
             switchMaterial.setChecked(true);
         });
     }
 
-    public void asyncGetChangDuan(ChangDuanInfo changDuanInfo, Callback<Object> callback) {
+    public void asyncGetChangDuan(ChangDuan changDuan, Callback<Object> callback) {
         //异步获取唱词
         if (changCiAdapter == null) {
             Toast.makeText(context, "唱词列表初始化异常", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (changDuanInfo == null) {
+        if (changDuan == null) {
             Toast.makeText(context, "请选择唱段", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        ChangCiDao changCiDao = AppDatabase.getInstance().changCiDao();
-        changCiDao.listByChangDuanId(changDuanInfo.getChangDuan().getId())
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(changCis -> {
-                    ChangCiList changCiList = new ChangCiList();
-                    changCiList.addAll(changCis);
-                    changCiList.setCursor(0);
-                    changDuanInfo.setChangCiList(changCiList);
+        ChangCiService changCiService = new ChangCiService();
+        changCiService.listByChangDuanId(changDuan.getId(), changCis -> {
+            ChangCiList changCiList = new ChangCiList();
+            changCiList.addAll(changCis);
+            changCiList.setCursor(0);
+            changCiList.observe(new ChangCiObserve());
 
-                    PingLunService.getInstance().setChangDuanInfo(changDuanInfo);
-                    changCiAdapter.updateData(changCiList);
-                    setChangCiListObservable();
-                    callback.call(true);
-                });
+            ChangDuanInfo changDuanInfo = new ChangDuanInfo();
+            changDuanInfo.setChangCiList(changCiList);
+            changDuanInfo.setChangDuan(changDuan);
+
+            changDuanData.setData(changDuanInfo);
+            changCiService.dispose();
+            callback.call(true);
+        });
     }
 
     private void updateTitleView(String text) {
         ((TextView) rootLayout.findViewById(R.id.currentZimuTitleTextView)).setText(text);
     }
 
-    private ChangCiObservable getChangCiObservable() {
-        ChangCiObservable changCiObservable = new ChangCiObservable();
-        changCiObservable.addObserver(new ChangCiObservar());
-        return changCiObservable;
-    }
-
-    static class ChangCiObservable extends BaseObservable<ChangCi> {
-    }
-
-    class ChangDuanObserve implements io.reactivex.rxjava3.core.Observer<ChangDuanInfo> {
-        private final Callback<Object> callback;
-
-        public ChangDuanObserve(Callback<Object> callback) {
-            this.callback = callback;
-        }
-
-        @Override
-        public void onSubscribe(@NonNull Disposable d) {
-
-        }
-
-        @Override
-        public void onNext(@NonNull ChangDuanInfo changDuan) {
-            PingLunService.getInstance().setChangDuanInfo(changDuan);
-            changCiAdapter.updateData(changDuan.getChangeCiList(0));
-            setChangCiListObservable();
-            if (callback != null) callback.call(null);
-        }
-
-        @Override
-        public void onError(@NonNull Throwable e) {
-
-        }
-
-        @Override
-        public void onComplete() {
-
+    class ChangCiObservable extends BaseObservable<ChangCi> {
+        public ChangCiObservable(Observer observer) {
+            this.addObserver(observer);
         }
     }
 
-    class ChangCiListObservar implements Observer {
-        @Override
-        public void update(Observable o, Object arg) {
-            ChangCiList.ChangCiListObservable observable = (ChangCiList.ChangCiListObservable) o;
-            updateTitleView(observable.getData().getContent());
-        }
-    }
-
-    class ChangCiObservar implements Observer {
-
-        public ChangCiObservar() {
-
-        }
+    class ChangCiObserve implements Observer {
 
         @Override
         public void update(Observable o, Object arg) {
-            ChangCiObservable observable = (ChangCiObservable) o;
-            //点击当前唱词应立即执行
             PingLunService.getInstance().start(0);
-            updateTitleView(observable.getData().getContent());
+            ChangCi changCi = (ChangCi) arg;
+            updateTitleView(changCi.getContent());
         }
     }
 }

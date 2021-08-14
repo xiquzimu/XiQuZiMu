@@ -10,6 +10,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import me.xlgp.douyinzimu.designpatterns.ChangDuanData;
 import me.xlgp.douyinzimu.exception.NotFoundDouYinException;
 import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
@@ -33,6 +34,9 @@ public class PingLunService {
 
     public PingLunService builder(DouYinAccessibilityService douYinAccessibilityService) {
         this.douYinAccessibilityService = douYinAccessibilityService;
+        ChangDuanData changDuanData = ChangDuanData.getInstance();
+        PingLunService thiz = this;
+        changDuanData.observe((o, arg) -> thiz.setChangDuanInfo(((ChangDuanData) o).getData()));
         return this;
     }
 
@@ -92,8 +96,9 @@ public class PingLunService {
             } catch (Exception e) {
                 if (e instanceof NotFoundDouYinException) {
                     Toast.makeText(douYinAccessibilityService, e.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(douYinAccessibilityService, "评论时出错", Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(douYinAccessibilityService, "评论时出错", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
         }

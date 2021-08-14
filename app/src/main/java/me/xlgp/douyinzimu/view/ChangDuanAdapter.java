@@ -1,5 +1,6 @@
 package me.xlgp.douyinzimu.view;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +16,17 @@ import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.model.ChangDuan;
 
 public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.ViewHolder> {
-    private final ZimuListFloatinglayout.ChangDuanObservable changDuanObservable;
+
+    private final ZimuMainFloatingLayout.ChangDuanObservable changDuanObservable;
     private List<ChangDuan> changDuanInfoList;
 
-    public ChangDuanAdapter(List<ChangDuan> changDuanInfoList, ZimuListFloatinglayout.ChangDuanObservable observable) {
+    public ChangDuanAdapter(List<ChangDuan> changDuanInfoList, ZimuMainFloatingLayout.ChangDuanObservable changDuanObservable) {
         this.changDuanInfoList = changDuanInfoList;
-        this.changDuanObservable = observable;
+        this.changDuanObservable = changDuanObservable;
     }
 
-    public ChangDuanAdapter(ZimuListFloatinglayout.ChangDuanObservable observable) {
-        this(new ArrayList<>(), observable);
+    public ChangDuanAdapter(ZimuMainFloatingLayout.ChangDuanObservable changDuanObservable) {
+        this(new ArrayList<>(), changDuanObservable);
     }
 
     public void updateData(List<ChangDuan> list) {
@@ -66,10 +68,10 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
             itemView.setOnClickListener(v -> changDuanObservable.setData(changDuanInfo));
         }
 
+        @SuppressLint("SetTextI18n")
         public void setData(ChangDuan changDuanInfo, int position) {
             noView.setText(String.valueOf(position + 1));
             titleView.setText(changDuanInfo.getName());
-            //todo 设置剧种和剧目
             subTitleView.setText(changDuanInfo.getJuZhong() + " " + changDuanInfo.getJuMu());
             this.changDuanInfo = changDuanInfo;
         }

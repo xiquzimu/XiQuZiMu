@@ -17,8 +17,8 @@ import java.util.Observer;
 
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
+import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.obj.LayoutParamsWithPoint;
-import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 
 public class ZimuMainFloatingLayout extends BasePanelLayout {
     private ViewPager2 viewPager2;
@@ -94,7 +94,7 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
         }
     }
 
-    class ChangDuanObservable extends BaseObservable<ChangDuanInfo> {
+    class ChangDuanObservable extends BaseObservable<ChangDuan> {
         public ChangDuanObservable() {
             this.addObserver(new ChangeDuanObserver());
         }

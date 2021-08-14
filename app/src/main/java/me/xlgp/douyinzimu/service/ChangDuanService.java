@@ -8,7 +8,9 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import me.xlgp.douyinzimu.dao.ChangDuanDao;
 import me.xlgp.douyinzimu.db.AppDatabase;
+import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.obj.Callback;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
@@ -25,6 +27,12 @@ public class ChangDuanService {
             emitter.onNext(next);
         }).subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(nextConsumer, errorConsumer);
+        compositeDisposable.add(disposable);
+    }
+
+    public void list(Consumer<List<ChangDuan>> consumer) {
+        ChangDuanDao changDuanDao = AppDatabase.getInstance().changDuanDao();
+        Disposable disposable = changDuanDao.list().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(consumer);
         compositeDisposable.add(disposable);
     }
 

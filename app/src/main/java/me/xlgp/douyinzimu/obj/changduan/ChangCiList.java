@@ -2,22 +2,24 @@ package me.xlgp.douyinzimu.obj.changduan;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
+import java.util.Observable;
+import java.util.Observer;
 
-import me.xlgp.douyinzimu.designpatterns.BaseObservable;
 import me.xlgp.douyinzimu.model.ChangCi;
 
 public class ChangCiList extends ArrayList<ChangCi> {
-    private ListIterator<ChangCi> listIterator = null;
-    private ChangCiListObservable changCiListObservable;
+    private ListIterator<ChangCi> listIterator;
+    private ChangCiObservable changCiObservable;
 
     public ChangCiList() {
+        changCiObservable = new ChangCiObservable();
         listIterator = this.listIterator();
     }
 
     public ChangCi next() {
         if (this.listIterator.hasNext()) {
             ChangCi changCi = this.listIterator.next();
-            changCiListObservable.setData(changCi);
+            changCiObservable.notifyObservers(changCi);
             return changCi;
         }
         return null;
@@ -25,10 +27,6 @@ public class ChangCiList extends ArrayList<ChangCi> {
 
     public boolean hasNext() {
         return listIterator.hasNext();
-    }
-
-    public void setChangCiListObservable(ChangCiListObservable changCiListObservable) {
-        this.changCiListObservable = changCiListObservable;
     }
 
     public ChangCi current() {
@@ -39,6 +37,11 @@ public class ChangCiList extends ArrayList<ChangCi> {
         listIterator = this.listIterator(cursor);
     }
 
-    public static class ChangCiListObservable extends BaseObservable<ChangCi> {
+    public void observe(Observer observer) {
+        changCiObservable.addObserver(observer);
+    }
+
+    public class ChangCiObservable extends Observable {
+
     }
 }

@@ -2,7 +2,7 @@ package me.xlgp.douyinzimu.designpatterns;
 
 import java.util.Observable;
 
-public class BaseObservable<T> extends Observable {
+public abstract class BaseObservable<T> extends Observable {
     private T data;
 
     public T getData() {
