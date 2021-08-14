@@ -49,17 +49,6 @@ public class ChangDuanService {
 
     public void update(String name, Callback<Throwable> callback) {
         String httpBaseUrl = "https://gitee.com/xlgp/opera-lyrics/raw/master/%E9%BB%84%E6%A2%85%E6%88%8F/";
-        HttpURLConnectionUtil.asyncGet(httpBaseUrl + name, new Consumer<List<String>>() {
-            @Override
-            public void accept(List<String> list) throws Throwable {
-                save(ChangDuanHelper.parse(list), null, new Consumer<Throwable>() {
-
-                    @Override
-                    public void accept(Throwable o) throws Throwable {
-                        callback.call(o);
-                    }
-                });
-            }
-        });
+        HttpURLConnectionUtil.asyncGet(httpBaseUrl + name, list -> save(ChangDuanHelper.parse(list), null, callback::call));
     }
 }
