@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import me.xlgp.douyinzimu.EmojiManager;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
 import me.xlgp.douyinzimu.designpatterns.ChangDuanData;
@@ -88,6 +90,22 @@ public class ZimuDetailFloatingLayout {
         });
     }
 
+    private ChangCiList parseChangCiList(List<ChangCi> changCis) {
+        ChangCiList changCiList = new ChangCiList();
+        for (int i = 0; i < changCis.size(); i++) {
+            ChangCi changCi = changCis.get(i);
+
+            changCi.setContent(EmojiManager.SMALL_BLUE_DIAMOND + changCi.getContent());
+            changCiList.add(changCi);
+        }
+        changCiList.setCursor(0);
+        changCiList.observe((o, arg) -> {
+            ChangCi changCi = (ChangCi) arg;
+            updateTitleView(changCi.getContent());
+        });
+        return changCiList;
+    }
+
     public void asyncGetChangDuan(ChangDuan changDuan, Callback<Object> callback) {
         //异步获取唱词
         if (changCiAdapter == null) {
@@ -101,16 +119,10 @@ public class ZimuDetailFloatingLayout {
 
         ChangCiService changCiService = new ChangCiService();
         changCiService.listByChangDuanId(changDuan.getId(), changCis -> {
-            ChangCiList changCiList = new ChangCiList();
-            changCiList.addAll(changCis);
-            changCiList.setCursor(0);
-            changCiList.observe((o, arg) -> {
-                ChangCi changCi = (ChangCi) arg;
-                updateTitleView(changCi.getContent());
-            });
+
 
             ChangDuanInfo changDuanInfo = new ChangDuanInfo();
-            changDuanInfo.setChangCiList(changCiList);
+            changDuanInfo.setChangCiList(parseChangCiList(changCis));
             changDuanInfo.setChangDuan(changDuan);
 
             changDuanData.setData(changDuanInfo);

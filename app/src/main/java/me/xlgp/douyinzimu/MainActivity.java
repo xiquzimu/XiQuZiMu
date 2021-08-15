@@ -83,16 +83,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void onFetch(View view) {
         startActivity(new Intent(this, FetchActivity.class));
-        return;
-//        String title = ((EditText) findViewById(R.id.editTextChangDuanTitle)).getText().toString();
-//        if ("".equals(title)) {
-//            Toast.makeText(this, "请输入唱段名称", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        new ChangDuanService().update(Objects.requireNonNull(title.trim()), throwable -> {
-//            throwable.printStackTrace();
-//            Toast.makeText(MainActivity.this, "更新失败", Toast.LENGTH_SHORT).show();
-//        });
     }
 
     @Override

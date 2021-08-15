@@ -19,7 +19,6 @@ public class FetchGiteeService {
                 }
             }
             data.setValue(nameList);
-
         });
     }
 }

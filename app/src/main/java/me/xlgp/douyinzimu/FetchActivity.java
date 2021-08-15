@@ -3,12 +3,9 @@ package me.xlgp.douyinzimu;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.List;
 
 import me.xlgp.douyinzimu.adapter.NameListAdapter;
 import me.xlgp.douyinzimu.db.AppDatabase;
@@ -32,12 +29,12 @@ public class FetchActivity extends AppCompatActivity {
         NameListAdapter nameListAdapter = new NameListAdapter();
         recyclerView.setAdapter(nameListAdapter);
         nameListAdapter.setOnItemClickListener((itemView, data, position) -> {
-            new ChangDuanService().update(data.substring(1), throwable -> throwable.printStackTrace());
+            new ChangDuanService().update(data.substring(1), Throwable::printStackTrace);
         });
 
         fetchViewModel = new ViewModelProvider(this).get(FetchViewModel.class);
 
         new FetchGiteeService().getNameList(fetchViewModel.getNameList());
-        fetchViewModel.getNameList().observe(this, strings -> nameListAdapter.updateData(strings));
+        fetchViewModel.getNameList().observe(this, nameListAdapter::updateData);
     }
 }
