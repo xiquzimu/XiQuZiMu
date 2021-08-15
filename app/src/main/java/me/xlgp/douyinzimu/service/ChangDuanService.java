@@ -56,7 +56,7 @@ public class ChangDuanService {
     }
 
     public void update(String name, Callback<Throwable> callback) {
-        String httpBaseUrl = "https://gitee.com/xlgp/opera-lyrics/raw/master/%E9%BB%84%E6%A2%85%E6%88%8F/";
+        String httpBaseUrl = "https://gitee.com/xlgp/opera-lyrics/raw/master";
         HttpURLConnectionUtil.asyncGet(httpBaseUrl + name, list -> save(ChangDuanHelper.parse(list), null, callback::call));
     }
 }

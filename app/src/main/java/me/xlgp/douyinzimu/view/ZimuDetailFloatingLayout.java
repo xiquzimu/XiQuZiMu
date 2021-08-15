@@ -1,6 +1,7 @@
 package me.xlgp.douyinzimu.view;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,7 +69,11 @@ public class ZimuDetailFloatingLayout {
         recyclerView = this.rootLayout.findViewById(R.id.zimu_detail_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        changCiAdapter = new ChangCiAdapter(new ChangCiObservable(new ChangCiObserve()));
+        changCiAdapter = new ChangCiAdapter();
+        changCiAdapter.setOnItemClickListener((itemView, data, position) -> {
+            PingLunService.getInstance().start(0);
+            updateTitleView(data.getContent());
+        });
 
         recyclerView.setAdapter(changCiAdapter);
     }
@@ -99,7 +104,10 @@ public class ZimuDetailFloatingLayout {
             ChangCiList changCiList = new ChangCiList();
             changCiList.addAll(changCis);
             changCiList.setCursor(0);
-            changCiList.observe(new ChangCiObserve());
+            changCiList.observe((o, arg) -> {
+                ChangCi changCi = (ChangCi) arg;
+                updateTitleView(changCi.getContent());
+            });
 
             ChangDuanInfo changDuanInfo = new ChangDuanInfo();
             changDuanInfo.setChangCiList(changCiList);
@@ -112,6 +120,7 @@ public class ZimuDetailFloatingLayout {
     }
 
     private void updateTitleView(String text) {
+        Log.i("TAG", "updateTitleView: " + text);
         ((TextView) rootLayout.findViewById(R.id.currentZimuTitleTextView)).setText(text);
     }
 

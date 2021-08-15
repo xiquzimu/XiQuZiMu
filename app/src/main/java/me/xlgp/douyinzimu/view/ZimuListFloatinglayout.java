@@ -44,7 +44,8 @@ public class ZimuListFloatinglayout {
         recyclerView = this.rootLayout.findViewById(R.id.zimu_list_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        ChangDuanAdapter changDuanAdapter = new ChangDuanAdapter(changDuanObservable);
+        ChangDuanAdapter changDuanAdapter = new ChangDuanAdapter();
+        changDuanAdapter.setOnItemClickListener((itemView, data, position) -> changDuanObservable.setData(data));
         recyclerView.setAdapter(changDuanAdapter);
 
         ChangDuanService changDuanService = new ChangDuanService();

@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DouYinZiMu"
         tools:ignore="HardcodedDebugMode">
-
+        <activity android:name=".FetchActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:exported="true">

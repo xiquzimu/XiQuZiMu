@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,14 +13,10 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.Objects;
-
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import me.xlgp.douyinzimu.db.AppDatabase;
 import me.xlgp.douyinzimu.db.LocalSqlite;
-import me.xlgp.douyinzimu.service.ChangDuanService;
 import me.xlgp.douyinzimu.util.AccessibilitySettingsHelper;
 import me.xlgp.douyinzimu.util.FloatingHelper;
 
@@ -87,16 +82,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onFetch(View view) {
-        AppDatabase.build(this);
-        String title = ((EditText) findViewById(R.id.editTextChangDuanTitle)).getText().toString();
-        if ("".equals(title)) {
-            Toast.makeText(this, "请输入唱段名称", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        new ChangDuanService().update(Objects.requireNonNull(title.trim()), throwable -> {
-            throwable.printStackTrace();
-            Toast.makeText(MainActivity.this, "更新失败", Toast.LENGTH_SHORT).show();
-        });
+        startActivity(new Intent(this, FetchActivity.class));
+        return;
+//        String title = ((EditText) findViewById(R.id.editTextChangDuanTitle)).getText().toString();
+//        if ("".equals(title)) {
+//            Toast.makeText(this, "请输入唱段名称", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        new ChangDuanService().update(Objects.requireNonNull(title.trim()), throwable -> {
+//            throwable.printStackTrace();
+//            Toast.makeText(MainActivity.this, "更新失败", Toast.LENGTH_SHORT).show();
+//        });
     }
 
     @Override

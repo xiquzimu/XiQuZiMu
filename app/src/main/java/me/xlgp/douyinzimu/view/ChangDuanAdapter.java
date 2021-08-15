@@ -7,57 +7,35 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import me.xlgp.douyinzimu.R;
+import me.xlgp.douyinzimu.adapter.BaseAdapter;
 import me.xlgp.douyinzimu.model.ChangDuan;
 
-public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.ViewHolder> {
+public class ChangDuanAdapter extends BaseAdapter<ChangDuan> {
 
-    private final ZimuMainFloatingLayout.ChangDuanObservable changDuanObservable;
-    private List<ChangDuan> changDuanInfoList;
-
-    public ChangDuanAdapter(List<ChangDuan> changDuanInfoList, ZimuMainFloatingLayout.ChangDuanObservable changDuanObservable) {
-        this.changDuanInfoList = changDuanInfoList;
-        this.changDuanObservable = changDuanObservable;
+    public ChangDuanAdapter(List<ChangDuan> changDuanInfoList) {
+        super(changDuanInfoList);
     }
 
-    public ChangDuanAdapter(ZimuMainFloatingLayout.ChangDuanObservable changDuanObservable) {
-        this(new ArrayList<>(), changDuanObservable);
-    }
-
-    public void updateData(List<ChangDuan> list) {
-        changDuanInfoList = list;
-        notifyDataSetChanged();
+    public ChangDuanAdapter() {
+        this(new ArrayList<>());
     }
 
     @NonNull
     @Override
-    public ChangDuanAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public BaseAdapter.ViewHolder<ChangDuan> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.zimu_list_item_layout, parent, false);
         return new ViewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull ChangDuanAdapter.ViewHolder holder, int position) {
-        ChangDuan changDuanInfo = changDuanInfoList.get(position);
-        holder.setData(changDuanInfo, position);
-    }
-
-    @Override
-    public int getItemCount() {
-        return changDuanInfoList.size();
-    }
-
-    protected class ViewHolder extends RecyclerView.ViewHolder {
+    protected class ViewHolder extends BaseAdapter.ViewHolder<ChangDuan> {
         private final TextView titleView;
         private final TextView subTitleView;
         private final TextView noView;
-
-        private ChangDuan changDuanInfo;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -65,15 +43,17 @@ public class ChangDuanAdapter extends RecyclerView.Adapter<ChangDuanAdapter.View
             subTitleView = itemView.findViewById(R.id.subTitle);
             noView = itemView.findViewById(R.id.no);
             //当点击唱段时，通知观察者
-            itemView.setOnClickListener(v -> changDuanObservable.setData(changDuanInfo));
+            itemView.setOnClickListener(v -> {
+                onItemClickListener.onItemClick(itemView, data, this.getAdapterPosition());
+            });
         }
 
         @SuppressLint("SetTextI18n")
-        public void setData(ChangDuan changDuanInfo, int position) {
-            noView.setText(String.valueOf(position + 1));
+        public void setData(ChangDuan changDuanInfo) {
+            super.setData(changDuanInfo);
+            noView.setText(String.valueOf(getAdapterPosition() + 1));
             titleView.setText(changDuanInfo.getName());
             subTitleView.setText(changDuanInfo.getJuZhong() + " " + changDuanInfo.getJuMu());
-            this.changDuanInfo = changDuanInfo;
         }
     }
 }
