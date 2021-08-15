@@ -1,7 +1,6 @@
 package me.xlgp.douyinzimu.view;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +17,7 @@ import java.util.Observer;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
 import me.xlgp.douyinzimu.model.ChangDuan;
-import me.xlgp.douyinzimu.obj.LayoutParamsWithPoint;
+import me.xlgp.douyinzimu.obj.ZimuLayoutParams;
 
 public class ZimuMainFloatingLayout extends BasePanelLayout {
     private ViewPager2 viewPager2;
@@ -26,7 +25,7 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
 
     public ZimuMainFloatingLayout(@NonNull Context context) {
         super(context, R.layout.zimu_viewpager2_layout);
-        super.build(new LayoutParamsWithPoint(new Point(getFullWidth(), 0)), this.getClass().getName());
+        super.build(new ZimuLayoutParams.WithFullWidth(), this.getClass().getName());
         init();
     }
 
