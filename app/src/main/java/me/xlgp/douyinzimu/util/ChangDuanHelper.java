@@ -11,27 +11,52 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.ObservableOnSubscribe;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import me.xlgp.douyinzimu.EmojiManager;
 import me.xlgp.douyinzimu.constant.LycConstant;
 import me.xlgp.douyinzimu.model.ChangCi;
+import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 
 public class ChangDuanHelper {
 
-    public static Observable<List<ChangDuanInfo>> getChangDuanInfoList(Context context) {
-        return Observable.create((ObservableOnSubscribe<List<File>>) emitter -> emitter.onNext(loadFileList(context))).subscribeOn(Schedulers.io()).map(files -> {
-            List<ChangDuanInfo> list = new ArrayList<>();
-            files.forEach(file -> {
-                list.add(parse(FileHelper.readFile(file.getAbsolutePath())));
-            });
-            return list;
-        }).unsubscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    /**
+     * 添加字幕前后缀
+     */
+    private static void addBeforeChangCi(ChangDuan changDuan, ChangCiList changCiList) {
+        ChangCi preChangCi = new ChangCi();
+        preChangCi.setContent(EmojiManager.SMALL_BLUE_DIAMOND + "请欣赏" + changDuan.getJuZhong() + "《" + changDuan.getJuMu() + "》" + "选段：" + changDuan.getName());
+        preChangCi.setDelayMillis(1000);
+        changCiList.add(preChangCi);
     }
 
+    private static void addAfterChangCi(ChangDuan changDuan, ChangCiList changCiList) {
+
+        changCiList.get(changCiList.size() - 1).setDelayMillis(2500);
+
+        ChangCi afterChangCi = new ChangCi();
+        afterChangCi.setDelayMillis(1000);
+        afterChangCi.setContent(EmojiManager.SMALL_BLUE_DIAMOND + "本曲出自" + changDuan.getJuZhong() + "《" + changDuan.getJuMu() + "》选段：" + changDuan.getName());
+        changCiList.add(afterChangCi);
+
+        ChangCi thankChangCi = new ChangCi();
+        thankChangCi.setContent(EmojiManager.SMALL_BLUE_DIAMOND + "谢谢各位聆听");
+        changCiList.add(thankChangCi);
+    }
+
+    public static ChangCiList parseChangCiList(ChangDuan changDuan, List<ChangCi> changCis) {
+        ChangCiList changCiList = new ChangCiList();
+
+        addBeforeChangCi(changDuan, changCiList);
+        for (int i = 0; i < changCis.size(); i++) {
+            changCis.get(i).setContent(EmojiManager.SMALL_BLUE_DIAMOND + changCis.get(i).getContent());
+            changCiList.add(changCis.get(i));
+        }
+        addAfterChangCi(changDuan, changCiList);
+
+        changCiList.setCursor(0);
+        return changCiList;
+    }
 
     /**
      * 从存储中加载唱段名称

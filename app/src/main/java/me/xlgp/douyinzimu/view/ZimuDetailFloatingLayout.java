@@ -12,7 +12,6 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.List;
 
-import me.xlgp.douyinzimu.EmojiManager;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.designpatterns.ChangDuanData;
 import me.xlgp.douyinzimu.model.ChangCi;
@@ -23,6 +22,7 @@ import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 import me.xlgp.douyinzimu.service.ChangCiService;
 import me.xlgp.douyinzimu.service.PingLunService;
+import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
 public class ZimuDetailFloatingLayout {
     private RecyclerView recyclerView = null;
@@ -90,15 +90,8 @@ public class ZimuDetailFloatingLayout {
         recyclerView.smoothScrollToPosition(position + 4);
     }
 
-    private ChangCiList parseChangCiList(List<ChangCi> changCis) {
-        ChangCiList changCiList = new ChangCiList();
-        for (int i = 0; i < changCis.size(); i++) {
-            ChangCi changCi = changCis.get(i);
-
-            changCi.setContent(EmojiManager.SMALL_BLUE_DIAMOND + changCi.getContent());
-            changCiList.add(changCi);
-        }
-        changCiList.setCursor(0);
+    private ChangCiList parseChangCiList(ChangDuan changDuan, List<ChangCi> changCis) {
+        ChangCiList changCiList = ChangDuanHelper.parseChangCiList(changDuan, changCis);
         changCiList.observe((o, arg) -> {
             ChangCi changCi = (ChangCi) arg;
             updateTitleView(changCi.getContent());
@@ -122,7 +115,7 @@ public class ZimuDetailFloatingLayout {
         changCiService.listByChangDuanId(changDuan.getId(), changCis -> {
 
             ChangDuanInfo changDuanInfo = new ChangDuanInfo();
-            changDuanInfo.setChangCiList(parseChangCiList(changCis));
+            changDuanInfo.setChangCiList(parseChangCiList(changDuan, changCis));
             changDuanInfo.setChangDuan(changDuan);
 
             changDuanData.setData(changDuanInfo);
