@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onFetch(View view) {
-        startActivity(new Intent(this, FetchActivity.class));
+        startActivity(new Intent(this, ListActivity.class));
     }
 
     @Override

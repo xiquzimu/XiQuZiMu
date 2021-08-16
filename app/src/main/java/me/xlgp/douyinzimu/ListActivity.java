@@ -9,18 +9,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import me.xlgp.douyinzimu.adapter.NameListAdapter;
 import me.xlgp.douyinzimu.db.AppDatabase;
-import me.xlgp.douyinzimu.service.ChangDuanService;
 import me.xlgp.douyinzimu.service.FetchGiteeService;
 import me.xlgp.douyinzimu.viewmodel.FetchViewModel;
 
-public class FetchActivity extends AppCompatActivity {
-
-    private FetchViewModel fetchViewModel = null;
+public class ListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fetch);
+        setContentView(R.layout.activity_list);
 
         AppDatabase.build(this);
 
@@ -28,11 +25,8 @@ public class FetchActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         NameListAdapter nameListAdapter = new NameListAdapter();
         recyclerView.setAdapter(nameListAdapter);
-        nameListAdapter.setOnItemClickListener((itemView, data, position) -> {
-            new ChangDuanService().update(data.substring(1), Throwable::printStackTrace);
-        });
 
-        fetchViewModel = new ViewModelProvider(this).get(FetchViewModel.class);
+        FetchViewModel fetchViewModel = new ViewModelProvider(this).get(FetchViewModel.class);
 
         new FetchGiteeService().getNameList(fetchViewModel.getNameList());
         fetchViewModel.getNameList().observe(this, nameListAdapter::updateData);

@@ -1,7 +1,6 @@
 package me.xlgp.douyinzimu.view;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -131,7 +130,6 @@ public class ZimuDetailFloatingLayout {
     }
 
     private void updateTitleView(String text) {
-        Log.i("TAG", "updateTitleView: " + text);
         ((TextView) rootLayout.findViewById(R.id.currentZimuTitleTextView)).setText(text);
     }
 }

@@ -5,10 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import me.xlgp.douyinzimu.R;
+import me.xlgp.douyinzimu.service.ChangDuanService;
 
 public class NameListAdapter extends BaseAdapter<String> {
 
@@ -20,16 +22,14 @@ public class NameListAdapter extends BaseAdapter<String> {
     }
 
     protected static class ViewHolder extends BaseAdapter.ViewHolder<String> {
-        private final Button itemBtn;
+        private final TextView textView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemBtn = itemView.findViewById(R.id.itembutton);
-            ViewHolder holder = this;
+            Button itemBtn = itemView.findViewById(R.id.itembutton);
+            textView = itemView.findViewById(R.id.textView2);
             itemBtn.setOnClickListener(v -> {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(itemView, data, holder.getAdapterPosition());
-                }
+                new ChangDuanService().update(data.substring(1), Throwable::printStackTrace);
             });
         }
 
@@ -37,7 +37,7 @@ public class NameListAdapter extends BaseAdapter<String> {
         @Override
         public void setData(String name) {
             super.setData(name);
-            itemBtn.setText(this.getAdapterPosition() + "：" + name);
+            textView.setText(this.getAdapterPosition() + "：" + name);
         }
     }
 }
