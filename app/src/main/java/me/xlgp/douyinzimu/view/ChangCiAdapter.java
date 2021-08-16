@@ -12,7 +12,6 @@ import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.adapter.BaseAdapter;
 import me.xlgp.douyinzimu.designpatterns.ChangDuanData;
 import me.xlgp.douyinzimu.model.ChangCi;
-import me.xlgp.douyinzimu.service.PingLunService;
 
 public class ChangCiAdapter extends BaseAdapter<ChangCi> {
 
@@ -36,7 +35,7 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
             super(itemView);
             button.setOnClickListener(v -> {
                 // 设置当前唱词
-                PingLunService.getInstance().getChangDuanInfo().getChangeCiList(getAdapterPosition());
+                ChangDuanData.getInstance().getData().getChangeCiList(getAdapterPosition());
                 onItemClickListener.onItemClick(itemView, data, getAdapterPosition());
             });
         }

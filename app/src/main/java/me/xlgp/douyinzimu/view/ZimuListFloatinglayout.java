@@ -13,7 +13,6 @@ import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.designpatterns.ChangDuanData;
 import me.xlgp.douyinzimu.obj.Callback;
 import me.xlgp.douyinzimu.service.ChangDuanService;
-import me.xlgp.douyinzimu.service.PingLunService;
 
 public class ZimuListFloatinglayout {
     private final View rootLayout;
@@ -33,7 +32,9 @@ public class ZimuListFloatinglayout {
         changDuanAdapter = new ChangDuanAdapter();
         initSwipeRefreshLayout();
         initRecyclerView();
-        onListener();
+
+        TextView textView = this.rootLayout.findViewById(R.id.currentZimuTitleTextView);
+        this.changDuanData.observe((o, arg) -> textView.setText(((ChangDuanData) o).getData().getChangDuan().getName()));
     }
 
     private void initSwipeRefreshLayout(){
@@ -52,17 +53,6 @@ public class ZimuListFloatinglayout {
             }
             changDuanAdapter.updateData(list);
         });
-    }
-
-    private void onListener() {
-        this.rootLayout.findViewById(R.id.clearCurrentZiMuBtn).setOnClickListener(v -> { //清除当前唱段
-            PingLunService.getInstance().clear();
-            TextView textView = this.rootLayout.findViewById(R.id.currentZimuTitleTextView);
-            textView.setText(R.string.currentZimuTitle);
-        });
-
-        TextView textView = this.rootLayout.findViewById(R.id.currentZimuTitleTextView);
-        this.changDuanData.observe((o, arg) -> textView.setText(((ChangDuanData) o).getData().getChangDuan().getName()));
     }
 
     private void initRecyclerView() {

@@ -86,7 +86,9 @@ public class ZimuDetailFloatingLayout {
             switchMaterial.setChecked(true);
         });
     }
-
+    private void updateRecyclerView(int position){
+        recyclerView.smoothScrollToPosition(position+4);
+    }
     private ChangCiList parseChangCiList(List<ChangCi> changCis) {
         ChangCiList changCiList = new ChangCiList();
         for (int i = 0; i < changCis.size(); i++) {
@@ -99,6 +101,7 @@ public class ZimuDetailFloatingLayout {
         changCiList.observe((o, arg) -> {
             ChangCi changCi = (ChangCi) arg;
             updateTitleView(changCi.getContent());
+            updateRecyclerView(changCiList.currentIndex());
         });
         return changCiList;
     }

@@ -33,6 +33,10 @@ public class ChangCiList extends ArrayList<ChangCi> {
         return this.get(listIterator.nextIndex());
     }
 
+    public int currentIndex(){
+        return listIterator.nextIndex();
+    }
+
     public void setCursor(int cursor) {
         listIterator = this.listIterator(cursor);
     }

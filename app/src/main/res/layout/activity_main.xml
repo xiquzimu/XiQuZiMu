@@ -13,12 +13,11 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/editTextChangDuanTitle"
+        app:layout_constraintBottom_toTopOf="@+id/fetchBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.69">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textView"
@@ -42,23 +41,6 @@
             android:onClick="onOpenAccessibilitySetting"
             android:text="@string/NoApenaccesibilityText" />
     </LinearLayout>
-
-    <EditText
-        android:id="@+id/editTextChangDuanTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:ems="14"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/fetchBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.964"
-        tools:ignore="SpeakableTextPresentCheck" />
 
     <Button
         android:id="@+id/runBtn"

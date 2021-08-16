@@ -34,8 +34,7 @@ public class ChangDuanInfo {
         return changCiList;
     }
 
-    public ChangCiList getChangeCiList(int cursor) {
+    public void getChangeCiList(int cursor) {
         changCiList.setCursor(cursor);
-        return changCiList;
     }
 }
