@@ -72,7 +72,11 @@ public class PingLunService {
     public void run() {
         if (enablePingLun()) {
             ChangCiList changCiList = changDuanInfo.getChangeCiList();
-            PingLunHelper.input(douYinAccessibilityService, changCiList.next(), this::start);
+            PingLunHelper.input(douYinAccessibilityService, changCiList.next(), aBoolean -> {
+                if (enablePingLun()) {
+                    start(changCiList.current().getDelayMillis());
+                }
+            });
         }
     }
 

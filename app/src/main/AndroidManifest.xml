@@ -21,7 +21,7 @@
         <activity
             android:name=".ZimuListActivity"
             android:exported="true" />
-        <activity android:name=".FetchActivity" />
+        <activity android:name=".ListActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

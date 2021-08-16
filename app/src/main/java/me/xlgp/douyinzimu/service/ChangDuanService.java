@@ -59,4 +59,15 @@ public class ChangDuanService {
         String httpBaseUrl = "https://gitee.com/xlgp/opera-lyrics/raw/master";
         HttpURLConnectionUtil.asyncGet(httpBaseUrl + name, list -> save(ChangDuanHelper.parse(list), null, callback::call));
     }
+
+    public void delete(ChangDuan data, Consumer<String> consumer) {
+
+        ChangDuanDao changDuanDao = AppDatabase.getInstance().changDuanDao();
+
+       Disposable disposable = Observable.just(data).map(d->{
+           changDuanDao.delete(d);
+           return "";
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(consumer);
+       compositeDisposable.add(disposable);
+    }
 }

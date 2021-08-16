@@ -98,23 +98,22 @@ public class PingLunHelper {
 
     /**
      * @param service  　service
-     * @param changCi  　内容
      * @param callback 回调
      * @param delay    延时时间 ms
      * @param fisrt    用于标记第一次调用
      */
-    public static void handleSend(AccessibilityService service, ChangCi changCi, Callback<Long> callback, int delay, final boolean fisrt) {
+    public static void handleSend(AccessibilityService service, Callback<Boolean> callback, int delay, final boolean fisrt) {
         // 延时发送，等待发送按钮出现，　douyin 17.2.0 版本中发送按钮默认隐藏了，只有输入内容后大概延时120ms后显示
         Disposable disposable = Observable.timer(delay, TimeUnit.MILLISECONDS).subscribe(aLong -> {
             try {
                 boolean sendSuccess = Objects.requireNonNull(getSendNodeByInputNode(service.getRootInActiveWindow())).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 if (sendSuccess) { //发送成功之后，回调
-                    callback.call(changCi.getDelayMillis());
+                    callback.call(true);
                 }
             } catch (NotFoundNodeException e) {
                 //若 第一次调用后发送按钮仍没显示，则再调用一次
                 if (!fisrt) return;
-                handleSend(service, changCi, callback, 100, false);
+                handleSend(service, callback, 100, false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -128,7 +127,7 @@ public class PingLunHelper {
      * @param changCi  唱词
      * @param callback 回调
      */
-    public static void input(AccessibilityService service, ChangCi changCi, Callback<Long> callback) {
+    public static void input(AccessibilityService service, ChangCi changCi, Callback<Boolean> callback) {
         AccessibilityNodeInfo node = null;
 
         try {
@@ -138,7 +137,7 @@ public class PingLunHelper {
             arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, changCi.getContent());
             boolean setTextSuccess = Objects.requireNonNull(node).performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
             if (setTextSuccess) {
-                handleSend(service, changCi, callback, 200, true);
+                handleSend(service, callback, 200, true);
             }
         } catch (Exception e) {
             e.printStackTrace();

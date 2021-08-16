@@ -1,6 +1,7 @@
 package me.xlgp.douyinzimu.adapter;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,8 +9,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import io.reactivex.rxjava3.functions.Consumer;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.model.ChangDuan;
+import me.xlgp.douyinzimu.service.ChangDuanService;
 
 public class ChangDuanListAdapter extends BaseAdapter<ChangDuan> {
 
@@ -26,6 +29,10 @@ public class ChangDuanListAdapter extends BaseAdapter<ChangDuan> {
         public ViewHolder(View view) {
             super(view);
             textView = itemView.findViewById(R.id.textView2);
+            view.setOnLongClickListener(v -> {
+                new ChangDuanService().delete(data, s -> Log.i("delete item", "accept: "));
+                return false;
+            });
         }
 
         @SuppressLint("SetTextI18n")

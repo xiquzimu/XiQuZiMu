@@ -1,6 +1,7 @@
 package me.xlgp.douyinzimu.dao;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Update;
 
@@ -17,4 +18,7 @@ public interface IDao<T> {
 
     @Update
     void update(T t);
+
+    @Delete
+    void delete(T t);
 }

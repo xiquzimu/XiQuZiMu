@@ -31,15 +31,13 @@ public class ChangDuanHelper {
     }
 
     private static void addAfterChangCi(ChangDuan changDuan, ChangCiList changCiList) {
-
-        changCiList.get(changCiList.size() - 1).setDelayMillis(2500);
-
         ChangCi afterChangCi = new ChangCi();
-        afterChangCi.setDelayMillis(1000);
+        afterChangCi.setDelayMillis(3000);
         afterChangCi.setContent(EmojiManager.SMALL_BLUE_DIAMOND + "本曲出自" + changDuan.getJuZhong() + "《" + changDuan.getJuMu() + "》选段：" + changDuan.getName());
         changCiList.add(afterChangCi);
 
         ChangCi thankChangCi = new ChangCi();
+        thankChangCi.setDelayMillis(2000);
         thankChangCi.setContent(EmojiManager.SMALL_BLUE_DIAMOND + "谢谢各位聆听");
         changCiList.add(thankChangCi);
     }
@@ -78,7 +76,8 @@ public class ChangDuanHelper {
      */
     public static ChangDuanInfo parse(List<String> list) {
         ChangDuanInfo changDuan = new ChangDuanInfo();
-        for (String line : list) {
+        for (String str : list) {
+            String line = str.trim();
             if (matcher(line, LycConstant.TIME_REG)) { //唱词
                 changDuan.getChangeCiList().add(getChangCi(line));
             } else if (matcher(line, LycConstant.TITLE_REG)) { //名称
@@ -94,13 +93,14 @@ public class ChangDuanHelper {
         }
         ChangCiList changCiList = changDuan.getChangeCiList();
         for (int i = 0; i < changCiList.size(); i++) {
-            if (i != changCiList.size() - 1) {
-                //时间间隔 = 后一句的时间-本句时间+时间补偿值（offset）,offset:一般表示唱词先于唱段声音出现
-                long delaymillis = getDelayMillis(changCiList.get(i + 1).getShowTime()) - getDelayMillis(changCiList.get(i).getShowTime()) + changDuan.getChangDuan().getOffset();
-                changCiList.get(i).setDelayMillis(delaymillis);
+            long beforeDelaymillis = 0;
+            if (i != 0) {
+                beforeDelaymillis = changCiList.get(i - 1).getDelayMillis();
             }
+            //时间间隔 = 本句的时间-前句时间+时间补偿值（offset）,offset:一般表示唱词先于唱段声音出现
+            long delaymillis = getDelayMillis(changCiList.get(i).getShowTime()) - beforeDelaymillis + changDuan.getChangDuan().getOffset();
+            changCiList.get(i).setDelayMillis(delaymillis);
         }
-        changCiList.setCursor(0); // 唱词初始化
         return changDuan;
     }
 
