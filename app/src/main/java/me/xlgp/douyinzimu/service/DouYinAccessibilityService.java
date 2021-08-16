@@ -1,19 +1,26 @@
 package me.xlgp.douyinzimu.service;
 
+import static android.view.accessibility.AccessibilityEvent.TYPE_VIEW_CLICKED;
+
 import android.accessibilityservice.AccessibilityService;
 import android.view.accessibility.AccessibilityEvent;
+import android.widget.Toast;
 
 import me.xlgp.douyinzimu.util.DianZanHelper;
 import me.xlgp.douyinzimu.util.PingLunHelper;
 
-import static android.view.accessibility.AccessibilityEvent.TYPE_VIEW_CLICKED;
-
 public class DouYinAccessibilityService extends AccessibilityService {
 
-    private PingLunService pingLunService;
+    private final PingLunService pingLunService;
 
     public DouYinAccessibilityService() {
         pingLunService = PingLunService.getInstance().builder(this);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Toast.makeText(this, "请按返回键返回至应用", Toast.LENGTH_LONG).show();
     }
 
     @Override

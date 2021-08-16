@@ -12,12 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import me.xlgp.douyinzimu.EmojiManager;
 import me.xlgp.douyinzimu.R;
-import me.xlgp.douyinzimu.designpatterns.BaseObservable;
 import me.xlgp.douyinzimu.designpatterns.ChangDuanData;
 import me.xlgp.douyinzimu.model.ChangCi;
 import me.xlgp.douyinzimu.model.ChangDuan;
@@ -120,7 +117,6 @@ public class ZimuDetailFloatingLayout {
         ChangCiService changCiService = new ChangCiService();
         changCiService.listByChangDuanId(changDuan.getId(), changCis -> {
 
-
             ChangDuanInfo changDuanInfo = new ChangDuanInfo();
             changDuanInfo.setChangCiList(parseChangCiList(changCis));
             changDuanInfo.setChangDuan(changDuan);
@@ -134,21 +130,5 @@ public class ZimuDetailFloatingLayout {
     private void updateTitleView(String text) {
         Log.i("TAG", "updateTitleView: " + text);
         ((TextView) rootLayout.findViewById(R.id.currentZimuTitleTextView)).setText(text);
-    }
-
-    class ChangCiObservable extends BaseObservable<ChangCi> {
-        public ChangCiObservable(Observer observer) {
-            this.addObserver(observer);
-        }
-    }
-
-    class ChangCiObserve implements Observer {
-
-        @Override
-        public void update(Observable o, Object arg) {
-            PingLunService.getInstance().start(0);
-            ChangCi changCi = (ChangCi) arg;
-            updateTitleView(changCi.getContent());
-        }
     }
 }
