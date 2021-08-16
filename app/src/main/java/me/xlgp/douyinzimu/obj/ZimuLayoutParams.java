@@ -6,16 +6,18 @@ import android.view.WindowManager;
 
 public class ZimuLayoutParams {
 
-    public static class BaseLayoutParams extends WindowManager.LayoutParams{
-        public BaseLayoutParams(){
+    public static class BaseLayoutParams extends WindowManager.LayoutParams {
+        public BaseLayoutParams() {
         }
     }
 
-    public static class WithPoint extends WindowManager.LayoutParams{
+    public static class WithPoint extends WindowManager.LayoutParams {
 
-        public WithPoint(){this(new Point(0,0));}
+        public WithPoint() {
+            this(new Point(0, 0));
+        }
 
-        public WithPoint(Point point){
+        public WithPoint(Point point) {
             this.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
             this.format = PixelFormat.TRANSPARENT;
             this.width = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -26,8 +28,8 @@ public class ZimuLayoutParams {
         }
     }
 
-    public static class WithFullWidth extends WindowManager.LayoutParams{
-        public WithFullWidth(){
+    public static class WithFullWidth extends WindowManager.LayoutParams {
+        public WithFullWidth() {
             this.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
             this.format = PixelFormat.TRANSPARENT;
             this.width = WindowManager.LayoutParams.MATCH_PARENT;

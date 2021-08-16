@@ -33,7 +33,7 @@ public class ChangCiList extends ArrayList<ChangCi> {
         return this.get(listIterator.nextIndex());
     }
 
-    public int currentIndex(){
+    public int currentIndex() {
         return listIterator.nextIndex();
     }
 

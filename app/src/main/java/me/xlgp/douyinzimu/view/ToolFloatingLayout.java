@@ -10,9 +10,9 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.listener.FloatingMoveListener;
-import me.xlgp.douyinzimu.obj.ZimuLayoutParams;
 import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.obj.ZWindowManager;
+import me.xlgp.douyinzimu.obj.ZimuLayoutParams;
 import me.xlgp.douyinzimu.service.FloatingService;
 
 public class ToolFloatingLayout extends BaseFloatingLayout {

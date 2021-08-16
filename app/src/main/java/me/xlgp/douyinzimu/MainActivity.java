@@ -65,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "已开启无障碍服务", Toast.LENGTH_SHORT).show();
     }
 
+    public void onListView(View view) {
+        startActivity(new Intent(this, ZimuListActivity.class));
+    }
+
     public void onRun(View view) {
         if (!AccessibilitySettingsHelper.isEnabled(this)) {
             Toast.makeText(this, "请先开启无障碍服务", Toast.LENGTH_SHORT).show();
