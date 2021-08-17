@@ -6,10 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import io.reactivex.rxjava3.functions.Consumer;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.service.ChangDuanService;
@@ -30,7 +30,12 @@ public class ChangDuanListAdapter extends BaseAdapter<ChangDuan> {
             super(view);
             textView = itemView.findViewById(R.id.textView2);
             view.setOnLongClickListener(v -> {
-                new ChangDuanService().delete(data, s -> Log.i("delete item", "accept: "));
+                try {
+                    new ChangDuanService().delete(data, s -> Log.i("delete item", "accept: "));
+                } catch (Exception e) {
+                    Toast.makeText(v.getContext(), "删除数据失败", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
                 return false;
             });
         }

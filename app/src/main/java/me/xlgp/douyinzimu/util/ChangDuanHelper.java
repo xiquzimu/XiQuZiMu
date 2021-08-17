@@ -68,6 +68,18 @@ public class ChangDuanHelper {
         return fileList;
     }
 
+    public static void parseChangCiListByDelayMillis(ChangDuanInfo changDuanInfo) {
+        ChangCiList changCiList = changDuanInfo.getChangeCiList();
+        long beforeDelaymillis = getDelayMillis("00:00.00");
+        for (int i = 0; i < changCiList.size(); i++) {
+            //时间间隔 = 本句的时间-前句时间+时间补偿值（offset）,offset:一般表示唱词先于唱段声音出现
+            long curDelay = getDelayMillis(changCiList.get(i).getShowTime()) + changDuanInfo.getChangDuan().getOffset() * 1000;
+            long delayMillis = curDelay - beforeDelaymillis;
+            changCiList.get(i).setDelayMillis(delayMillis);
+            beforeDelaymillis = curDelay;
+        }
+    }
+
     /**
      * 从存储中或网络中获取lrc文件后，格式化为 ChangDuan对象
      *
@@ -91,16 +103,7 @@ public class ChangDuanHelper {
                 changDuan.getChangDuan().setJuZhong(getQitaContent(line, LycConstant.JUZHONG_START));
             }
         }
-        ChangCiList changCiList = changDuan.getChangeCiList();
-        for (int i = 0; i < changCiList.size(); i++) {
-            long beforeDelaymillis = 0;
-            if (i != 0) {
-                beforeDelaymillis = changCiList.get(i - 1).getDelayMillis();
-            }
-            //时间间隔 = 本句的时间-前句时间+时间补偿值（offset）,offset:一般表示唱词先于唱段声音出现
-            long delaymillis = getDelayMillis(changCiList.get(i).getShowTime()) - beforeDelaymillis + changDuan.getChangDuan().getOffset();
-            changCiList.get(i).setDelayMillis(delaymillis);
-        }
+        parseChangCiListByDelayMillis(changDuan);
         return changDuan;
     }
 
@@ -112,7 +115,7 @@ public class ChangDuanHelper {
         String[] strings = line.trim().split("]");
         ChangCi changCi = new ChangCi();
         changCi.setContent(strings[strings.length - 1].trim());
-        changCi.setShowTime(strings[0].substring(1, strings[0].length() - 1));
+        changCi.setShowTime(strings[0].substring(1));
         return changCi;
     }
 

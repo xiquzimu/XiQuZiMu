@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread()).subscribe();
     }
 
-    public void onFetch(View view) {
+    public void onFetchView(View view) {
         startActivity(new Intent(this, ListActivity.class));
     }
 

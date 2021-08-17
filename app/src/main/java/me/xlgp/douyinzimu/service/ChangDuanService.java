@@ -21,15 +21,6 @@ public class ChangDuanService {
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-
-    private <T extends Object> void addDisposable(T next, Consumer<? super Object> nextConsumer, Consumer<? super Throwable> errorConsumer) {
-        Disposable disposable = Observable.create(emitter -> {
-            emitter.onNext(next);
-        }).subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(nextConsumer, errorConsumer);
-        compositeDisposable.add(disposable);
-    }
-
     public void list(Consumer<List<ChangDuan>> consumer) {
         ChangDuanDao changDuanDao = AppDatabase.getInstance().changDuanDao();
         Disposable disposable = changDuanDao.list().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(consumer);
@@ -63,11 +54,19 @@ public class ChangDuanService {
     public void delete(ChangDuan data, Consumer<String> consumer) {
 
         ChangDuanDao changDuanDao = AppDatabase.getInstance().changDuanDao();
-
-       Disposable disposable = Observable.just(data).map(d->{
-           changDuanDao.delete(d);
-           return "";
+        Disposable disposable = Observable.just(data).map(d -> {
+            changDuanDao.delete(d);
+            new ChangCiService().deleteByChangDuanId(d.getId());
+            return "";
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(consumer);
-       compositeDisposable.add(disposable);
+        compositeDisposable.add(disposable);
+    }
+
+    public void deleteAll() {
+        ChangDuanDao changDuanDao = AppDatabase.getInstance().changDuanDao();
+        list(list -> {
+            Disposable disposable = changDuanDao.deleteAll(list).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
+            compositeDisposable.add(disposable);
+        });
     }
 }

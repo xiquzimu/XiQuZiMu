@@ -7,6 +7,8 @@ import androidx.room.Update;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Single;
+
 @Dao
 public interface IDao<T> {
 
@@ -21,4 +23,7 @@ public interface IDao<T> {
 
     @Delete
     void delete(T t);
+
+    @Delete
+    Single<Integer> deleteAll(List<T> list);
 }

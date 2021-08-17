@@ -91,6 +91,7 @@ public class ZimuDetailFloatingLayout {
     }
 
     private ChangCiList parseChangCiList(ChangDuan changDuan, List<ChangCi> changCis) {
+        if (changCis == null || changCis.size() == 0) return new ChangCiList();
         ChangCiList changCiList = ChangDuanHelper.parseChangCiList(changDuan, changCis);
         changCiList.observe((o, arg) -> {
             ChangCi changCi = (ChangCi) arg;

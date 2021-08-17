@@ -13,4 +13,7 @@ public interface ChangCiDao extends IDao<ChangCi> {
 
     @Query("select * from changci where cd_id = :changDuanId")
     Flowable<List<ChangCi>> listByChangDuanId(long changDuanId);
+
+    @Query("select * from changci")
+    Flowable<List<ChangCi>> list();
 }
