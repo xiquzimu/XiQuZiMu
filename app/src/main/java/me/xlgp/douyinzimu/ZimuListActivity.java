@@ -13,7 +13,6 @@ import java.util.List;
 
 import io.reactivex.rxjava3.functions.Consumer;
 import me.xlgp.douyinzimu.adapter.ChangDuanListAdapter;
-import me.xlgp.douyinzimu.db.AppDatabase;
 import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.service.ChangCiService;
 import me.xlgp.douyinzimu.service.ChangDuanService;
@@ -25,8 +24,6 @@ public class ZimuListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zimu_list);
-
-        AppDatabase.build(this);
 
         RecyclerView recyclerView = findViewById(R.id.changduanListRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

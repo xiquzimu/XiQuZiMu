@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import me.xlgp.douyinzimu.adapter.NameListAdapter;
-import me.xlgp.douyinzimu.db.AppDatabase;
 import me.xlgp.douyinzimu.service.FetchGiteeService;
 import me.xlgp.douyinzimu.viewmodel.FetchViewModel;
 
@@ -18,8 +17,6 @@ public class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-
-        AppDatabase.build(this);
 
         RecyclerView recyclerView = findViewById(R.id.fetchNameList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
