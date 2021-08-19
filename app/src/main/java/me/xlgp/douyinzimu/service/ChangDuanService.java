@@ -2,14 +2,13 @@ package me.xlgp.douyinzimu.service;
 
 import java.util.List;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Consumer;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import me.xlgp.douyinzimu.dao.ChangDuanDao;
 import me.xlgp.douyinzimu.db.AppDatabase;
+import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
 import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.obj.Callback;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
@@ -23,7 +22,7 @@ public class ChangDuanService {
 
     public void list(Consumer<List<ChangDuan>> consumer) {
         ChangDuanDao changDuanDao = AppDatabase.getInstance().changDuanDao();
-        Disposable disposable = changDuanDao.list().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(consumer);
+        Disposable disposable = changDuanDao.list().compose(ObserverHelper.flowableTransformer()).subscribe(consumer);
         compositeDisposable.add(disposable);
     }
 
@@ -40,8 +39,7 @@ public class ChangDuanService {
                     }
                     db.changCiDao().insert(changCiList);
                     return "";
-                }).subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(nextConsumer == null ? (Consumer<Object>) o -> {
+                }).compose(ObserverHelper.transformer()).subscribe(nextConsumer == null ? (Consumer<Object>) o -> {
                 } : nextConsumer, errorConsumer);
         compositeDisposable.add(disposable);
     }
@@ -51,21 +49,20 @@ public class ChangDuanService {
         HttpURLConnectionUtil.asyncGet(httpBaseUrl + name, list -> save(ChangDuanHelper.parse(list), null, callback::call));
     }
 
-    public void delete(ChangDuan data, Consumer<String> consumer) {
-
+    public void delete(ChangDuan data, Consumer<Object> consumer) {
         ChangDuanDao changDuanDao = AppDatabase.getInstance().changDuanDao();
-        Disposable disposable = Observable.just(data).map(d -> {
-            changDuanDao.delete(d);
-            new ChangCiService().deleteByChangDuanId(d.getId());
-            return "";
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(consumer);
+        Disposable disposable = Observable.create(emitter -> {
+            changDuanDao.delete(data);
+            new ChangCiService().deleteByChangDuanId(data.getId());
+            emitter.onNext(true);
+        }).compose(ObserverHelper.transformer()).subscribe(consumer);
         compositeDisposable.add(disposable);
     }
 
     public void deleteAll() {
         ChangDuanDao changDuanDao = AppDatabase.getInstance().changDuanDao();
         list(list -> {
-            Disposable disposable = changDuanDao.deleteAll(list).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
+            Disposable disposable = changDuanDao.deleteAll(list).compose(ObserverHelper.singleTransformer()).subscribe();
             compositeDisposable.add(disposable);
         });
     }
