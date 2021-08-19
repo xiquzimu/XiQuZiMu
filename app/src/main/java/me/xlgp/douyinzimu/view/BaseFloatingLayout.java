@@ -41,13 +41,13 @@ public class BaseFloatingLayout {
     }
 
     protected void build(WindowManager.LayoutParams layoutParams, String key) {
-        ZWindowManager.getInstance(this.context).addView(currentLayout, layoutParams, key);
+        ZWindowManager.getInstance().addView(currentLayout, layoutParams, key);
         this.layoutName = key;
         this.layoutParams = layoutParams;
     }
 
     protected void build(WindowManager.LayoutParams layoutParams) {
-        build(layoutParams, "floatinglayout" + ZWindowManager.getInstance(this.context).count());
+        build(layoutParams, "floatinglayout" + ZWindowManager.getInstance().count());
     }
 
     public WindowManager.LayoutParams getLayoutParams() {

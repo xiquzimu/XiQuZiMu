@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.douyinzimu.R;
+import me.xlgp.douyinzimu.ZimuApplication;
 import me.xlgp.douyinzimu.designpatterns.ChangDuanData;
 import me.xlgp.douyinzimu.obj.Callback;
 import me.xlgp.douyinzimu.service.ChangDuanService;
@@ -17,23 +19,25 @@ import me.xlgp.douyinzimu.service.ChangDuanService;
 public class ZimuListFloatinglayout {
     private final View rootLayout;
     private final Context context;
+    private final ZimuMainFloatingLayout.ChangDuanObservable changDuanObservable;
+    private final CompositeDisposable compositeDisposable;
     RecyclerView recyclerView = null;
-    ChangDuanAdapter changDuanAdapter = null;
+    ChangDuanAdapter changDuanAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private ChangDuanData changDuanData = null;
-    private ZimuMainFloatingLayout.ChangDuanObservable changDuanObservable;
 
     public ZimuListFloatinglayout(View view, ZimuMainFloatingLayout.ChangDuanObservable changDuanObservable) {
         rootLayout = view;
         this.context = view.getContext();
         this.changDuanObservable = changDuanObservable;
-        this.changDuanData = ChangDuanData.getInstance();
+        this.compositeDisposable = ZimuApplication.getCompositeDisposable();
+
+        ChangDuanData changDuanData = ChangDuanData.getInstance();
         changDuanAdapter = new ChangDuanAdapter();
         initSwipeRefreshLayout();
         initRecyclerView();
 
         TextView textView = this.rootLayout.findViewById(R.id.currentZimuTitleTextView);
-        this.changDuanData.observe((o, arg) -> textView.setText(((ChangDuanData) o).getData().getChangDuan().getName()));
+        changDuanData.observe((o, arg) -> textView.setText(((ChangDuanData) o).getData().getChangDuan().getName()));
     }
 
     private void initSwipeRefreshLayout() {
@@ -43,7 +47,7 @@ public class ZimuListFloatinglayout {
     }
 
     private void loadData(Callback<Boolean> callback) {
-        ChangDuanService changDuanService = new ChangDuanService();
+        ChangDuanService changDuanService = new ChangDuanService(compositeDisposable);
         changDuanService.list(list -> {
             if (callback != null) callback.call(true);
             if (list == null || list.size() == 0) {

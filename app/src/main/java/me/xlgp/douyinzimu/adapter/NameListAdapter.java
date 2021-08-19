@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import me.xlgp.douyinzimu.R;
-import me.xlgp.douyinzimu.service.ChangDuanService;
 
 public class NameListAdapter extends BaseAdapter<String> {
 
@@ -28,9 +27,7 @@ public class NameListAdapter extends BaseAdapter<String> {
             super(itemView);
             Button itemBtn = itemView.findViewById(R.id.itembutton);
             textView = itemView.findViewById(R.id.textView2);
-            itemBtn.setOnClickListener(v -> {
-                new ChangDuanService().update(data.substring(1), Throwable::printStackTrace);
-            });
+            itemBtn.setOnClickListener(v -> onItemClickListener.onItemClick(itemView, data, getAdapterPosition()));
         }
 
         @SuppressLint("SetTextI18n")

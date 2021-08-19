@@ -1,6 +1,5 @@
 package me.xlgp.douyinzimu.obj;
 
-import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -14,16 +13,23 @@ public class ZWindowManager {
     WindowManager windowManager;
     Map<String, View> viewMap;
 
-    private ZWindowManager(Context context) {
-        this.windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+    private ZWindowManager() {
         this.viewMap = new HashMap<>();
     }
 
-    public static ZWindowManager getInstance(Context context) {
+    public static ZWindowManager getInstance() {
         if (instance == null) {
-            instance = new ZWindowManager(context);
+            synchronized (ZWindowManager.class) {
+                if (instance == null) {
+                    instance = new ZWindowManager();
+                }
+            }
         }
         return instance;
+    }
+
+    public void build(WindowManager windowManager) {
+        this.windowManager = windowManager;
     }
 
     public void addView(View view, ViewGroup.LayoutParams params) {
@@ -35,12 +41,8 @@ public class ZWindowManager {
     }
 
     public void addView(View view, ViewGroup.LayoutParams params, String key) {
-        try {
-            addView(view, params);
-            viewMap.put(key, view);
-        } catch (Exception e) {
-        }
-
+        addView(view, params);
+        viewMap.put(key, view);
     }
 
     public boolean containView(String key) {

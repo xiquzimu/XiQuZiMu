@@ -18,7 +18,11 @@ import me.xlgp.douyinzimu.util.HttpURLConnectionUtil;
 
 public class ChangDuanService {
 
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable;
+
+    public ChangDuanService(CompositeDisposable compositeDisposable) {
+        this.compositeDisposable = compositeDisposable;
+    }
 
     public void list(Consumer<List<ChangDuan>> consumer) {
         ChangDuanDao changDuanDao = AppDatabase.getInstance().changDuanDao();
@@ -53,7 +57,7 @@ public class ChangDuanService {
         ChangDuanDao changDuanDao = AppDatabase.getInstance().changDuanDao();
         Disposable disposable = Observable.create(emitter -> {
             changDuanDao.delete(data);
-            new ChangCiService().deleteByChangDuanId(data.getId());
+            new ChangCiService(compositeDisposable).deleteByChangDuanId(data.getId());
             emitter.onNext(true);
         }).compose(ObserverHelper.transformer()).subscribe(consumer);
         compositeDisposable.add(disposable);

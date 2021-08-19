@@ -12,7 +12,9 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.douyinzimu.R;
+import me.xlgp.douyinzimu.ZimuApplication;
 import me.xlgp.douyinzimu.designpatterns.ChangDuanData;
 import me.xlgp.douyinzimu.model.ChangCi;
 import me.xlgp.douyinzimu.model.ChangDuan;
@@ -31,7 +33,7 @@ public class ZimuDetailFloatingLayout {
     private ChangCiAdapter changCiAdapter;
     private SwitchMaterial switchMaterial;
     private ChangDuanData changDuanData;
-
+    private CompositeDisposable compositeDisposable;
 
     public ZimuDetailFloatingLayout(View view) {
         init(view);
@@ -42,6 +44,7 @@ public class ZimuDetailFloatingLayout {
     private void init(View view) {
         this.rootLayout = view;
         this.context = view.getContext();
+        compositeDisposable = ZimuApplication.getCompositeDisposable();
         changDuanData = ChangDuanData.getInstance();
         this.switchMaterial = this.rootLayout.findViewById(R.id.pingLunSwitchMaterial);
     }
@@ -112,7 +115,7 @@ public class ZimuDetailFloatingLayout {
             return;
         }
 
-        ChangCiService changCiService = new ChangCiService();
+        ChangCiService changCiService = new ChangCiService(compositeDisposable);
         changCiService.listByChangDuanId(changDuan.getId(), changCis -> {
 
             ChangDuanInfo changDuanInfo = new ChangDuanInfo();
@@ -120,7 +123,6 @@ public class ZimuDetailFloatingLayout {
             changDuanInfo.setChangDuan(changDuan);
 
             changDuanData.setData(changDuanInfo);
-            changCiService.dispose();
             callback.call(true);
         });
     }
