@@ -4,13 +4,12 @@ import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import me.xlgp.douyinzimu.designpatterns.ChangDuanData;
+import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
 import me.xlgp.douyinzimu.exception.NotFoundDouYinException;
 import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
@@ -43,8 +42,7 @@ public class PingLunService {
     public void start(long delayMillis) {
         count++;
         if (enablePingLun()) {
-            Observable.just(count).delay(delayMillis, TimeUnit.MILLISECONDS).subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
+            Observable.just(count).delay(delayMillis, TimeUnit.MILLISECONDS).compose(ObserverHelper.transformer())
                     .subscribe(new StartObserver(instance));
         }
     }
@@ -81,7 +79,8 @@ public class PingLunService {
     }
 
     private class StartObserver implements Observer<Long> {
-        private PingLunService pingLunService;
+        private final PingLunService pingLunService;
+        private Disposable disposable;
 
         public StartObserver(PingLunService pingLunService) {
             this.pingLunService = pingLunService;
@@ -89,6 +88,7 @@ public class PingLunService {
 
         @Override
         public void onSubscribe(@NonNull Disposable d) {
+            disposable = d;
         }
 
         @Override
@@ -112,10 +112,18 @@ public class PingLunService {
             if (e instanceof NotFoundDouYinException) {
                 Toast.makeText(douYinAccessibilityService, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
+            dispose();
         }
 
         @Override
         public void onComplete() {
+            dispose();
+        }
+
+        public void dispose() {
+            if (disposable != null && !disposable.isDisposed()) {
+                disposable.dispose();
+            }
         }
     }
 }
