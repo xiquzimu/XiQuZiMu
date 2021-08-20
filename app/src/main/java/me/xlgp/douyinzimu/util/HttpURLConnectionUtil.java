@@ -6,21 +6,20 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Consumer;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
 
 public class HttpURLConnectionUtil {
 
     public static Disposable asyncGet(String httpUrl, Consumer<List<String>> consumer) {
         return Observable.just(httpUrl).map(HttpURLConnectionUtil::doGetList)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(consumer);
+                .compose(ObserverHelper.transformer()).subscribe(consumer);
     }
 
     public static List<String> doGetList(String httpUrl) {
@@ -34,7 +33,7 @@ public class HttpURLConnectionUtil {
         HttpURLConnection connection = null;
         InputStream is = null;
         BufferedReader br = null;
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
 
         if (list == null) list = new ArrayList<>();
 
@@ -53,7 +52,7 @@ public class HttpURLConnectionUtil {
                 //获取返回的数据
                 is = connection.getInputStream();
                 if (null != is) {
-                    br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                    br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
                     String temp = null;
                     list.clear();
                     while (null != (temp = br.readLine())) {
@@ -80,7 +79,8 @@ public class HttpURLConnectionUtil {
                 }
             }
             //关闭远程连接
-            connection.disconnect();
+            if (connection != null){connection.disconnect();}
+
         }
         return result.toString();
     }

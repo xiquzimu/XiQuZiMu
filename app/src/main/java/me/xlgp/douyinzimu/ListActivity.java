@@ -25,7 +25,7 @@ public class ListActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.fetchNameList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         NameListAdapter nameListAdapter = new NameListAdapter();
-        nameListAdapter.setOnItemClickListener((itemView, data, position) -> new ChangDuanService(compositeDisposable).update(data.substring(1), Throwable::printStackTrace));
+        nameListAdapter.setOnItemClickListener((itemView, data, position) -> new ChangDuanService(compositeDisposable).update(data, Throwable::printStackTrace));
         recyclerView.setAdapter(nameListAdapter);
 
         FetchViewModel fetchViewModel = new ViewModelProvider(this).get(FetchViewModel.class);

@@ -13,6 +13,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.douyinzimu.adapter.ChangDuanListAdapter;
 import me.xlgp.douyinzimu.service.ChangCiService;
 import me.xlgp.douyinzimu.service.ChangDuanService;
+import me.xlgp.douyinzimu.service.FetchGiteeService;
 import me.xlgp.douyinzimu.viewmodel.ChangDuanViewModel;
 
 public class ZimuListActivity extends AppCompatActivity {
@@ -45,7 +46,10 @@ public class ZimuListActivity extends AppCompatActivity {
     }
 
     public void onFetch(View view) {
+        new FetchGiteeService().getNameList(new ChangDuanService(compositeDisposable)::updateList);
+    }
 
+    public void onClearList(View view) {
         try {
             new ChangDuanService(compositeDisposable).deleteAll();
             Toast.makeText(this, "唱段删除完毕", Toast.LENGTH_SHORT).show();

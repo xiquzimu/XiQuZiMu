@@ -50,7 +50,13 @@ public class ChangDuanService {
 
     public void update(String name, Callback<Throwable> callback) {
         String httpBaseUrl = "https://gitee.com/xlgp/opera-lyrics/raw/master";
-        HttpURLConnectionUtil.asyncGet(httpBaseUrl + name, list -> save(ChangDuanHelper.parse(list), null, callback::call));
+        HttpURLConnectionUtil.asyncGet(httpBaseUrl + name.substring(1), list -> save(ChangDuanHelper.parse(list), null, callback::call));
+    }
+
+    public void updateList(List<String> nameList) {
+        for (String name : nameList) {
+            update(name, Throwable::printStackTrace);
+        }
     }
 
     public void delete(ChangDuan data, Consumer<Object> consumer) {
@@ -66,7 +72,7 @@ public class ChangDuanService {
     public void deleteAll() {
         ChangDuanDao changDuanDao = AppDatabase.getInstance().changDuanDao();
         list(list -> {
-            Disposable disposable = changDuanDao.deleteAll(list).compose(ObserverHelper.singleTransformer()).subscribe();
+            Disposable disposable = changDuanDao.deleteAll(list).compose(ObserverHelper.singleTransformer()).subscribe((integer, throwable) -> new ChangCiService(compositeDisposable).deleteAll());
             compositeDisposable.add(disposable);
         });
     }
