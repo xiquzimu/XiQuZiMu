@@ -1,6 +1,7 @@
 package me.xlgp.douyinzimu.view;
 
 import android.content.Context;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -16,6 +17,7 @@ import me.xlgp.douyinzimu.service.FloatingService;
  */
 public class BasePanelLayout extends BaseFloatingLayout {
     private final int resource;
+    View titleBtn = null;
     private LinearLayout rootLayout;
     private boolean isShou = false;
     private int shouHeight;
@@ -64,8 +66,14 @@ public class BasePanelLayout extends BaseFloatingLayout {
         return rootLayout.getHeight() - totalHeight;
     }
 
+    public void setOnTitleClickListener(View.OnClickListener onClickListener) {
+        titleBtn.setOnClickListener(onClickListener);
+    }
+
     private void onViewListener() {
-        rootLayout.findViewById(R.id.titleBtn).setOnTouchListener(new FloatingMoveListener(rootLayout, (WindowManager.LayoutParams) rootLayout.getLayoutParams(), (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)));
+        titleBtn = rootLayout.findViewById(R.id.titleBtn);
+        titleBtn.setOnTouchListener(new FloatingMoveListener(rootLayout, (WindowManager.LayoutParams) rootLayout.getLayoutParams(), (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)));
+
         this.rootLayout.findViewById(R.id.closeFloatingBtn).setOnClickListener(v -> {
             FloatingService service = (FloatingService) getContext();
             service.closeFloatingWindow(rootLayout);

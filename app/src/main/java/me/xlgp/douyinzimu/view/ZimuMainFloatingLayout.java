@@ -18,6 +18,7 @@ import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
 import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.obj.ZimuLayoutParams;
+import me.xlgp.douyinzimu.service.DianZanService;
 
 public class ZimuMainFloatingLayout extends BasePanelLayout {
     private ViewPager2 viewPager2;
@@ -35,6 +36,11 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
         //懒加载，主要防止选择唱段后第二个layout还没有造成 zimuDetailFloatingLayout 为null情况
         viewPager2.setOffscreenPageLimit(2);
         setPanelTitle("字幕列表");
+        dianZanAction();
+    }
+
+    public void dianZanAction() {
+        super.setOnTitleClickListener(v -> new DianZanService().dianZan());
     }
 
     private class ZimuMainFloatingAdapter extends RecyclerView.Adapter<ZimuMainFloatingAdapter.ViewHolder> {

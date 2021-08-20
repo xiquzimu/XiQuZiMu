@@ -11,30 +11,34 @@ import me.xlgp.douyinzimu.util.PingLunHelper;
 
 public class DouYinAccessibilityService extends AccessibilityService {
 
+    private static DouYinAccessibilityService douYinAccessibilityService;
     private final PingLunService pingLunService;
 
     public DouYinAccessibilityService() {
         pingLunService = PingLunService.getInstance().builder(this);
     }
 
+    public static DouYinAccessibilityService getInstance() {
+        return douYinAccessibilityService;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+        douYinAccessibilityService = this;
         Toast.makeText(this, "请按返回键返回至应用", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        switch (event.getEventType()) {
-            case TYPE_VIEW_CLICKED:
-                if (DianZanHelper.isEnabled(this, event)) {
-                    DianZanHelper.dianZan(this);
-                    return;
-                }
-                if (PingLunHelper.pingLun(this, event)) {
-                    pingLunService.run();
-                }
-                break;
+        if (event.getEventType() == TYPE_VIEW_CLICKED) {
+            if (DianZanHelper.isEnabled(this, event)) {
+                DianZanHelper.dianZan(this);
+                return;
+            }
+            if (PingLunHelper.pingLun(this, event)) {
+                pingLunService.run();
+            }
         }
     }
 
