@@ -66,6 +66,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, ZimuListActivity.class));
     }
 
+    public void onSearchView(View view) {
+        startActivity(new Intent(this, SearchRecycleActivity.class));
+    }
+
     public void onRun(View view) {
         if (!AccessibilitySettingsHelper.isEnabled(this)) {
             Toast.makeText(this, "请先开启无障碍服务", Toast.LENGTH_SHORT).show();

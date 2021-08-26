@@ -11,7 +11,7 @@ import java.util.List;
 
 public class BaseAdapter<E> extends RecyclerView.Adapter<BaseAdapter.ViewHolder<E>> {
     protected OnItemClickListener<E> onItemClickListener;
-    List<E> list;
+    protected List<E> list;
 
     public BaseAdapter() {
         this.list = new ArrayList<E>();

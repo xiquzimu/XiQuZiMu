@@ -20,6 +20,9 @@
         android:theme="@style/Theme.DouYinZiMu"
         tools:ignore="HardcodedDebugMode">
         <activity
+            android:name=".SearchRecycleActivity"
+            android:exported="true" />
+        <activity
             android:name=".ZimuListActivity"
             android:exported="true" />
         <activity android:name=".ListActivity" />

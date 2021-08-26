@@ -79,7 +79,9 @@ public class HttpURLConnectionUtil {
                 }
             }
             //关闭远程连接
-            if (connection != null){connection.disconnect();}
+            if (connection != null) {
+                connection.disconnect();
+            }
 
         }
         return result.toString();
