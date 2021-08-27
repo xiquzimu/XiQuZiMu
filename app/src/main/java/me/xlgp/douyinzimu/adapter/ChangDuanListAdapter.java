@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.model.ChangDuan;
 
-public class ChangDuanListAdapter extends BaseAdapter<ChangDuan> {
+public class ChangDuanListAdapter extends SearchListAdapter<ChangDuan> {
 
     @NonNull
     @Override

@@ -9,10 +9,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import java.util.Comparator;
+
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.ZimuApplication;
 import me.xlgp.douyinzimu.designpatterns.ChangDuanData;
+import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.obj.Callback;
 import me.xlgp.douyinzimu.service.ChangDuanService;
 
@@ -54,7 +57,7 @@ public class ZimuListFloatinglayout {
                 Toast.makeText(context, "无数据可更新", Toast.LENGTH_SHORT).show();
                 return;
             }
-            list.sort((o1, o2) -> o1.getJuMu().compareTo(o2.getJuMu()));
+            list.sort(Comparator.comparing(ChangDuan::getJuMu));
             changDuanAdapter.updateData(list);
         });
     }

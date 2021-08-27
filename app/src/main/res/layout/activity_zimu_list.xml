@@ -31,8 +31,11 @@
             android:text="更新唱词" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/changduanListRecyclerView"
+    <me.xlgp.douyinzimu.ui.main.SearchRecyclerviewLayout
+        android:id="@+id/zimu_list_SearchRecyclerviewLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
+
+    </me.xlgp.douyinzimu.ui.main.SearchRecyclerviewLayout>
+
 </LinearLayout>

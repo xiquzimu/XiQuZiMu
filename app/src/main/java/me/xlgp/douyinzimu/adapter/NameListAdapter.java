@@ -11,16 +11,16 @@ import androidx.annotation.NonNull;
 
 import me.xlgp.douyinzimu.R;
 
-public class NameListAdapter extends BaseAdapter<String> {
+public class NameListAdapter extends SearchListAdapter<String> {
 
     @NonNull
     @Override
-    public BaseAdapter.ViewHolder<String> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fetch_item_layout, parent, false);
         return new ViewHolder(view);
     }
 
-    protected static class ViewHolder extends BaseAdapter.ViewHolder<String> {
+    protected static class ViewHolder extends SearchListAdapter.ViewHolder<String> {
         private final TextView textView;
 
         public ViewHolder(@NonNull View itemView) {

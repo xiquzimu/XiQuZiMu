@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseAdapter<E> extends RecyclerView.Adapter<BaseAdapter.ViewHolder<E>> {
+public abstract class BaseAdapter<E> extends RecyclerView.Adapter<BaseAdapter.ViewHolder<E>> {
     protected OnItemClickListener<E> onItemClickListener;
     protected List<E> list;
 

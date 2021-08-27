@@ -6,14 +6,16 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.Objects;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.douyinzimu.adapter.ChangDuanListAdapter;
+import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.service.ChangCiService;
 import me.xlgp.douyinzimu.service.ChangDuanService;
 import me.xlgp.douyinzimu.service.FetchGiteeService;
+import me.xlgp.douyinzimu.ui.main.SearchRecyclerviewLayout;
 import me.xlgp.douyinzimu.viewmodel.ChangDuanViewModel;
 
 public class ZimuListActivity extends AppCompatActivity {
@@ -25,8 +27,17 @@ public class ZimuListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zimu_list);
 
-        RecyclerView recyclerView = findViewById(R.id.changduanListRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        SearchRecyclerviewLayout<ChangDuan> searchRecyclerviewLayout = findViewById(R.id.zimu_list_SearchRecyclerviewLayout);
+        searchRecyclerviewLayout.build(this);
+        searchRecyclerviewLayout.setPredicate(changDuan -> {
+            try {
+                return Objects.requireNonNull(changDuan.getName()).contains(searchRecyclerviewLayout.getFilterCharSequence());
+            } catch (Exception e) {
+                return false;
+            }
+
+        });
+
         ChangDuanListAdapter changDuanListAdapter = new ChangDuanListAdapter();
         changDuanListAdapter.setOnItemClickListener((itemView, data, position) -> {
             try {
@@ -36,7 +47,7 @@ public class ZimuListActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
-        recyclerView.setAdapter(changDuanListAdapter);
+        searchRecyclerviewLayout.setSearchListAdapter(changDuanListAdapter);
 
         ChangDuanViewModel viewModel = new ViewModelProvider(this).get(ChangDuanViewModel.class);
 

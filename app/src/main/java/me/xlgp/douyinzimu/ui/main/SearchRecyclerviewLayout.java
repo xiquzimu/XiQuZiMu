@@ -1,19 +1,13 @@
 package me.xlgp.douyinzimu.ui.main;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
@@ -22,17 +16,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.function.Predicate;
 
 import me.xlgp.douyinzimu.R;
-import me.xlgp.douyinzimu.adapter.BaseAdapter;
+import me.xlgp.douyinzimu.adapter.SearchListAdapter;
 
-public class SearchRecyclerviewLayout extends LinearLayout {
+public class SearchRecyclerviewLayout<T> extends LinearLayout {
 
     private SearchViewModel searchViewModel;
-    private SearchListAdapter searchListAdapter;
+    private SearchListAdapter<T> searchListAdapter;
+    private Predicate<T> predicate;
+    private RecyclerView recyclerView;
 
     public SearchRecyclerviewLayout(Context context) {
         super(context);
@@ -61,16 +55,29 @@ public class SearchRecyclerviewLayout extends LinearLayout {
         EditText searchEditText = findViewById(R.id.searchEditText);
         searchEditText.addTextChangedListener(new SearchTextWatcher(searchViewModel.getSearchTextLiveData()));
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerview);
+        recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        searchListAdapter = new SearchListAdapter();
 
-        recyclerView.setAdapter(searchListAdapter);
         SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(() -> swipeRefreshLayout.setRefreshing(false));
+    }
+
+    public CharSequence getFilterCharSequence() {
+        return searchViewModel.getSearchTextLiveData().getValue();
     }
 
     public void build(LifecycleOwner lifecycleOwner) {
-        searchViewModel.getSearchTextLiveData().observe(lifecycleOwner, searchListAdapter::filter);
+        searchViewModel.getSearchTextLiveData().observe(lifecycleOwner, charSequence -> searchListAdapter.filter(predicate));
+    }
+
+    public void setSearchListAdapter(SearchListAdapter<T> searchListAdapter) {
+        this.searchListAdapter = searchListAdapter;
+        recyclerView.setAdapter(searchListAdapter);
+    }
+
+
+    public void setPredicate(Predicate<T> predicate) {
+        this.predicate = predicate;
     }
 
     static class SearchViewModel extends ViewModel {
@@ -78,61 +85,6 @@ public class SearchRecyclerviewLayout extends LinearLayout {
 
         public MutableLiveData<CharSequence> getSearchTextLiveData() {
             return searchTextLiveData;
-        }
-    }
-
-    static class SearchListAdapter extends BaseAdapter<String> {
-        List<String> filterLsit;
-        List<String> sourceList = new ArrayList<>();
-
-        public SearchListAdapter() {
-            sourceList.add("222");
-            sourceList.add("111");
-            sourceList.add("333");
-            sourceList.add("45322");
-            sourceList.add("2234342");
-            sourceList.add("6666");
-            sourceList = list;
-            filterLsit = list;
-            super.updateData(filterLsit);
-        }
-
-        public SearchListAdapter(List<String> list) {
-            super();
-            sourceList = list;
-            filterLsit = list;
-            super.updateData(filterLsit);
-        }
-
-        public void filter(CharSequence charSequence) {
-            filterLsit = sourceList.stream().filter(s -> s.contains(charSequence)).collect(Collectors.toList());
-            updateData(filterLsit);
-        }
-
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.zimu_item_layout, parent, false);
-            return new ViewHolder(view);
-        }
-
-        protected static class ViewHolder extends BaseAdapter.ViewHolder<String> {
-
-            Button button = itemView.findViewById(R.id.zimu_item_btn);
-
-            public ViewHolder(@NonNull View itemView) {
-                super(itemView);
-                button.setOnClickListener(v -> {
-                    onItemClickListener.onItemClick(itemView, data, getAdapterPosition());
-                });
-            }
-
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void setData(String data) {
-                super.setData(data);
-                button.setText((getAdapterPosition() + 1) + ". " + data);
-            }
         }
     }
 
@@ -151,7 +103,6 @@ public class SearchRecyclerviewLayout extends LinearLayout {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             liveData.setValue(s);
-            Log.i("SearchTextWatcher", "onTextChanged: " + s.toString());
         }
 
         @Override
