@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,19 +27,35 @@ public class ChangDuanHelper {
      */
     private static void addBeforeChangCi(ChangDuan changDuan, ChangCiList changCiList) {
         ChangCi preChangCi = new ChangCi();
-        preChangCi.setContent(EmojiManager.SMALL_BLUE_DIAMOND + "请欣赏" + changDuan.getJuZhong() + "《" + changDuan.getJuMu() + "》" + "选段：" + changDuan.getName());
         preChangCi.setDelayMillis(1000);
+        preChangCi.setShowTime(formatDate("00:00.00", 1000));
+        preChangCi.setContent(EmojiManager.SMALL_BLUE_DIAMOND + "请欣赏" + changDuan.getJuZhong() + "《" + changDuan.getJuMu() + "》" + "选段：" + changDuan.getName());
         changCiList.add(preChangCi);
+    }
+
+    private static String formatDate(String strDate, long delayMillis){
+        SimpleDateFormat format = new SimpleDateFormat("mm:ss.SS", Locale.CHINESE);
+        try{
+            long result = Objects.requireNonNull(format.parse(strDate)).getTime() + delayMillis;
+            Date date = new Date();
+            date.setTime(result);
+            return format.format(date);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return strDate;
     }
 
     private static void addAfterChangCi(ChangDuan changDuan, ChangCiList changCiList) {
         ChangCi afterChangCi = new ChangCi();
-        afterChangCi.setDelayMillis(3000);
+        afterChangCi.setDelayMillis(5000);
+        afterChangCi.setShowTime(formatDate(changCiList.get(changCiList.size()-1).getShowTime(), 5000));
         afterChangCi.setContent(EmojiManager.SMALL_BLUE_DIAMOND + "本曲出自" + changDuan.getJuZhong() + "《" + changDuan.getJuMu() + "》选段：" + changDuan.getName());
         changCiList.add(afterChangCi);
 
         ChangCi thankChangCi = new ChangCi();
         thankChangCi.setDelayMillis(2000);
+        thankChangCi.setShowTime(formatDate(changCiList.get(changCiList.size()-1).getShowTime(), 2000));
         thankChangCi.setContent(EmojiManager.SMALL_BLUE_DIAMOND + "谢谢各位聆听");
         changCiList.add(thankChangCi);
     }
@@ -59,8 +77,8 @@ public class ChangDuanHelper {
     /**
      * 从存储中加载唱段名称
      *
-     * @param context
-     * @return
+     * @param context context
+     * @return list
      */
     public static List<File> loadFileList(Context context) {
         List<File> fileList = new ArrayList<>();
@@ -83,8 +101,8 @@ public class ChangDuanHelper {
     /**
      * 从存储中或网络中获取lrc文件后，格式化为 ChangDuan对象
      *
-     * @param list
-     * @return
+     * @param list list
+     * @return ChangDuanInfo
      */
     public static ChangDuanInfo parse(List<String> list) {
         ChangDuanInfo changDuan = new ChangDuanInfo();
@@ -120,9 +138,10 @@ public class ChangDuanHelper {
     }
 
     private static long getDelayMillis(String time) {
-        SimpleDateFormat format = new SimpleDateFormat("mm:ss.SSS");
+        SimpleDateFormat format = new SimpleDateFormat("mm:ss.SSS", Locale.CHINESE);
         try {
             Date date = format.parse(time);
+            assert date != null;
             return date.getTime();
         } catch (ParseException e) {
             e.printStackTrace();

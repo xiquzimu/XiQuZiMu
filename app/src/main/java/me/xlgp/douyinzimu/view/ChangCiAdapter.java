@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -23,17 +23,19 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
     @NonNull
     @Override
     public BaseAdapter.ViewHolder<ChangCi> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.zimu_item_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.zimu_detail_item_layout, parent, false);
         return new ViewHolder(view);
     }
 
     protected static class ViewHolder extends BaseAdapter.ViewHolder<ChangCi> {
 
-        Button button = itemView.findViewById(R.id.zimu_item_btn);
+        TextView no = itemView.findViewById(R.id.no);
+        TextView title = itemView.findViewById(R.id.title);
+        TextView subTitle = itemView.findViewById(R.id.subTitle);
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            button.setOnClickListener(v -> {
+            itemView.setOnClickListener(v -> {
                 // 设置当前唱词
                 ChangDuanData.getInstance().getData().getChangeCiList(getAdapterPosition());
                 onItemClickListener.onItemClick(itemView, data, getAdapterPosition());
@@ -44,7 +46,9 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
         @Override
         public void setData(ChangCi data) {
             super.setData(data);
-            button.setText((getAdapterPosition() + 1) + ". " + data.getContent());
+            no.setText(String.valueOf(getAdapterPosition() + 1));
+            title.setText(data.getContent());
+            subTitle.setText(data.getShowTime() + "  " + data.getDelayMillis());
         }
     }
 }
