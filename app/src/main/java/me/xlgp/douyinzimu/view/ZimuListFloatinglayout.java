@@ -19,8 +19,6 @@ import me.xlgp.douyinzimu.designpatterns.ChangDuanData;
 import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.obj.Callback;
 import me.xlgp.douyinzimu.service.ChangDuanService;
-import opensource.jpinyin.PinyinFormat;
-import opensource.jpinyin.PinyinHelper;
 
 public class ZimuListFloatinglayout {
     private final View rootLayout;
@@ -52,12 +50,10 @@ public class ZimuListFloatinglayout {
         swipeRefreshLayout.setOnRefreshListener(() -> loadData(aBoolean -> swipeRefreshLayout.setRefreshing(false)));
     }
 
-    private void sortByPinYin(List<ChangDuan> list){
+    private void sortByPinYin(List<ChangDuan> list) {
         list.sort((o1, o2) -> {
             try {
-                String py1 = PinyinHelper.convertToPinyinString(o1.getJuMu(), "", PinyinFormat.WITHOUT_TONE);
-                String py2 = PinyinHelper.convertToPinyinString(o2.getJuMu(), "", PinyinFormat.WITHOUT_TONE);
-                return Objects.requireNonNull(py1).compareTo(Objects.requireNonNull(py2));
+                return Objects.requireNonNull(o1.getJuMu()).compareTo(Objects.requireNonNull(o2.getJuMu()));
             } catch (Exception e) {
                 e.printStackTrace();
             }

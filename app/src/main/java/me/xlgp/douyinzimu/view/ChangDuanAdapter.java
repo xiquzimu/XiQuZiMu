@@ -32,7 +32,7 @@ public class ChangDuanAdapter extends BaseAdapter<ChangDuan> {
         return new ViewHolder(view);
     }
 
-    protected class ViewHolder extends BaseAdapter.ViewHolder<ChangDuan> {
+    protected static class ViewHolder extends BaseAdapter.ViewHolder<ChangDuan> {
         private final TextView titleView;
         private final TextView subTitleView;
         private final TextView noView;
@@ -43,9 +43,7 @@ public class ChangDuanAdapter extends BaseAdapter<ChangDuan> {
             subTitleView = itemView.findViewById(R.id.subTitle);
             noView = itemView.findViewById(R.id.no);
             //当点击唱段时，通知观察者
-            itemView.setOnClickListener(v -> {
-                onItemClickListener.onItemClick(itemView, data, this.getAdapterPosition());
-            });
+            itemView.setOnClickListener(v -> onItemClickListener.onItemClick(itemView, data, this.getAdapterPosition()));
         }
 
         @SuppressLint("SetTextI18n")
