@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.douyinzimu.R;
@@ -18,6 +19,8 @@ import me.xlgp.douyinzimu.designpatterns.ChangDuanData;
 import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.obj.Callback;
 import me.xlgp.douyinzimu.service.ChangDuanService;
+import opensource.jpinyin.PinyinFormat;
+import opensource.jpinyin.PinyinHelper;
 
 public class ZimuListFloatinglayout {
     private final View rootLayout;
@@ -49,6 +52,19 @@ public class ZimuListFloatinglayout {
         swipeRefreshLayout.setOnRefreshListener(() -> loadData(aBoolean -> swipeRefreshLayout.setRefreshing(false)));
     }
 
+    private void sortByPinYin(List<ChangDuan> list){
+        list.sort((o1, o2) -> {
+            try {
+                String py1 = PinyinHelper.convertToPinyinString(o1.getJuMu(), "", PinyinFormat.WITHOUT_TONE);
+                String py2 = PinyinHelper.convertToPinyinString(o2.getJuMu(), "", PinyinFormat.WITHOUT_TONE);
+                return Objects.requireNonNull(py1).compareTo(Objects.requireNonNull(py2));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return 0;
+        });
+    }
+
     private void loadData(Callback<Boolean> callback) {
         ChangDuanService changDuanService = new ChangDuanService(compositeDisposable);
         changDuanService.list(list -> {
@@ -57,7 +73,7 @@ public class ZimuListFloatinglayout {
                 Toast.makeText(context, "无数据可更新", Toast.LENGTH_SHORT).show();
                 return;
             }
-            list.sort(Comparator.comparing(ChangDuan::getJuMu));
+            sortByPinYin(list);
             changDuanAdapter.updateData(list);
         });
     }
