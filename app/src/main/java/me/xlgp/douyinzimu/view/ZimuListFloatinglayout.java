@@ -42,11 +42,13 @@ public class ZimuListFloatinglayout {
 
         TextView textView = this.rootLayout.findViewById(R.id.currentZimuTitleTextView);
         changDuanData.observe((o, arg) -> textView.setText(((ChangDuanData) o).getData().getChangDuan().getName()));
+
+        swipeRefreshLayout.setRefreshing(true);
+        loadData(aBoolean -> swipeRefreshLayout.setRefreshing(false));
     }
 
     private void initSwipeRefreshLayout() {
         swipeRefreshLayout = rootLayout.findViewById(R.id.zimu_list_SwipeRefreshLayout);
-
         swipeRefreshLayout.setOnRefreshListener(() -> loadData(aBoolean -> swipeRefreshLayout.setRefreshing(false)));
     }
 
@@ -64,13 +66,13 @@ public class ZimuListFloatinglayout {
     private void loadData(Callback<Boolean> callback) {
         ChangDuanService changDuanService = new ChangDuanService(compositeDisposable);
         changDuanService.list(list -> {
-            if (callback != null) callback.call(true);
             if (list == null || list.size() == 0) {
                 Toast.makeText(context, "无数据可更新", Toast.LENGTH_SHORT).show();
                 return;
             }
             sortByPinYin(list);
             changDuanAdapter.updateData(list);
+            if (callback != null) callback.call(true);
         });
     }
 
@@ -80,6 +82,5 @@ public class ZimuListFloatinglayout {
 
         changDuanAdapter.setOnItemClickListener((itemView, data, position) -> changDuanObservable.setData(data));
         recyclerView.setAdapter(changDuanAdapter);
-        loadData(null);
     }
 }
