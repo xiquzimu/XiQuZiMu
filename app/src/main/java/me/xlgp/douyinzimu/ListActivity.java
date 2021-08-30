@@ -3,9 +3,11 @@ package me.xlgp.douyinzimu;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.douyinzimu.adapter.NameListAdapter;
@@ -25,13 +27,7 @@ public class ListActivity extends AppCompatActivity {
 
         SearchRecyclerviewLayout<String> searchRecyclerviewLayout = findViewById(R.id.nameListSearchRecyclerviewLayout);
         searchRecyclerviewLayout.build(this);
-        searchRecyclerviewLayout.setPredicate(s -> {
-            try {
-                return Objects.requireNonNull(s).contains(searchRecyclerviewLayout.getFilterCharSequence());
-            } catch (Exception e) {
-                return false;
-            }
-        });
+        searchRecyclerviewLayout.setPredicate(new StringPredicate(searchRecyclerviewLayout.getFilterCharSequenceLiveData()));
 
         NameListAdapter nameListAdapter = new NameListAdapter();
         nameListAdapter.setOnItemClickListener((itemView, data, position) -> new ChangDuanService(compositeDisposable).update(data, Throwable::printStackTrace));
@@ -49,6 +45,22 @@ public class ListActivity extends AppCompatActivity {
         if (compositeDisposable != null) {
             compositeDisposable.clear();
             compositeDisposable = null;
+        }
+    }
+
+    static class StringPredicate implements Predicate<String> {
+        private final MutableLiveData<CharSequence> liveData;
+
+        public StringPredicate(MutableLiveData<CharSequence> liveData){
+            this.liveData = liveData;
+        }
+        @Override
+        public boolean test(String s) {
+            try {
+                return Objects.requireNonNull(s).contains(Objects.requireNonNull(liveData.getValue()));
+            } catch (Exception e) {
+                return false;
+            }
         }
     }
 }
