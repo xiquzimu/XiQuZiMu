@@ -70,12 +70,14 @@ public class SearchRecyclerviewLayout<T> extends LinearLayout {
         searchViewModel.getSearchTextLiveData().observe(lifecycleOwner, charSequence -> searchListAdapter.filter(predicate));
     }
 
-    public void  setRefreshing(boolean refreshing){
+    public void setRefreshing(boolean refreshing) {
         swipeRefreshLayout.setRefreshing(refreshing);
     }
-    public void setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener onRefreshListener){
+
+    public void setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener onRefreshListener) {
         swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
     }
+
     public void setSearchListAdapter(SearchListAdapter<T> searchListAdapter) {
         this.searchListAdapter = searchListAdapter;
         recyclerView.setAdapter(searchListAdapter);
@@ -83,6 +85,7 @@ public class SearchRecyclerviewLayout<T> extends LinearLayout {
 
     /**
      * 过滤规则
+     *
      * @param predicate Predicate
      */
     public void setPredicate(Predicate<T> predicate) {

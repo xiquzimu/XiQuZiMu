@@ -51,9 +51,10 @@ public class ListActivity extends AppCompatActivity {
     static class StringPredicate implements Predicate<String> {
         private final MutableLiveData<CharSequence> liveData;
 
-        public StringPredicate(MutableLiveData<CharSequence> liveData){
+        public StringPredicate(MutableLiveData<CharSequence> liveData) {
             this.liveData = liveData;
         }
+
         @Override
         public boolean test(String s) {
             try {

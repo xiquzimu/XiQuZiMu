@@ -23,4 +23,8 @@
     <string name="package_version" />
     <string name="floatingTitle">悬浮窗口</string>
     <string name="fetchChangDuan">更新唱段</string>
+    <string name="title_activity_nav_main">NavMainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_about">关于</string>
 </resources>
