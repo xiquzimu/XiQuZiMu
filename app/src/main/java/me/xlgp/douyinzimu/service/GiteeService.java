@@ -1,12 +1,20 @@
 package me.xlgp.douyinzimu.service;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import okhttp3.ResponseBody;
@@ -17,14 +25,42 @@ import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
+
+class StringListRequestBodyConverter implements Converter<ResponseBody, List<String>> {
+    @Nullable
+    @Override
+    public List<String> convert(@NotNull ResponseBody value) {
+        BufferedReader br = null;
+        List<String> list = new ArrayList<>();
+        try {
+            br = new BufferedReader(value.charStream());
+            String temp = "";
+            while (null != (temp = br.readLine())) {
+                if (temp.endsWith(".lrc")) {
+                    list.add(temp);
+                }
+            }
+            return list;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (br != null) br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return list;
+    }
+}
 
 class StringListConverterFactory extends Converter.Factory {
 
     @Nullable
     @Override
-    public Converter<ResponseBody, ?> responseBodyConverter(@NonNull Type type, @NonNull Annotation[] annotations, @NonNull Retrofit retrofit) {
-
-        return super.responseBodyConverter(type, annotations, retrofit);
+    public Converter<ResponseBody, List<String>> responseBodyConverter(@NonNull Type type, @NonNull Annotation[] annotations, @NonNull Retrofit retrofit) {
+        return new StringListRequestBodyConverter();
     }
 
     public static StringListConverterFactory create() {
@@ -32,7 +68,7 @@ class StringListConverterFactory extends Converter.Factory {
     }
 }
 
-class LiveDataCallAdapter<String> implements CallAdapter<String, LiveData<String>> {
+class LiveDataCallAdapter<T> implements CallAdapter<T, LiveData<T>> {
     Type type;
 
     public LiveDataCallAdapter(Type type) {
@@ -47,28 +83,28 @@ class LiveDataCallAdapter<String> implements CallAdapter<String, LiveData<String
 
     @NonNull
     @Override
-    public LiveData<String> adapt(@NonNull Call<String> call) {
-        return new LiveData<String>() {
+    public LiveData<T> adapt(@NonNull Call<T> call) {
+        return new LiveData<T>() {
             private final AtomicBoolean started = new AtomicBoolean(false);
+
             @Override
             protected void onActive() {
-                if (started.compareAndSet(false,true)){
-                    call.enqueue(new Callback<String>() {
+                if (started.compareAndSet(false, true)) {
+                    call.enqueue(new Callback<T>() {
                         @Override
-                        public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+                        public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
                             postValue(response.body());
                         }
 
                         @Override
-                        public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
-                            postValue((String) "错误");
+                        public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
+
                         }
                     });
                 }
             }
         };
     }
-
 }
 
 class LiveDataCallAdapterFactory<T> extends CallAdapter.Factory {
@@ -83,21 +119,20 @@ class LiveDataCallAdapterFactory<T> extends CallAdapter.Factory {
         Type observableType = getParameterUpperBound(0, (ParameterizedType) returnType);
 
         Class<?> rawObservableType = getRawType(observableType);
-        if (rawObservableType != String.class) {
-            throw new IllegalArgumentException("type must be string");
-        }
-
         if (!(observableType instanceof ParameterizedType)) {
-            throw new IllegalStateException("response must be parameterized");
+            throw new IllegalStateException("observableType must be ParameterizedType");
         }
-        return new LiveDataCallAdapter<T>(getParameterUpperBound(0, (ParameterizedType) observableType));
+        if (rawObservableType != List.class) {
+            throw new IllegalArgumentException("type must be list");
+        }
+        return new LiveDataCallAdapter<T>(observableType);
     }
 }
 
 class RetrofitFactory {
     public static <T> T get(Class<T> clazz) {
         String baseUrl = "https://gitee.com/xlgp/opera-lyrics/raw/master/";
-        Retrofit retrofit = new Retrofit.Builder().addConverterFactory(new StringListConverterFactory()).baseUrl(baseUrl).build();
+        Retrofit retrofit = new Retrofit.Builder().addCallAdapterFactory(new LiveDataCallAdapterFactory<List<String>>()).addConverterFactory(StringListConverterFactory.create()).baseUrl(baseUrl).build();
         return retrofit.create(clazz);
     }
 }
@@ -105,5 +140,8 @@ class RetrofitFactory {
 public interface GiteeService {
 
     @GET("name.list")
-    Call<ResponseBody> nameList();
+    LiveData<List<String>> nameList();
+
+    @GET("{path}")
+    LiveData<List<String>> changDuan(@Path("path") String path);
 }

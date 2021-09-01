@@ -8,11 +8,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.github.promeg.pinyinhelper.Pinyin;
 
 import java.util.Comparator;
+import java.util.List;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.douyinzimu.adapter.ChangDuanListAdapter;
@@ -75,7 +77,8 @@ public class DashboardFragment extends Fragment {
     }
 
     public void onFetch(View view) {
-        new FetchGiteeService().getNameList(new ChangDuanService(compositeDisposable)::updateList);
+        LiveData<List<String>> liveData = new FetchGiteeService().getNameList();
+        liveData.observe(requireActivity(), new ChangDuanService(compositeDisposable)::updateList);
     }
 
     public void onClearList(View view) {
