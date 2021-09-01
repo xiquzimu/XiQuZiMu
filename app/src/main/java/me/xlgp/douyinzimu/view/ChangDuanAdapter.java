@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.github.promeg.pinyinhelper.Pinyin;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +53,8 @@ public class ChangDuanAdapter extends BaseAdapter<ChangDuan> {
             super.setData(changDuanInfo);
             noView.setText(String.valueOf(getAdapterPosition() + 1));
             titleView.setText(changDuanInfo.getName());
-            subTitleView.setText(changDuanInfo.getJuZhong() + " " + changDuanInfo.getJuMu());
+            char letter = Pinyin.toPinyin(changDuanInfo.getJuMu().charAt(0)).charAt(0);
+            subTitleView.setText(letter + " " + changDuanInfo.getJuZhong() + " " + changDuanInfo.getJuMu());
         }
     }
 }

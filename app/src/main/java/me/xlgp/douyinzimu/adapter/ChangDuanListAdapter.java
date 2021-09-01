@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.github.promeg.pinyinhelper.Pinyin;
+
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.model.ChangDuan;
@@ -45,7 +47,8 @@ public class ChangDuanListAdapter extends SearchListAdapter<ChangDuan> {
         @Override
         public void setData(ChangDuan changDuan) {
             super.setData(changDuan);
-            textView.setText(this.getAdapterPosition() + "：" + changDuan.getName());
+            ;
+            textView.setText(this.getAdapterPosition() + "：" + Pinyin.toPinyin(changDuan.getJuMu().charAt(0)).charAt(0) + " " + changDuan.getName());
         }
     }
 }

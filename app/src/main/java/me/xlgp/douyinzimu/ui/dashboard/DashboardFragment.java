@@ -10,6 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.github.promeg.pinyinhelper.Pinyin;
+
+import java.util.Comparator;
+
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.douyinzimu.adapter.ChangDuanListAdapter;
 import me.xlgp.douyinzimu.databinding.FragmentDashboardBinding;
@@ -65,6 +69,7 @@ public class DashboardFragment extends Fragment {
     private void loadData() {
         new ChangDuanService(compositeDisposable).list(changDuanList -> {
             searchRecyclerviewLayout.setRefreshing(false);
+            changDuanList.sort(Comparator.comparing(o -> Pinyin.toPinyin(o.getJuMu().charAt(0))));
             viewModel.getChangduanList().setValue(changDuanList);
         });
     }

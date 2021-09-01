@@ -3,6 +3,10 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        //主要用于添加tinypinyin
+        maven {
+            url 'https://maven.aliyun.com/repository/public/'
+        }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:4.2.2"
@@ -16,6 +20,10 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        //主要用于添加tinypinyin
+        maven {
+            url 'https://maven.aliyun.com/repository/public/'
+        }
     }
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {

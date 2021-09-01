@@ -9,8 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.github.promeg.pinyinhelper.Pinyin;
+
 import java.util.List;
-import java.util.Objects;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.douyinzimu.R;
@@ -55,7 +56,7 @@ public class ZimuListFloatinglayout {
     private void sortByPinYin(List<ChangDuan> list) {
         list.sort((o1, o2) -> {
             try {
-                return Objects.requireNonNull(o1.getJuMu()).compareTo(Objects.requireNonNull(o2.getJuMu()));
+                return Pinyin.toPinyin(o1.getJuMu(),"").compareTo(Pinyin.toPinyin(o2.getJuMu(),""));
             } catch (Exception e) {
                 e.printStackTrace();
             }
