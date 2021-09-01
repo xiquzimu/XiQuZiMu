@@ -1,12 +1,9 @@
 package me.xlgp.douyinzimu.view;
 
 import android.content.Context;
-import android.os.Build;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.WindowMetrics;
 
 import me.xlgp.douyinzimu.obj.ZWindowManager;
 
@@ -15,10 +12,6 @@ public class BaseFloatingLayout {
     private View currentLayout;
     private String layoutName;
     private WindowManager.LayoutParams layoutParams;
-
-    public BaseFloatingLayout(Context context, Integer resource) {
-        this(context, resource, null);
-    }
 
     public BaseFloatingLayout(Context context, Integer resource, WindowManager.LayoutParams layoutParams) {
         this.context = context;
@@ -58,22 +51,4 @@ public class BaseFloatingLayout {
         return layoutName;
     }
 
-    /**
-     * 获取屏幕width
-     *
-     * @return width
-     */
-    protected int getFullWidth() {
-        int width;
-        WindowManager windowManager = (WindowManager) this.context.getSystemService(Context.WINDOW_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            WindowMetrics windowMetrics = windowManager.getCurrentWindowMetrics();
-            width = windowMetrics.getBounds().width();
-        } else {
-            DisplayMetrics displayMetrics = new DisplayMetrics();
-            windowManager.getDefaultDisplay().getMetrics(displayMetrics);
-            width = displayMetrics.widthPixels;
-        }
-        return width;
-    }
 }
