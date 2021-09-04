@@ -4,7 +4,7 @@ import java.util.List;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.core.ObservableSource;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Consumer;
@@ -25,7 +25,8 @@ public class ChangDuanService {
     public ChangDuanService(CompositeDisposable compositeDisposable) {
         this.compositeDisposable = compositeDisposable;
     }
-    public ChangDuanService(){
+
+    public ChangDuanService() {
         this.compositeDisposable = new CompositeDisposable();
     }
 
@@ -35,7 +36,7 @@ public class ChangDuanService {
         compositeDisposable.add(disposable);
     }
 
-    public long save(ChangDuanInfo changDuanInfo){
+    public long save(ChangDuanInfo changDuanInfo) {
         AppDatabase db = AppDatabase.getInstance();
         long id = db.changDuanDao().insert(changDuanInfo.getChangDuan());
         ChangCiList changCiList = changDuanInfo.getChangeCiList();
@@ -46,11 +47,9 @@ public class ChangDuanService {
         return id;
     }
 
-    public void saveAynsc(ChangDuanInfo changDuanInfo, Consumer<Throwable> errorConsumer){
-        Disposable disposable =Observable.just(changDuanInfo)
-                .filter(changDuanInfo12 -> changDuanInfo12.getChangDuan() != null && changDuanInfo12.getChangeCiList().size() > 0).map(this::save).compose(ObserverHelper.transformer()).subscribe((Consumer<Object>) o -> {
-                }, errorConsumer);
-        compositeDisposable.add(disposable);
+    public @NonNull Observable<Long> saveAynsc(ChangDuanInfo changDuanInfo, Consumer<Throwable> errorConsumer) {
+        return Observable.just(changDuanInfo)
+                .filter(changDuanInfo12 -> changDuanInfo12.getChangDuan() != null && changDuanInfo12.getChangeCiList().size() > 0).map(this::save).compose(ObserverHelper.transformer());
     }
 
     public void update(String name, Callback<Throwable> callback) {
@@ -61,11 +60,9 @@ public class ChangDuanService {
 
     public @NonNull Observable<Object> updateList(List<String> nameList) {
         GiteeService giteeService = RetrofitFactory.get(GiteeService.class);
-        return Observable.fromIterable(nameList).map((Function<String, Object>) s -> {
-            giteeService.changDuan(s.substring(1)).compose(ObserverHelper.transformer()).subscribe(list -> saveAynsc(ChangDuanHelper.parse(list), Throwable::printStackTrace));
-            return s;
-        }).compose(ObserverHelper.transformer());
+        return Observable.fromIterable(nameList).flatMap((Function<String, ObservableSource<List<String>>>) s -> giteeService.changDuan(s.substring(1))).compose(ObserverHelper.transformer());
     }
+
     public Observable<List<String>> updateList() {
         return new FetchGiteeService().getNameList();
 
