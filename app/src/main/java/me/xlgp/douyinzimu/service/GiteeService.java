@@ -1,7 +1,5 @@
 package me.xlgp.douyinzimu.service;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
@@ -17,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import io.reactivex.rxjava3.core.Observable;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.CallAdapter;
@@ -24,6 +23,7 @@ import retrofit2.Callback;
 import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
@@ -35,11 +35,9 @@ class StringListRequestBodyConverter implements Converter<ResponseBody, List<Str
         List<String> list = new ArrayList<>();
         try {
             br = new BufferedReader(value.charStream());
-            String temp = "";
+            String temp;
             while (null != (temp = br.readLine())) {
-                if (temp.endsWith(".lrc")) {
-                    list.add(temp);
-                }
+                list.add(temp);
             }
             return list;
         } catch (IOException e) {
@@ -130,18 +128,27 @@ class LiveDataCallAdapterFactory<T> extends CallAdapter.Factory {
 }
 
 class RetrofitFactory {
+    static String baseUrl = "https://gitee.com/xlgp/opera-lyrics/raw/master/";
+
     public static <T> T get(Class<T> clazz) {
-        String baseUrl = "https://gitee.com/xlgp/opera-lyrics/raw/master/";
-        Retrofit retrofit = new Retrofit.Builder().addCallAdapterFactory(new LiveDataCallAdapterFactory<List<String>>()).addConverterFactory(StringListConverterFactory.create()).baseUrl(baseUrl).build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+                .addConverterFactory(StringListConverterFactory.create())
+                .baseUrl(baseUrl).build();
         return retrofit.create(clazz);
+    }
+
+    public static <T> T getLiveData(Class<T> tClass) {
+        Retrofit retrofit = new Retrofit.Builder().addCallAdapterFactory(new LiveDataCallAdapterFactory<List<String>>()).addConverterFactory(StringListConverterFactory.create()).baseUrl(baseUrl).build();
+        return retrofit.create(tClass);
     }
 }
 
 public interface GiteeService {
 
     @GET("name.list")
-    LiveData<List<String>> nameList();
+    Observable<List<String>> nameList();
 
     @GET("{path}")
-    LiveData<List<String>> changDuan(@Path("path") String path);
+    Observable<List<String>> changDuan(@Path("path") String path);
 }

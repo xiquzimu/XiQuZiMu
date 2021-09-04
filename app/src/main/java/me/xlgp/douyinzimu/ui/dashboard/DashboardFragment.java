@@ -8,13 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
-
-import com.github.promeg.pinyinhelper.Pinyin;
-
-import java.util.Comparator;
-import java.util.List;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.douyinzimu.adapter.ChangDuanListAdapter;
@@ -23,7 +17,6 @@ import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.predicate.ChangDuanPredicate;
 import me.xlgp.douyinzimu.service.ChangCiService;
 import me.xlgp.douyinzimu.service.ChangDuanService;
-import me.xlgp.douyinzimu.service.FetchGiteeService;
 import me.xlgp.douyinzimu.ui.main.SearchRecyclerviewLayout;
 import me.xlgp.douyinzimu.viewmodel.ChangDuanViewModel;
 
@@ -44,15 +37,20 @@ public class DashboardFragment extends Fragment {
         View root = binding.getRoot();
 
         searchRecyclerviewLayout = binding.zimuListSearchRecyclerviewLayout;
+
+        viewModel = new ViewModelProvider(this).get(ChangDuanViewModel.class);
         initSearchRecyclerviewLayout();
 
         ChangDuanListAdapter changDuanListAdapter = new ChangDuanListAdapter();
         searchRecyclerviewLayout.setSearchListAdapter(changDuanListAdapter);
-
-        viewModel = new ViewModelProvider(this).get(ChangDuanViewModel.class);
-        viewModel.getChangduanList().observe(getViewLifecycleOwner(), changDuanListAdapter::updateData);
-
-        loadData();
+        viewModel.getChangduanList().observe(getViewLifecycleOwner(), list -> {
+            searchRecyclerviewLayout.setRefreshing(false);
+            if (list.size() == 0) {
+                Toast.makeText(requireContext(), "没有唱词", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            changDuanListAdapter.updateData(list);
+        });
 
         binding.clear.setOnClickListener(this::onClearList);
         binding.update.setOnClickListener(this::onFetch);
@@ -65,20 +63,12 @@ public class DashboardFragment extends Fragment {
         searchRecyclerviewLayout.build(this);
         searchRecyclerviewLayout.setRefreshing(true);
         searchRecyclerviewLayout.setPredicate(new ChangDuanPredicate(searchRecyclerviewLayout.getFilterCharSequenceLiveData()));
-        searchRecyclerviewLayout.setOnRefreshListener(this::loadData);
-    }
-
-    private void loadData() {
-        new ChangDuanService(compositeDisposable).list(changDuanList -> {
-            searchRecyclerviewLayout.setRefreshing(false);
-            changDuanList.sort(Comparator.comparing(o -> Pinyin.toPinyin(o.getJuMu().charAt(0))));
-            viewModel.getChangduanList().setValue(changDuanList);
-        });
+        searchRecyclerviewLayout.setOnRefreshListener(viewModel::loadChangDuanList);
     }
 
     public void onFetch(View view) {
-        LiveData<List<String>> liveData = new FetchGiteeService().getNameList();
-        liveData.observe(requireActivity(), new ChangDuanService(compositeDisposable)::updateList);
+        searchRecyclerviewLayout.setRefreshing(true);
+        viewModel.fetchChangDuanList();
     }
 
     public void onClearList(View view) {

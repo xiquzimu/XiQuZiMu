@@ -1,11 +1,12 @@
 package me.xlgp.douyinzimu.service;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Observable;
+import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
 import me.xlgp.douyinzimu.util.HttpURLConnectionUtil;
 
 public class FetchGiteeService {
@@ -26,13 +27,17 @@ public class FetchGiteeService {
         HttpURLConnectionUtil.asyncGet(httpBaseUrl, list -> data.setValue(parseNameList(list)));
     }
 
-    public LiveData<List<String>> getNameList() {
+    /**
+     * 远程获取namelist
+     * @return
+     */
+    public Observable<List<String>> getNameList() {
         GiteeService giteeService = RetrofitFactory.get(GiteeService.class);
-        return giteeService.nameList();
+        return giteeService.nameList().compose(ObserverHelper.transformer());
     }
 
-    public LiveData<List<String>> getChangDuan(String path) {
+    public void getChangDuan(String path) {
         GiteeService giteeService = RetrofitFactory.get(GiteeService.class);
-        return giteeService.changDuan(path.substring(1));
+
     }
 }

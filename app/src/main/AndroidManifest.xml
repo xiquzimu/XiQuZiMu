@@ -19,13 +19,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DouYinZiMu"
         tools:ignore="HardcodedDebugMode">
+        <activity android:name=".ListActivity" android:exported="true"/>
         <activity
             android:name=".NavMainActivity"
             android:exported="true"
             android:label="@string/title_activity_nav_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+i
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

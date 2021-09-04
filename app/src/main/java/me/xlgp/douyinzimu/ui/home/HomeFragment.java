@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import io.reactivex.rxjava3.core.Observable;
+import me.xlgp.douyinzimu.ListActivity;
 import me.xlgp.douyinzimu.databinding.FragmentHomeBinding;
 import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
 import me.xlgp.douyinzimu.service.FloatingService;
@@ -51,8 +52,13 @@ public class HomeFragment extends Fragment {
         binding.openAccessibilitySetting.setOnClickListener(this::onOpenAccessibilitySetting);
         binding.openFloatingServiceBtn.setOnClickListener(this::onStartFloatingService);
 
+        binding.remoteBtn.setOnClickListener(this::onRemote);
 
         return root;
+    }
+
+    public void onRemote(View view){
+        startActivity(new Intent(requireActivity(), ListActivity.class));
     }
 
     public void onStartFloatingService(View view) {
