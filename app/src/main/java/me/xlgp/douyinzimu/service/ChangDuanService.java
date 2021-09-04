@@ -2,7 +2,9 @@ package me.xlgp.douyinzimu.service;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Consumer;
@@ -57,17 +59,12 @@ public class ChangDuanService {
         compositeDisposable.add(disposable);
     }
 
-    public void updateList(List<String> nameList) {
+    public @NonNull Observable<Object> updateList(List<String> nameList) {
         GiteeService giteeService = RetrofitFactory.get(GiteeService.class);
-        Observable.fromIterable(nameList).map(new Function<String, Observable<List<String>>>() {
-            @Override
-            public Observable<List<String>> apply(String s) throws Throwable {
-                return giteeService.changDuan(s.substring(1));
-            }
-        });
-        for (String name : nameList) {
-            update(name, Throwable::printStackTrace);
-        }
+        return Observable.fromIterable(nameList).map((Function<String, Object>) s -> {
+            giteeService.changDuan(s.substring(1)).compose(ObserverHelper.transformer()).subscribe(list -> saveAynsc(ChangDuanHelper.parse(list), Throwable::printStackTrace));
+            return s;
+        }).compose(ObserverHelper.transformer());
     }
     public Observable<List<String>> updateList() {
         return new FetchGiteeService().getNameList();
