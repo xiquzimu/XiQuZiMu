@@ -1,6 +1,8 @@
 package me.xlgp.douyinzimu;
 
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
@@ -10,6 +12,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import me.xlgp.douyinzimu.adapter.BaseAdapter.OnItemClickListener;
 import me.xlgp.douyinzimu.adapter.NameListAdapter;
 import me.xlgp.douyinzimu.service.ChangDuanService;
 import me.xlgp.douyinzimu.service.FetchGiteeService;
@@ -30,7 +33,7 @@ public class ListActivity extends AppCompatActivity {
         searchRecyclerviewLayout.setPredicate(new StringPredicate(searchRecyclerviewLayout.getFilterCharSequenceLiveData()));
 
         NameListAdapter nameListAdapter = new NameListAdapter();
-        nameListAdapter.setOnItemClickListener((itemView, data, position) -> new ChangDuanService(compositeDisposable).update(data, Throwable::printStackTrace));
+        nameListAdapter.setOnItemClickListener(getOnItemClickListener());
         searchRecyclerviewLayout.setSearchListAdapter(nameListAdapter);
 
         FetchViewModel fetchViewModel = new ViewModelProvider(this).get(FetchViewModel.class);
@@ -38,6 +41,22 @@ public class ListActivity extends AppCompatActivity {
         new FetchGiteeService().getNameList(fetchViewModel.getNameList());
         fetchViewModel.getNameList().observe(this, nameListAdapter::updateData);
     }
+
+    private OnItemClickListener<String> getOnItemClickListener() {
+        return (itemView, view, data, position) -> {
+            Button button = (Button) view;
+            CharSequence text = button.getText();
+            button.setText("更新...");
+            compositeDisposable.add(new ChangDuanService().update(data).subscribe(id -> {
+                Toast.makeText(this, "更新成功", Toast.LENGTH_SHORT).show();
+                button.setText(text);
+            }, throwable -> {
+                Toast.makeText(this, "更新失败", Toast.LENGTH_SHORT).show();
+                button.setText(text);
+            }));
+        };
+    }
+
 
     @Override
     protected void onDestroy() {

@@ -68,7 +68,7 @@ public class DashboardFragment extends Fragment {
 
     public void onFetch(View view) {
         searchRecyclerviewLayout.setRefreshing(true);
-        viewModel.fetchChangDuanList();
+        compositeDisposable.add(viewModel.fetchChangDuanList().subscribe(id->{},throwable -> Toast.makeText(requireContext(),throwable.getMessage(), Toast.LENGTH_SHORT).show()));
     }
 
     public void onClearList(View view) {

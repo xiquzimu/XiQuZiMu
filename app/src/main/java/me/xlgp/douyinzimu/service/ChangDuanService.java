@@ -13,9 +13,9 @@ import me.xlgp.douyinzimu.dao.ChangDuanDao;
 import me.xlgp.douyinzimu.db.AppDatabase;
 import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
 import me.xlgp.douyinzimu.model.ChangDuan;
-import me.xlgp.douyinzimu.obj.Callback;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
+import me.xlgp.douyinzimu.retrofit.RetrofitFactory;
 import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
 public class ChangDuanService {
@@ -52,20 +52,20 @@ public class ChangDuanService {
                 .filter(changDuanInfo12 -> changDuanInfo12.getChangDuan() != null && changDuanInfo12.getChangeCiList().size() > 0).map(this::save).compose(ObserverHelper.transformer());
     }
 
-    public void update(String name, Callback<Throwable> callback) {
-        GiteeService giteeService = RetrofitFactory.get(GiteeService.class);
-        Disposable disposable = giteeService.changDuan(name.substring(1)).compose(ObserverHelper.transformer()).subscribe(list -> saveAynsc(ChangDuanHelper.parse(list), callback::call));
-        compositeDisposable.add(disposable);
+    public @NonNull Observable<Long> saveAynsc(ChangDuanInfo changDuanInfo) {
+        return Observable.just(changDuanInfo)
+                .filter(changDuanInfo12 -> changDuanInfo12.getChangDuan() != null && changDuanInfo12.getChangeCiList().size() > 0).map(this::save).compose(ObserverHelper.transformer());
     }
 
-    public @NonNull Observable<Object> updateList(List<String> nameList) {
+    public @NonNull Observable<Long> update(String name) {
         GiteeService giteeService = RetrofitFactory.get(GiteeService.class);
-        return Observable.fromIterable(nameList).flatMap((Function<String, ObservableSource<List<String>>>) s -> giteeService.changDuan(s.substring(1))).compose(ObserverHelper.transformer());
+        return giteeService.changDuan(name.substring(1))
+                .flatMap((Function<List<String>, ObservableSource<Long>>) list -> saveAynsc(ChangDuanHelper.parse(list)))
+                .compose(ObserverHelper.transformer());
     }
 
     public Observable<List<String>> updateList() {
         return new FetchGiteeService().getNameList();
-
     }
 
     public void delete(ChangDuan data, Consumer<Object> consumer) {

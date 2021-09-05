@@ -7,6 +7,7 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;
 import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
+import me.xlgp.douyinzimu.retrofit.RetrofitFactory;
 import me.xlgp.douyinzimu.util.HttpURLConnectionUtil;
 
 public class FetchGiteeService {
@@ -29,7 +30,7 @@ public class FetchGiteeService {
 
     /**
      * 远程获取namelist
-     * @return
+     * @return Observable
      */
     public Observable<List<String>> getNameList() {
         GiteeService giteeService = RetrofitFactory.get(GiteeService.class);
