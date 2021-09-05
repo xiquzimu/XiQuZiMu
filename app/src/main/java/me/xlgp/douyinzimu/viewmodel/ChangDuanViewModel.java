@@ -8,7 +8,6 @@ import com.github.promeg.pinyinhelper.Pinyin;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableSource;
@@ -43,7 +42,6 @@ public class ChangDuanViewModel extends ViewModel {
         ChangDuanService changDuanService = new ChangDuanService();
         return changDuanService.updateList()
                 .flatMap((Function<List<String>, ObservableSource<String>>) list -> {
-                    list = list.stream().filter(s -> s.endsWith(".lrc")).collect(Collectors.toList());
                     if (list.size() == 0) throw new NoSuchElementException("没有远程数据");
                     return Observable.fromIterable(list);
                 }).flatMap((Function<String, ObservableSource<List<String>>>) s -> RetrofitFactory.get(GiteeService.class).changDuan(s.substring(1)))

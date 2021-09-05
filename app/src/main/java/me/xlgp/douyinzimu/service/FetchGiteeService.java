@@ -1,14 +1,13 @@
 package me.xlgp.douyinzimu.service;
 
-import androidx.lifecycle.MutableLiveData;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Observable;
-import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
+import io.reactivex.rxjava3.core.ObservableSource;
+import io.reactivex.rxjava3.functions.Function;
 import me.xlgp.douyinzimu.retrofit.RetrofitFactory;
-import me.xlgp.douyinzimu.util.HttpURLConnectionUtil;
 
 public class FetchGiteeService {
     private final String httpBaseUrl = "https://gitee.com/xlgp/opera-lyrics/raw/master/name.list";
@@ -23,22 +22,15 @@ public class FetchGiteeService {
         return nameList;
     }
 
-    public void getNameList(MutableLiveData<List<String>> data) {
-
-        HttpURLConnectionUtil.asyncGet(httpBaseUrl, list -> data.setValue(parseNameList(list)));
-    }
-
     /**
      * 远程获取namelist
      * @return Observable
      */
     public Observable<List<String>> getNameList() {
         GiteeService giteeService = RetrofitFactory.get(GiteeService.class);
-        return giteeService.nameList().compose(ObserverHelper.transformer());
-    }
-
-    public void getChangDuan(String path) {
-        GiteeService giteeService = RetrofitFactory.get(GiteeService.class);
-
+        return giteeService.nameList().flatMap((Function<List<String>, ObservableSource<List<String>>>) list -> {
+            list = list.stream().filter(s -> s.endsWith(".lrc")).collect(Collectors.toList());
+            return Observable.just(list);
+        });
     }
 }
