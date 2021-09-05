@@ -27,6 +27,12 @@
             android:layout_height="wrap_content"
             android:onClick="onFetch"
             android:text="更新唱词" />
+
+        <TextView
+            android:id="@+id/totalCountTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
     </LinearLayout>
 
     <me.xlgp.douyinzimu.ui.main.SearchRecyclerviewLayout

@@ -1,5 +1,6 @@
 package me.xlgp.douyinzimu.ui.dashboard;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,6 +48,7 @@ public class DashboardFragment extends Fragment {
             if (list.size() == 0) {
                 Toast.makeText(requireContext(), "没有唱词", Toast.LENGTH_SHORT).show();
             }
+            setTotalCountTextView(list.size());
             changDuanListAdapter.updateData(list);
         });
 
@@ -56,6 +58,10 @@ public class DashboardFragment extends Fragment {
         return root;
     }
 
+    @SuppressLint("SetTextI18n")
+    private void setTotalCountTextView(int count){
+        binding.totalCountTextView.setText("共有唱段 " + count + " 段");
+    }
     private void initSearchRecyclerviewLayout() {
 
         searchRecyclerviewLayout.build(this);
