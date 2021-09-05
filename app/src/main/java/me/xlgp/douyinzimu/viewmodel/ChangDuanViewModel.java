@@ -34,7 +34,7 @@ public class ChangDuanViewModel extends ViewModel {
     public void loadChangDuanList() {
         new ChangDuanService().list(changDuanList -> {
             changDuanList.sort(Comparator.comparing(o -> Pinyin.toPinyin(o.getJuMu().charAt(0))));
-            changduanList.setValue(changDuanList);
+            changduanList.postValue(changDuanList);
         });
     }
 

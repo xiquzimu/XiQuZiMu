@@ -38,6 +38,8 @@ public class ListActivity extends AppCompatActivity {
 
         FetchViewModel fetchViewModel = new ViewModelProvider(this).get(FetchViewModel.class);
 
+        searchRecyclerviewLayout.setOnRefreshListener(fetchViewModel::fetchNameList);
+
         fetchViewModel.getNameList().observe(this, list -> {
             searchRecyclerviewLayout.setRefreshing(false);
             if (list.size() == 0) {

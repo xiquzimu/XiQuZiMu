@@ -27,6 +27,6 @@ public class FetchViewModel extends ViewModel {
 
     public void fetchNameList() {
         new FetchGiteeService().getNameList().compose(ObserverHelper.transformer())
-                .subscribe(list -> nameList.setValue(list), throwable -> nameList.setValue(new ArrayList<>()));
+                .subscribe(list -> nameList.postValue(list), throwable -> nameList.setValue(new ArrayList<>()));
     }
 }
