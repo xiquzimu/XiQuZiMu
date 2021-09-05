@@ -71,7 +71,7 @@ public class ZimuDetailFloatingLayout {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         changCiAdapter = new ChangCiAdapter();
-        changCiAdapter.setOnItemClickListener((itemView, data, position) -> {
+        changCiAdapter.setOnItemClickListener((itemView, view, data, position) -> {
             PingLunService.getInstance().start(0);
             updateTitleView(data.getContent());
         });

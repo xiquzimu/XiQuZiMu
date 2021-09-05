@@ -56,7 +56,7 @@ public class ZimuListFloatinglayout {
     private void sortByPinYin(List<ChangDuan> list) {
         list.sort((o1, o2) -> {
             try {
-                return Pinyin.toPinyin(o1.getJuMu(),"").compareTo(Pinyin.toPinyin(o2.getJuMu(),""));
+                return Pinyin.toPinyin(o1.getJuMu(), "").compareTo(Pinyin.toPinyin(o2.getJuMu(), ""));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -81,7 +81,7 @@ public class ZimuListFloatinglayout {
         recyclerView = this.rootLayout.findViewById(R.id.zimu_list_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        changDuanAdapter.setOnItemClickListener((itemView, data, position) -> changDuanObservable.setData(data));
+        changDuanAdapter.setOnItemClickListener((itemView, view, data, position) -> changDuanObservable.setData(data));
         recyclerView.setAdapter(changDuanAdapter);
     }
 }

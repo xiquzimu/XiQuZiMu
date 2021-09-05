@@ -27,7 +27,7 @@ public class NameListAdapter extends SearchListAdapter<String> {
             super(itemView);
             Button itemBtn = itemView.findViewById(R.id.itembutton);
             textView = itemView.findViewById(R.id.textView2);
-            itemBtn.setOnClickListener(v -> onItemClickListener.onItemClick(itemView, data, getAdapterPosition()));
+            itemBtn.setOnClickListener(v -> onItemClickListener.onItemClick(itemView,v, data, getAdapterPosition()));
         }
 
         @SuppressLint("SetTextI18n")

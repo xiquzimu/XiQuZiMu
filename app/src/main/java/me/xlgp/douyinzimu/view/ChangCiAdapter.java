@@ -38,7 +38,7 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
             itemView.setOnClickListener(v -> {
                 // 设置当前唱词
                 ChangDuanData.getInstance().getData().getChangeCiList(getAdapterPosition());
-                onItemClickListener.onItemClick(itemView, data, getAdapterPosition());
+                onItemClickListener.onItemClick(itemView,v, data, getAdapterPosition());
             });
         }
 

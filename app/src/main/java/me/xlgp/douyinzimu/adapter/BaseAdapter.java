@@ -1,5 +1,6 @@
 package me.xlgp.douyinzimu.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,7 +15,7 @@ public abstract class BaseAdapter<E> extends RecyclerView.Adapter<BaseAdapter.Vi
     protected List<E> list;
 
     public BaseAdapter() {
-        this.list = new ArrayList<E>();
+        this.list = new ArrayList<>();
     }
 
     public BaseAdapter(List<E> list) {
@@ -24,7 +25,7 @@ public abstract class BaseAdapter<E> extends RecyclerView.Adapter<BaseAdapter.Vi
     @NonNull
     @Override
     public BaseAdapter.ViewHolder<E> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        throw new NullPointerException("BaseAdapter.ViewHolder is null");
     }
 
     @Override
@@ -33,6 +34,7 @@ public abstract class BaseAdapter<E> extends RecyclerView.Adapter<BaseAdapter.Vi
         holder.setOnItemClickListener(onItemClickListener);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void updateData(List<E> list) {
         this.list = list;
         notifyDataSetChanged();
@@ -48,7 +50,14 @@ public abstract class BaseAdapter<E> extends RecyclerView.Adapter<BaseAdapter.Vi
     }
 
     public interface OnItemClickListener<E> {
-        void onItemClick(View itemView, E data, int position);
+        /**
+         *
+         * @param itemView 当前项 view
+         * @param view 发出事件view
+         * @param data 当前项的数据
+         * @param position 当前项的position
+         */
+        void onItemClick(View itemView, View view, E data, int position);
     }
 
     protected static class ViewHolder<E> extends RecyclerView.ViewHolder {
