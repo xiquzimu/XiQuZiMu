@@ -1,6 +1,7 @@
 package me.xlgp.douyinzimu.ui.dashboard;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +16,6 @@ import me.xlgp.douyinzimu.adapter.ChangDuanListAdapter;
 import me.xlgp.douyinzimu.databinding.FragmentDashboardBinding;
 import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.predicate.ChangDuanPredicate;
-import me.xlgp.douyinzimu.service.ChangCiService;
-import me.xlgp.douyinzimu.service.ChangDuanService;
 import me.xlgp.douyinzimu.ui.main.SearchRecyclerviewLayout;
 import me.xlgp.douyinzimu.viewmodel.ChangDuanViewModel;
 
@@ -47,7 +46,6 @@ public class DashboardFragment extends Fragment {
             searchRecyclerviewLayout.setRefreshing(false);
             if (list.size() == 0) {
                 Toast.makeText(requireContext(), "没有唱词", Toast.LENGTH_SHORT).show();
-                return;
             }
             changDuanListAdapter.updateData(list);
         });
@@ -68,25 +66,18 @@ public class DashboardFragment extends Fragment {
 
     public void onFetch(View view) {
         searchRecyclerviewLayout.setRefreshing(true);
-        compositeDisposable.add(viewModel.fetchChangDuanList().subscribe(id->{},throwable -> Toast.makeText(requireContext(),throwable.getMessage(), Toast.LENGTH_SHORT).show()));
+        compositeDisposable.add(viewModel.fetchChangDuanList().subscribe(id -> {
+        }, throwable -> Toast.makeText(requireContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show()));
     }
 
     public void onClearList(View view) {
-        try {
-            new ChangDuanService(compositeDisposable).deleteAll();
-            Toast.makeText(requireContext(), "唱段删除完毕", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            Toast.makeText(requireContext(), "唱段删除异常", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
-
-        try {
-            new ChangCiService(compositeDisposable).deleteAll();
-            Toast.makeText(requireContext(), "唱词删除完毕", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            Toast.makeText(requireContext(), "删除唱词异常", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
+        compositeDisposable.add(viewModel.deleteChangDuanList().subscribe(o -> {
+            Log.i("onClearList", "onClearList: " + o.toString());
+            Toast.makeText(requireContext(), "删除成功", Toast.LENGTH_SHORT).show();
+        }, throwable -> {
+            throwable.printStackTrace();
+            Toast.makeText(requireContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
+        }));
     }
 
     @Override

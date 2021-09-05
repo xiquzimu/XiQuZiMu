@@ -5,18 +5,21 @@ import androidx.lifecycle.ViewModel;
 
 import com.github.promeg.pinyinhelper.Pinyin;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableSource;
 import io.reactivex.rxjava3.functions.Function;
 import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
 import me.xlgp.douyinzimu.model.ChangDuan;
-import me.xlgp.douyinzimu.retrofit.RetrofitFactory;
+import me.xlgp.douyinzimu.service.ChangCiService;
 import me.xlgp.douyinzimu.service.ChangDuanService;
-import me.xlgp.douyinzimu.service.GiteeService;
+import me.xlgp.douyinzimu.service.FetchGiteeService;
 import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
 public class ChangDuanViewModel extends ViewModel {
@@ -32,10 +35,10 @@ public class ChangDuanViewModel extends ViewModel {
     }
 
     public void loadChangDuanList() {
-        new ChangDuanService().list(changDuanList -> {
+        new ChangDuanService().list().subscribe(changDuanList -> {
             changDuanList.sort(Comparator.comparing(o -> Pinyin.toPinyin(o.getJuMu().charAt(0))));
             changduanList.postValue(changDuanList);
-        });
+        }, throwable -> changduanList.postValue(new ArrayList<>()));
     }
 
     public Observable<Long> fetchChangDuanList() {
@@ -44,8 +47,12 @@ public class ChangDuanViewModel extends ViewModel {
                 .flatMap((Function<List<String>, ObservableSource<String>>) list -> {
                     if (list.size() == 0) throw new NoSuchElementException("没有远程数据");
                     return Observable.fromIterable(list);
-                }).flatMap((Function<String, ObservableSource<List<String>>>) s -> RetrofitFactory.get(GiteeService.class).changDuan(s.substring(1)))
+                }).flatMap((Function<String, ObservableSource<List<String>>>) s -> new FetchGiteeService().changDuan(s.substring(1)))
                 .flatMap((Function<List<String>, ObservableSource<Long>>) list -> changDuanService.saveAynsc(ChangDuanHelper.parse(list)))
                 .compose(ObserverHelper.transformer());
+    }
+
+    public @NonNull Flowable<Object> deleteChangDuanList() {
+        return new ChangDuanService().deleteAll().concatWith(new ChangCiService().deleteAll());
     }
 }

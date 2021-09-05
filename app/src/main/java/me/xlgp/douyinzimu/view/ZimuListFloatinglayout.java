@@ -66,7 +66,7 @@ public class ZimuListFloatinglayout {
 
     private void loadData(Callback<Boolean> callback) {
         ChangDuanService changDuanService = new ChangDuanService(compositeDisposable);
-        changDuanService.list(list -> {
+        changDuanService.list().subscribe(list -> {
             if (list == null || list.size() == 0) {
                 Toast.makeText(context, "无数据可更新", Toast.LENGTH_SHORT).show();
                 return;
@@ -74,7 +74,7 @@ public class ZimuListFloatinglayout {
             sortByPinYin(list);
             changDuanAdapter.updateData(list);
             if (callback != null) callback.call(true);
-        });
+        }, throwable -> Toast.makeText(context, "获取唱段异常", Toast.LENGTH_SHORT).show());
     }
 
     private void initRecyclerView() {

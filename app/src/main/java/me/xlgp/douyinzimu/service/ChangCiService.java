@@ -4,7 +4,7 @@ import java.util.List;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Consumer;
@@ -19,6 +19,10 @@ public class ChangCiService {
 
     public ChangCiService(CompositeDisposable compositeDisposable) {
         this.compositeDisposable = compositeDisposable;
+    }
+
+    public ChangCiService() {
+        this.compositeDisposable = new CompositeDisposable();
     }
 
     public void listByChangDuanId(int id, Consumer<List<ChangCi>> consumer) {
@@ -38,17 +42,12 @@ public class ChangCiService {
         listByChangDuanId(id, this::deleteList);
     }
 
-    public void deleteList(List<ChangCi> list) {
+    public @NonNull Single<Integer> deleteList(List<ChangCi> list) {
         ChangCiDao changCiDao = AppDatabase.getInstance().changCiDao();
-        Disposable disposable = Observable.just(list).subscribe(changCis -> {
-            Disposable disposable1 = changCiDao.deleteAll(changCis).compose(ObserverHelper.singleTransformer()).subscribe();
-            compositeDisposable.add(disposable1);
-        });
-        compositeDisposable.add(disposable);
+        return changCiDao.deleteAll(list).compose(ObserverHelper.singleTransformer());
     }
 
-    public void deleteAll() {
-        Disposable disposable = list().subscribe(this::deleteList);
-        compositeDisposable.add(disposable);
+    public @NonNull Flowable<Object> deleteAll() {
+        return list().flatMapSingle(this::deleteList);
     }
 }
