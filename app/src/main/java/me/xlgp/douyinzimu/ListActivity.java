@@ -1,5 +1,6 @@
 package me.xlgp.douyinzimu;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ public class ListActivity extends AppCompatActivity {
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     ActivityListBinding binding = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,8 +50,14 @@ public class ListActivity extends AppCompatActivity {
             if (list.size() == 0) {
                 Toast.makeText(this, "无法获取远程唱词", Toast.LENGTH_SHORT).show();
             }
+            setTotalCountTextView(list.size());
             nameListAdapter.updateData(list);
         });
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void setTotalCountTextView(int count) {
+        binding.totalCountTextView.setText("共有 " + count + " 条");
     }
 
     private OnItemClickListener<String> getOnItemClickListener() {
