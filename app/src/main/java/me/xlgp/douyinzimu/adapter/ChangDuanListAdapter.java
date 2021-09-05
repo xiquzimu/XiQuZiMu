@@ -21,16 +21,24 @@ public class ChangDuanListAdapter extends SearchListAdapter<ChangDuan> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fetch_item_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.changduan_item_layout, parent, false);
         return new ViewHolder(view);
     }
 
     protected static class ViewHolder extends BaseAdapter.ViewHolder<ChangDuan> {
-        private final TextView textView;
+        private final TextView no;
+        private final TextView content;
+        private final TextView title;
+        private final TextView letter;
+
 
         public ViewHolder(View view) {
             super(view);
-            textView = itemView.findViewById(R.id.textView2);
+            no = itemView.findViewById(R.id.no);
+            content = itemView.findViewById(R.id.content);
+            title = itemView.findViewById(R.id.title);
+            letter = itemView.findViewById(R.id.letter);
+
             view.setOnLongClickListener(v -> {
                 try {
                     new ChangDuanService(new CompositeDisposable())
@@ -47,8 +55,10 @@ public class ChangDuanListAdapter extends SearchListAdapter<ChangDuan> {
         @Override
         public void setData(ChangDuan changDuan) {
             super.setData(changDuan);
-            ;
-            textView.setText(this.getAdapterPosition() + "：" + Pinyin.toPinyin(changDuan.getJuMu().charAt(0)).charAt(0) + " " + changDuan.getName());
+            no.setText(this.getAdapterPosition() + "");
+            title.setText(changDuan.getJuZhong() + " " + changDuan.getJuMu());
+            content.setText(changDuan.getName());
+            letter.setText(String.valueOf(Pinyin.toPinyin(changDuan.getJuMu().charAt(0)).charAt(0)));
         }
     }
 }
