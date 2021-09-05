@@ -14,6 +14,7 @@ import java.util.function.Predicate;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.douyinzimu.adapter.BaseAdapter.OnItemClickListener;
 import me.xlgp.douyinzimu.adapter.NameListAdapter;
+import me.xlgp.douyinzimu.databinding.ActivityListBinding;
 import me.xlgp.douyinzimu.service.ChangDuanService;
 import me.xlgp.douyinzimu.ui.main.SearchRecyclerviewLayout;
 import me.xlgp.douyinzimu.viewmodel.FetchViewModel;
@@ -21,13 +22,15 @@ import me.xlgp.douyinzimu.viewmodel.FetchViewModel;
 public class ListActivity extends AppCompatActivity {
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-
+    ActivityListBinding binding = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list);
 
-        SearchRecyclerviewLayout<String> searchRecyclerviewLayout = findViewById(R.id.nameListSearchRecyclerviewLayout);
+        binding = ActivityListBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        SearchRecyclerviewLayout<String> searchRecyclerviewLayout = binding.nameListSearchRecyclerviewLayout;
         searchRecyclerviewLayout.build(this);
         searchRecyclerviewLayout.setPredicate(new StringPredicate(searchRecyclerviewLayout.getFilterCharSequenceLiveData()));
         searchRecyclerviewLayout.setRefreshing(true);
@@ -44,7 +47,6 @@ public class ListActivity extends AppCompatActivity {
             searchRecyclerviewLayout.setRefreshing(false);
             if (list.size() == 0) {
                 Toast.makeText(this, "无法获取远程唱词", Toast.LENGTH_SHORT).show();
-                return;
             }
             nameListAdapter.updateData(list);
         });
