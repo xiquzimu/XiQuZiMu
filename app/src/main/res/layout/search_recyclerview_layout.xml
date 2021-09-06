@@ -11,11 +11,15 @@
         android:id="@+id/searchEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:hint="@string/searchEditTextHint"
+        android:inputType="text"
         android:paddingStart="6dp"
         android:paddingTop="8dp"
         android:paddingEnd="6dp"
         android:paddingBottom="6dp"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:textSize="14sp" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"

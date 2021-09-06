@@ -25,6 +25,7 @@
     <string name="fetchChangDuan">更新唱段</string>
     <string name="title_activity_nav_main">NavMainActivity</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_dashboard">列表</string>
     <string name="title_about">关于</string>
+    <string name="searchEditTextHint">查询点什么...</string>
 </resources>
