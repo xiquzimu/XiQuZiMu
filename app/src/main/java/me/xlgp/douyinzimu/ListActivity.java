@@ -65,12 +65,15 @@ public class ListActivity extends AppCompatActivity {
             Button button = (Button) view;
             CharSequence text = button.getText();
             button.setText("更新...");
+            button.setEnabled(false);
             compositeDisposable.add(new ChangDuanService().update(data).subscribe(id -> {
                 Toast.makeText(this, "更新成功", Toast.LENGTH_SHORT).show();
                 button.setText(text);
+                button.setEnabled(true);
             }, throwable -> {
                 Toast.makeText(this, "更新失败", Toast.LENGTH_SHORT).show();
                 button.setText(text);
+                button.setEnabled(true);
             }));
         };
     }
