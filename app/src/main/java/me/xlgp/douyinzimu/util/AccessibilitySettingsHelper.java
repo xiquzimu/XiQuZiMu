@@ -3,25 +3,13 @@ package me.xlgp.douyinzimu.util;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.Context;
 import android.view.accessibility.AccessibilityManager;
-import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.List;
 
-import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.service.DouYinAccessibilityService;
 
 public class AccessibilitySettingsHelper {
-
-    public static void updateAccessibilitySettingBtn(Context context, Button button) {
-        if (AccessibilitySettingsHelper.isEnabled(context)) {
-            button.setText(R.string.ApenaccesibilityText);
-            button.setTextColor(context.getResources().getColor(R.color.white, null));
-        } else {
-            button.setText(R.string.NoApenaccesibilityText);
-            button.setTextColor(context.getResources().getColor(R.color.red, null));
-        }
-    }
 
     /**
      * 是否可用，true:表示服务启动，可以使用

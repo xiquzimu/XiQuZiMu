@@ -12,6 +12,7 @@ public class FetchGiteeService {
 
     /**
      * 远程获取namelist
+     *
      * @return Observable
      */
     public Observable<List<String>> getNameList() {
@@ -22,7 +23,7 @@ public class FetchGiteeService {
         });
     }
 
-    public Observable<List<String>> changDuan(String path){
+    public Observable<List<String>> changDuan(String path) {
         GiteeService giteeService = RetrofitFactory.get(GiteeService.class);
         return giteeService.changDuan(path);
     }

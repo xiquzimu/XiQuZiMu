@@ -57,6 +57,10 @@ class LiveDataCallAdapter<T> implements CallAdapter<T, LiveData<T>> {
 
 public class LiveDataCallAdapterFactory<T> extends CallAdapter.Factory {
 
+    public static <T> LiveDataCallAdapterFactory<T> create() {
+        return new LiveDataCallAdapterFactory<>();
+    }
+
     @Nullable
     @Override
     public CallAdapter<?, ?> get(@NonNull Type returnType, @NonNull Annotation[] annotations, @NonNull Retrofit retrofit) {
@@ -74,9 +78,5 @@ public class LiveDataCallAdapterFactory<T> extends CallAdapter.Factory {
             throw new IllegalArgumentException("type must be list");
         }
         return new LiveDataCallAdapter<T>(observableType);
-    }
-
-    public static <T> LiveDataCallAdapterFactory<T> create(){
-        return new LiveDataCallAdapterFactory<>();
     }
 }

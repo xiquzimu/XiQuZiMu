@@ -51,10 +51,9 @@ public abstract class BaseAdapter<E> extends RecyclerView.Adapter<BaseAdapter.Vi
 
     public interface OnItemClickListener<E> {
         /**
-         *
          * @param itemView 当前项 view
-         * @param view 发出事件view
-         * @param data 当前项的数据
+         * @param view     发出事件view
+         * @param data     当前项的数据
          * @param position 当前项的position
          */
         void onItemClick(View itemView, View view, E data, int position);

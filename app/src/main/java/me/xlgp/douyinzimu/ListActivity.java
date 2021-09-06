@@ -22,8 +22,8 @@ import me.xlgp.douyinzimu.viewmodel.FetchViewModel;
 
 public class ListActivity extends AppCompatActivity {
 
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     ActivityListBinding binding = null;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

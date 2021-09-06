@@ -8,7 +8,6 @@ import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -28,25 +27,30 @@ import me.xlgp.douyinzimu.util.FloatingHelper;
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
+    private final ActivityResultLauncher<Intent> floatingLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> judgeFloating());
+    private final ActivityResultLauncher<Intent> accessibilityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> judgeAccessibility());
     private FragmentHomeBinding binding;
-    private Button openFloatingBtn = null;
-    private final ActivityResultLauncher<Intent> floatingLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> FloatingHelper.updateFloatingBtn(requireContext(), openFloatingBtn));
-    private Button openAccessibilitySettingBtn = null;
-    private final ActivityResultLauncher<Intent> accessibilityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> AccessibilitySettingsHelper.updateAccessibilitySettingBtn(requireContext(), openAccessibilitySettingBtn));
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
 
+        homeViewModel.getAccessibilitySettingStatus().observe(requireActivity(), result -> {
+            QuanxianState quanxianState = result.getData();
+            binding.openAccessibilitySetting.setText(quanxianState.getTextid());
+            binding.openAccessibilitySetting.setTextColor(requireContext().getResources().getColor(quanxianState.getResouceId(), null));
+        });
+        homeViewModel.getFloatQuanxianState().observe(requireActivity(), result -> {
+            QuanxianState quanxianState = result.getData();
+            binding.openFloatingServiceBtn.setTextColor(requireContext().getResources().getColor(quanxianState.getResouceId(), null));
+            binding.openFloatingServiceBtn.setText(quanxianState.getTextid());
+        });
+
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        openFloatingBtn = binding.openFloatingServiceBtn;
-        openAccessibilitySettingBtn = binding.openAccessibilitySetting;
-
-        AccessibilitySettingsHelper.updateAccessibilitySettingBtn(requireContext(), openAccessibilitySettingBtn);
-        FloatingHelper.updateFloatingBtn(requireContext(), openFloatingBtn);
+        judgeQuanxian();
 
         binding.runBtn.setOnClickListener(this::onRun);
         binding.openAccessibilitySetting.setOnClickListener(this::onOpenAccessibilitySetting);
@@ -57,7 +61,28 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
-    public void onRemote(View view){
+    private void judgeFloating() {
+        if (FloatingHelper.enable(requireContext())) {
+            homeViewModel.getFloatQuanxianState().setValue(new FloatQuanxianState.Succes());
+        } else {
+            homeViewModel.getFloatQuanxianState().setValue(new FloatQuanxianState.Error());
+        }
+    }
+
+    private void judgeAccessibility() {
+        if (AccessibilitySettingsHelper.isEnabled(requireContext())) {
+            homeViewModel.getAccessibilitySettingStatus().setValue(new AccessibilitySettingStatus.Succes());
+        } else {
+            homeViewModel.getAccessibilitySettingStatus().setValue(new AccessibilitySettingStatus.Error());
+        }
+    }
+
+    private void judgeQuanxian() {
+        judgeFloating();
+        judgeAccessibility();
+    }
+
+    public void onRemote(View view) {
         startActivity(new Intent(requireActivity(), ListActivity.class));
     }
 

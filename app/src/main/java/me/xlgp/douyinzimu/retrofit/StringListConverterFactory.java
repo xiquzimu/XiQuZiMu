@@ -44,13 +44,13 @@ class StringListRequestBodyConverter implements Converter<ResponseBody, List<Str
 
 public class StringListConverterFactory extends Converter.Factory {
 
+    public static StringListConverterFactory create() {
+        return new StringListConverterFactory();
+    }
+
     @Nullable
     @Override
     public Converter<ResponseBody, List<String>> responseBodyConverter(@NonNull Type type, @NonNull Annotation[] annotations, @NonNull Retrofit retrofit) {
         return new StringListRequestBodyConverter();
-    }
-
-    public static StringListConverterFactory create() {
-        return new StringListConverterFactory();
     }
 }

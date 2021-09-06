@@ -59,9 +59,10 @@ public class DashboardFragment extends Fragment {
     }
 
     @SuppressLint("SetTextI18n")
-    private void setTotalCountTextView(int count){
+    private void setTotalCountTextView(int count) {
         binding.totalCountTextView.setText("共有唱段 " + count + " 段");
     }
+
     private void initSearchRecyclerviewLayout() {
 
         searchRecyclerviewLayout.build(this);
