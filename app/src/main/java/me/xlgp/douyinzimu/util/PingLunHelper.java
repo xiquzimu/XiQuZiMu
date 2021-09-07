@@ -8,10 +8,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.disposables.Disposable;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.exception.NotFoundDouYinException;
 import me.xlgp.douyinzimu.exception.NotFoundNodeException;
@@ -72,52 +69,9 @@ public class PingLunHelper {
      * 获取发送按钮
      */
     private static AccessibilityNodeInfo getSendNodeByInputNode(AccessibilityNodeInfo rootNodeInfo) throws Exception {
-        try {
-            AccessibilityNodeInfo actionNode = rootNodeInfo.findFocus(AccessibilityNodeInfo.ACTION_FOCUS);
-            AccessibilityNodeInfo node;
-
-            //抖音version >= v17.2.0
-            node = actionNode.getParent().getParent().getParent().getChild(1);
-            if (isSendAccessibilityNodeInfo(node)) return node;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw new NotFoundNodeException("没有找到发送按钮");
-        }
-
-        try {
-            AccessibilityNodeInfo actionNode = rootNodeInfo.findFocus(AccessibilityNodeInfo.ACTION_FOCUS);
-            AccessibilityNodeInfo node;
-            //抖音version <= v17.1.0
-            node = actionNode.getParent().getParent().getParent().getChild(2);
-            if (isSendAccessibilityNodeInfo(node)) return node;
-
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw new NotFoundNodeException("没有找到发送按钮");
-        }
-        throw new Exception("获取发送按钮异常");
-    }
-
-    /**
-     * @param service  　service
-     * @param callback 回调
-     * @param delay    延时时间 ms
-     * @param fisrt    用于标记第一次调用
-     */
-    public static void handleSend(AccessibilityService service, Callback<Boolean> callback, int delay, final boolean fisrt) {
-        // 延时发送，等待发送按钮出现，　douyin 17.2.0 版本中发送按钮默认隐藏了，只有输入内容后大概延时120ms后显示
-        Disposable disposable = Observable.timer(delay, TimeUnit.MILLISECONDS).subscribe(aLong -> {
-            try {
-                boolean sendSuccess = Objects.requireNonNull(getSendNodeByInputNode(service.getRootInActiveWindow())).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                if (sendSuccess) { //发送成功之后，回调
-                    callback.call(true);
-                }
-            } catch (NotFoundNodeException e) {
-                //若 第一次调用后发送按钮仍没显示，则再调用一次
-                if (!fisrt) return;
-                handleSend(service, callback, 100, false);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        AccessibilityNodeInfo node = rootNodeInfo.getParent().getParent().getParent().getChild(2);
+        if (isSendAccessibilityNodeInfo(node)) return node;
+        throw new NotFoundNodeException("没有找到发送按钮");
     }
 
     /**
@@ -137,10 +91,18 @@ public class PingLunHelper {
             arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, changCi.getContent());
             boolean setTextSuccess = Objects.requireNonNull(node).performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
             if (setTextSuccess) {
-                handleSend(service, callback, 200, true);
+                boolean sendSuccess = getSendNodeByInputNode(node).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                if (sendSuccess) { //发送成功之后，回调
+                    callback.call(true);
+                }else{
+                    throw new RuntimeException("发送操作异常");
+                }
+            }else{
+                throw new RuntimeException("输入内容异常");
             }
         } catch (Exception e) {
             e.printStackTrace();
+            callback.call(false);
         } finally {
             if (node != null) node.recycle();
         }

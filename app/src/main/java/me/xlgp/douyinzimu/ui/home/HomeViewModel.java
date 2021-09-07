@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel;
 
 public class HomeViewModel extends ViewModel {
 
-    private MutableLiveData<Result<QuanxianState>> floatQuanxianState;
-    private MutableLiveData<Result<QuanxianState>> accessibilitySettingStatus;
+    private final MutableLiveData<Result<QuanxianState>> floatQuanxianState;
+    private final MutableLiveData<Result<QuanxianState>> accessibilitySettingStatus;
 
     public HomeViewModel() {
         floatQuanxianState = new MutableLiveData<>();
