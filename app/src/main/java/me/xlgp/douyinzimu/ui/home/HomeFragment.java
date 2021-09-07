@@ -50,8 +50,6 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        judgeQuanxian();
-
         binding.runBtn.setOnClickListener(this::onRun);
         binding.openAccessibilitySetting.setOnClickListener(this::onOpenAccessibilitySetting);
         binding.openFloatingServiceBtn.setOnClickListener(this::onStartFloatingService);
@@ -75,11 +73,6 @@ public class HomeFragment extends Fragment {
         } else {
             homeViewModel.getAccessibilitySettingStatus().setValue(new AccessibilitySettingStatus.Error());
         }
-    }
-
-    private void judgeQuanxian() {
-        judgeFloating();
-        judgeAccessibility();
     }
 
     public void onRemote(View view) {
@@ -114,6 +107,13 @@ public class HomeFragment extends Fragment {
         }
         Intent floatingIntent = new Intent(getActivity(), FloatingService.class);
         Observable.create(emitter -> emitter.onNext(context.startService(floatingIntent))).compose(ObserverHelper.transformer()).subscribe();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        judgeFloating();
+        judgeAccessibility();
     }
 
     @Override
