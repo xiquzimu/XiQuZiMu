@@ -59,6 +59,13 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        judgeFloating();
+        judgeAccessibility();
+    }
+
     private void judgeFloating() {
         if (FloatingHelper.enable(requireContext())) {
             homeViewModel.getFloatQuanxianState().setValue(new FloatQuanxianState.Succes());
@@ -107,13 +114,6 @@ public class HomeFragment extends Fragment {
         }
         Intent floatingIntent = new Intent(getActivity(), FloatingService.class);
         Observable.create(emitter -> emitter.onNext(context.startService(floatingIntent))).compose(ObserverHelper.transformer()).subscribe();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        judgeFloating();
-        judgeAccessibility();
     }
 
     @Override
