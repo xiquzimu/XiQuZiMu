@@ -15,6 +15,7 @@ import java.util.Observer;
 
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
+import me.xlgp.douyinzimu.listener.OnDoubleClickListener;
 import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.obj.ZimuLayoutParams;
 import me.xlgp.douyinzimu.service.DianZanService;
@@ -39,8 +40,13 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
         viewPager2.setOffscreenPageLimit(2);
         setPanelTitle("字幕列表");
 
-        setOnCloseListener(v->floatingService.closeFloatingWindow(getCurrentLayout()));
-        setOnTitleClickListener(v -> new DianZanService().dianZan());
+        setOnCloseListener(v -> floatingService.closeFloatingWindow(getCurrentLayout()));
+        setOnTitleClickListener(new OnDoubleClickListener() {
+            @Override
+            public void doubleClick(View v) {
+                new DianZanService().dianZan();
+            }
+        });
     }
 
     private class ZimuMainFloatingAdapter extends RecyclerView.Adapter<ZimuMainFloatingAdapter.ViewHolder> {
