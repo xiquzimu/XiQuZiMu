@@ -33,6 +33,12 @@ public class ChangCiService {
         compositeDisposable.add(disposable);
     }
 
+    public @NonNull Flowable<List<ChangCi>> listByChangDuanId(int id){
+        ChangCiDao changCiDao = AppDatabase.getInstance().changCiDao();
+        return changCiDao.listByChangDuanId(id)
+                .compose(ObserverHelper.flowableTransformer());
+    }
+
     public @NonNull Flowable<List<ChangCi>> list() {
         ChangCiDao changCiDao = AppDatabase.getInstance().changCiDao();
         return changCiDao.list().compose(ObserverHelper.flowableTransformer());

@@ -13,6 +13,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import java.util.List;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.ZimuApplication;
 import me.xlgp.douyinzimu.designpatterns.ChangDuanData;
@@ -83,9 +84,11 @@ public class ZimuDetailFloatingLayout {
      * 获取唱词并初始化唱词后是否立即评论
      */
     public void asyncRun(ChangDuan changDuan) {
-        asyncGetChangDuan(changDuan, o -> {
+        asyncGetChangDuan(changDuan, b -> {
             switchMaterial.setChecked(false);
-            switchMaterial.setChecked(true);
+            if (b) {
+                switchMaterial.setChecked(true);
+            }
         });
     }
 
@@ -104,7 +107,7 @@ public class ZimuDetailFloatingLayout {
         return changCiList;
     }
 
-    public void asyncGetChangDuan(ChangDuan changDuan, Callback<Object> callback) {
+    public void asyncGetChangDuan(ChangDuan changDuan, Callback<Boolean> callback) {
         //异步获取唱词
         if (changCiAdapter == null) {
             Toast.makeText(context, "唱词列表初始化异常", Toast.LENGTH_SHORT).show();
@@ -115,16 +118,16 @@ public class ZimuDetailFloatingLayout {
             return;
         }
 
-        ChangCiService changCiService = new ChangCiService(compositeDisposable);
-        changCiService.listByChangDuanId(changDuan.getId(), changCis -> {
-
+        ChangCiService changCiService = new ChangCiService();
+        Disposable disposable = changCiService.listByChangDuanId(changDuan.getId()).subscribe(list -> {
             ChangDuanInfo changDuanInfo = new ChangDuanInfo();
-            changDuanInfo.setChangCiList(parseChangCiList(changDuan, changCis));
+            changDuanInfo.setChangCiList(parseChangCiList(changDuan, list));
             changDuanInfo.setChangDuan(changDuan);
 
             changDuanData.setData(changDuanInfo);
             callback.call(true);
-        });
+        }, throwable -> callback.call(false));
+        compositeDisposable.add(disposable);
     }
 
     private void updateTitleView(String text) {
