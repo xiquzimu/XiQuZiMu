@@ -113,7 +113,8 @@ public class HomeFragment extends Fragment {
             return;
         }
         Intent floatingIntent = new Intent(getActivity(), FloatingService.class);
-        Observable.create(emitter -> emitter.onNext(context.startService(floatingIntent))).compose(ObserverHelper.transformer()).subscribe();
+        Observable.create(emitter -> emitter.onNext(context.startService(floatingIntent)))
+                .compose(ObserverHelper.transformer()).subscribe();
     }
 
     @Override
