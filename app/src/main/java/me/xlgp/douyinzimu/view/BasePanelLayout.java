@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -85,11 +86,14 @@ public class BasePanelLayout extends BaseFloatingLayout {
                 (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)));
 
         this.rootLayout.findViewById(R.id.kaiOrShouBtn).setOnClickListener(v -> {
+            ImageButton imageButton = (ImageButton)v;
             if (isShou) {
                 rootLayout.getLayoutParams().height = WindowManager.LayoutParams.WRAP_CONTENT;
+                imageButton.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24);
                 isShou = false;
             } else {
                 rootLayout.getLayoutParams().height = getShouHeight();
+                imageButton.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
                 isShou = true;
             }
             ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
