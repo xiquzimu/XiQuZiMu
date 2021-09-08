@@ -15,14 +15,13 @@ public class BaseFloatingLayout {
 
     public BaseFloatingLayout(Context context, Integer resource, WindowManager.LayoutParams layoutParams) {
         this.context = context;
-        inflateLayout(resource);
+        currentLayout = inflateLayout(resource);
         this.layoutParams = layoutParams;
     }
 
     protected View inflateLayout(int resource) {
         LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        currentLayout = inflater.inflate(resource, null);
-        return currentLayout;
+        return inflater.inflate(resource, null);
     }
 
     public View getCurrentLayout() {

@@ -1,6 +1,5 @@
 package me.xlgp.douyinzimu.view;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,13 +18,16 @@ import me.xlgp.douyinzimu.designpatterns.BaseObservable;
 import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.obj.ZimuLayoutParams;
 import me.xlgp.douyinzimu.service.DianZanService;
+import me.xlgp.douyinzimu.service.FloatingService;
 
 public class ZimuMainFloatingLayout extends BasePanelLayout {
     private ViewPager2 viewPager2;
     private ZimuDetailFloatingLayout zimuDetailFloatingLayout;
+    private final FloatingService floatingService;
 
-    public ZimuMainFloatingLayout(@NonNull Context context) {
-        super(context, R.layout.zimu_viewpager2_layout);
+    public ZimuMainFloatingLayout(@NonNull FloatingService floatingService) {
+        super(floatingService, R.layout.zimu_viewpager2_layout);
+        this.floatingService = floatingService;
         super.build(new ZimuLayoutParams.WithFullWidth(), this.getClass().getName());
         init();
     }
@@ -36,11 +38,9 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
         //懒加载，主要防止选择唱段后第二个layout还没有造成 zimuDetailFloatingLayout 为null情况
         viewPager2.setOffscreenPageLimit(2);
         setPanelTitle("字幕列表");
-        dianZanAction();
-    }
 
-    public void dianZanAction() {
-        super.setOnTitleClickListener(v -> new DianZanService().dianZan());
+        setOnCloseListener(v->floatingService.closeFloatingWindow(getCurrentLayout()));
+        setOnTitleClickListener(v -> new DianZanService().dianZan());
     }
 
     private class ZimuMainFloatingAdapter extends RecyclerView.Adapter<ZimuMainFloatingAdapter.ViewHolder> {

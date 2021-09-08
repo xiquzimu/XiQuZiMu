@@ -57,7 +57,6 @@ public class ZWindowManager {
         windowManager.removeView(view);
         Collection<View> collection = viewMap.values();
         collection.remove(view);
-        windowManager.removeView(view);
 
     }
 
