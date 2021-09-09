@@ -8,6 +8,9 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+
 import java.util.Observable;
 import java.util.Observer;
 
@@ -54,6 +57,23 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
                 new DianZanService().dianZan();
             }
         });
+
+        initTabList();
+    }
+
+    private void initTabList() {
+        String[] names = new String[]{"黄梅戏", "唱词"};
+        for (int i = 0; i < names.length; i++) {
+            TabLayout.Tab tab = binding.zimuTabList.newTab();
+            tab.setText(names[i]);
+            binding.zimuTabList.addTab(tab);
+        }
+        new TabLayoutMediator(binding.zimuTabList, binding.zimuViewpager2, new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                tab.setText(names[position]);
+            }
+        }).attach();
     }
 
     private class ZimuMainFloatingAdapter extends RecyclerView.Adapter<ZimuMainFloatingAdapter.ViewHolder> {
