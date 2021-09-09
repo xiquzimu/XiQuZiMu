@@ -19,7 +19,6 @@ import me.xlgp.douyinzimu.obj.Callback;
 import me.xlgp.douyinzimu.service.ChangDuanService;
 
 public class ZimuListFloatinglayout {
-    private final View rootLayout;
     private final Context context;
     private final ZimuMainFloatingLayout.ChangDuanObservable changDuanObservable;
     private final CompositeDisposable compositeDisposable;
@@ -28,7 +27,6 @@ public class ZimuListFloatinglayout {
     private final ZimuFloatingLayoutBinding binding;
 
     public ZimuListFloatinglayout(View view, ZimuMainFloatingLayout.ChangDuanObservable changDuanObservable) {
-        rootLayout = view;
         binding = ZimuFloatingLayoutBinding.bind(view);
         this.context = view.getContext();
         this.changDuanObservable = changDuanObservable;
