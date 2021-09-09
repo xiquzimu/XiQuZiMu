@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/zimu_viewpager2_layout"
+        android:id="@+id/zimu_viewpager2"
         android:layout_width="match_parent"
         android:layout_height="400dp" />
 </LinearLayout>

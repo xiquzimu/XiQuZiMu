@@ -2,20 +2,17 @@ package me.xlgp.douyinzimu.view;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.promeg.pinyinhelper.Pinyin;
 
 import java.util.List;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.ZimuApplication;
+import me.xlgp.douyinzimu.databinding.ZimuFloatingLayoutBinding;
 import me.xlgp.douyinzimu.designpatterns.ChangDuanData;
 import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.obj.Callback;
@@ -26,31 +23,34 @@ public class ZimuListFloatinglayout {
     private final Context context;
     private final ZimuMainFloatingLayout.ChangDuanObservable changDuanObservable;
     private final CompositeDisposable compositeDisposable;
-    RecyclerView recyclerView = null;
+
     ChangDuanAdapter changDuanAdapter;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private final ZimuFloatingLayoutBinding binding;
 
     public ZimuListFloatinglayout(View view, ZimuMainFloatingLayout.ChangDuanObservable changDuanObservable) {
         rootLayout = view;
+        binding = ZimuFloatingLayoutBinding.bind(view);
         this.context = view.getContext();
         this.changDuanObservable = changDuanObservable;
         this.compositeDisposable = ZimuApplication.getCompositeDisposable();
 
         ChangDuanData changDuanData = ChangDuanData.getInstance();
         changDuanAdapter = new ChangDuanAdapter();
-        initSwipeRefreshLayout();
+
         initRecyclerView();
 
-        TextView textView = this.rootLayout.findViewById(R.id.currentZimuTitleTextView);
-        changDuanData.observe((o, arg) -> textView.setText(((ChangDuanData) o).getData().getChangDuan().getName()));
+        changDuanData.observe((o, arg) ->
+                binding.currentZimuTitleTextView.setText(((ChangDuanData) o)
+                .getData().getChangDuan().getName()));
 
-        swipeRefreshLayout.setRefreshing(true);
-        loadData(aBoolean -> swipeRefreshLayout.setRefreshing(false));
+        initSwipeRefreshLayout();
     }
 
     private void initSwipeRefreshLayout() {
-        swipeRefreshLayout = rootLayout.findViewById(R.id.zimu_list_SwipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(() -> loadData(aBoolean -> swipeRefreshLayout.setRefreshing(false)));
+        binding.zimuListSwipeRefreshLayout.setOnRefreshListener(() ->
+                loadData(aBoolean -> binding.zimuListSwipeRefreshLayout.setRefreshing(false)));
+        binding.zimuListSwipeRefreshLayout.setRefreshing(true);
+        loadData(aBoolean -> binding.zimuListSwipeRefreshLayout.setRefreshing(false));
     }
 
     private void sortByPinYin(List<ChangDuan> list) {
@@ -78,10 +78,9 @@ public class ZimuListFloatinglayout {
     }
 
     private void initRecyclerView() {
-        recyclerView = this.rootLayout.findViewById(R.id.zimu_list_recyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
+        binding.zimuListRecyclerview.setLayoutManager(new LinearLayoutManager(context));
         changDuanAdapter.setOnItemClickListener((itemView, view, data, position) -> changDuanObservable.setData(data));
-        recyclerView.setAdapter(changDuanAdapter);
+        binding.zimuListRecyclerview.setAdapter(changDuanAdapter);
     }
 }

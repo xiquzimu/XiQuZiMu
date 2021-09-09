@@ -2,20 +2,16 @@ package me.xlgp.douyinzimu.view;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.List;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
-import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.ZimuApplication;
+import me.xlgp.douyinzimu.databinding.ZimuDetailLayoutBinding;
 import me.xlgp.douyinzimu.designpatterns.ChangDuanData;
 import me.xlgp.douyinzimu.model.ChangCi;
 import me.xlgp.douyinzimu.model.ChangDuan;
@@ -28,31 +24,29 @@ import me.xlgp.douyinzimu.service.PingLunService;
 import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
 public class ZimuDetailFloatingLayout {
-    private RecyclerView recyclerView = null;
-    private View rootLayout;
+
     private Context context;
     private ChangCiAdapter changCiAdapter;
-    private SwitchMaterial switchMaterial;
     private ChangDuanData changDuanData;
     private CompositeDisposable compositeDisposable;
+    private final ZimuDetailLayoutBinding binding;
 
     public ZimuDetailFloatingLayout(View view) {
+        binding = ZimuDetailLayoutBinding.bind(view);
         init(view);
         onViewListener();
         initRecyclerView();
     }
 
     private void init(View view) {
-        this.rootLayout = view;
         this.context = view.getContext();
         compositeDisposable = ZimuApplication.getCompositeDisposable();
         changDuanData = ChangDuanData.getInstance();
-        this.switchMaterial = this.rootLayout.findViewById(R.id.pingLunSwitchMaterial);
     }
 
     private void onViewListener() {
         //选择评论
-        switchMaterial.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        binding.pingLunSwitchMaterial.setOnCheckedChangeListener((buttonView, isChecked) -> {
             PingLun.getInstance().change(isChecked);
             PingLunService pingLunService = PingLunService.getInstance();
             if (PingLun.getInstance().disabled()) {
@@ -68,16 +62,12 @@ public class ZimuDetailFloatingLayout {
     }
 
     private void initRecyclerView() {
-        recyclerView = this.rootLayout.findViewById(R.id.zimu_detail_recyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        binding.zimuDetailRecyclerview.setLayoutManager(new LinearLayoutManager(context));
 
         changCiAdapter = new ChangCiAdapter();
-        changCiAdapter.setOnItemClickListener((itemView, view, data, position) -> {
-            PingLunService.getInstance().start(0);
-            updateTitleView(data.getContent());
-        });
+        changCiAdapter.setOnItemClickListener((itemView, view, data, position) -> PingLunService.getInstance().start(0));
 
-        recyclerView.setAdapter(changCiAdapter);
+        binding.zimuDetailRecyclerview.setAdapter(changCiAdapter);
     }
 
     /**
@@ -85,15 +75,15 @@ public class ZimuDetailFloatingLayout {
      */
     public void asyncRun(ChangDuan changDuan) {
         asyncGetChangDuan(changDuan, b -> {
-            switchMaterial.setChecked(false);
+            binding.pingLunSwitchMaterial.setChecked(false);
             if (b) {
-                switchMaterial.setChecked(true);
+                binding.pingLunSwitchMaterial.setChecked(true);
             }
         });
     }
 
     private void updateRecyclerView(int position) {
-        recyclerView.smoothScrollToPosition(position + 4);
+        binding.zimuDetailRecyclerview.smoothScrollToPosition(position + 4);
     }
 
     private ChangCiList parseChangCiList(ChangDuan changDuan, List<ChangCi> changCis) {
@@ -131,6 +121,6 @@ public class ZimuDetailFloatingLayout {
     }
 
     private void updateTitleView(String text) {
-        ((TextView) rootLayout.findViewById(R.id.currentZimuTitleTextView)).setText(text);
+        binding.currentZimuTitleTextView.setText(text);
     }
 }

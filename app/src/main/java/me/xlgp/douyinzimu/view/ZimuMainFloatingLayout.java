@@ -1,6 +1,5 @@
 package me.xlgp.douyinzimu.view;
 
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,12 +7,12 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.Observable;
 import java.util.Observer;
 
 import me.xlgp.douyinzimu.R;
+import me.xlgp.douyinzimu.databinding.ZimuViewpager2LayoutBinding;
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
 import me.xlgp.douyinzimu.listener.OnDoubleClickListener;
 import me.xlgp.douyinzimu.model.ChangDuan;
@@ -22,22 +21,30 @@ import me.xlgp.douyinzimu.service.DianZanService;
 import me.xlgp.douyinzimu.service.FloatingService;
 
 public class ZimuMainFloatingLayout extends BasePanelLayout {
-    private ViewPager2 viewPager2;
+
     private ZimuDetailFloatingLayout zimuDetailFloatingLayout;
+    private final ZimuViewpager2LayoutBinding binding;
     private final FloatingService floatingService;
+
 
     public ZimuMainFloatingLayout(@NonNull FloatingService floatingService) {
         super(floatingService, R.layout.zimu_viewpager2_layout);
+
         this.floatingService = floatingService;
+
         super.build(new ZimuLayoutParams.WithFullWidth(), this.getClass().getName());
+
+        this.binding = ZimuViewpager2LayoutBinding.bind(getCurrentLayout());
+
         init();
     }
 
     private void init() {
-        viewPager2 = getCurrentLayout().findViewById(R.id.zimu_viewpager2_layout);
-        viewPager2.setAdapter(new ZimuMainFloatingAdapter());
+
+        binding.zimuViewpager2.setAdapter(new ZimuMainFloatingAdapter());
         //懒加载，主要防止选择唱段后第二个layout还没有造成 zimuDetailFloatingLayout 为null情况
-        viewPager2.setOffscreenPageLimit(2);
+        binding.zimuViewpager2.setOffscreenPageLimit(2);
+
         setPanelTitle("字幕列表");
 
         setOnCloseListener(v -> floatingService.closeFloatingWindow(getCurrentLayout()));
@@ -51,9 +58,7 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
 
     private class ZimuMainFloatingAdapter extends RecyclerView.Adapter<ZimuMainFloatingAdapter.ViewHolder> {
 
-        private final static int LIST = 0;
-        private final static int DETAIL = 1;
-
+        private final int[] viewIdList = new int[]{R.layout.zimu_floating_layout, R.layout.zimu_detail_layout};
 
         private View inflateLayout(ViewGroup parent, int resource) {
             return LayoutInflater.from(parent.getContext()).inflate(resource, parent, false);
@@ -63,11 +68,7 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            if (viewType == LIST) { //唱段列表
-                return new ViewHolder(inflateLayout(parent, R.layout.zimu_floating_layout), viewType);
-            } else {
-                return new ViewHolder(inflateLayout(parent, R.layout.zimu_detail_layout), viewType);
-            }
+            return new ViewHolder(inflateLayout(parent, viewType), viewType);
         }
 
         @Override
@@ -77,14 +78,12 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
 
         @Override
         public int getItemViewType(int position) {
-            if (position == 0) return LIST;
-            if (position == 1) return DETAIL;
-            return super.getItemViewType(position);
+            return viewIdList[position];
         }
 
         @Override
         public int getItemCount() {
-            return 2;
+            return viewIdList.length;
         }
 
         protected class ViewHolder extends RecyclerView.ViewHolder {
@@ -95,10 +94,10 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
 
             public ViewHolder(@NonNull View itemView, int viewType) {
                 this(itemView);
-                if (viewType == LIST) {
+                if (viewType == viewIdList[0]) {
                     new ZimuListFloatinglayout(itemView, new ChangDuanObservable());
                 }
-                if (viewType == DETAIL) {
+                if (viewType == viewIdList[1]) {
                     zimuDetailFloatingLayout = new ZimuDetailFloatingLayout(itemView);
                 }
             }
@@ -115,7 +114,8 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
         @Override
         public void update(Observable o, Object arg) {
             //滑动切换到唱词列表
-            boolean bool = viewPager2.performAccessibilityAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD, new Bundle());
+            boolean bool = binding.zimuViewpager2.performAccessibilityAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD,
+                    null);
             if (bool) {
                 ChangDuanObservable changDuanObservable = (ChangDuanObservable) o;
                 //切换成功后
