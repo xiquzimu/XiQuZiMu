@@ -1,7 +1,6 @@
 package me.xlgp.douyinzimu.view;
 
 import android.annotation.SuppressLint;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -30,8 +29,7 @@ public class ChangDuanAdapter extends BaseAdapter<ChangDuan> {
     @NonNull
     @Override
     public BaseAdapter.ViewHolder<ChangDuan> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.zimu_list_item_layout, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(getInflatedView(R.layout.zimu_list_item_layout, parent, false));
     }
 
     protected static class ViewHolder extends BaseAdapter.ViewHolder<ChangDuan> {

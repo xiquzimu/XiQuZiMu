@@ -1,6 +1,7 @@
 package me.xlgp.douyinzimu.adapter;
 
 import android.annotation.SuppressLint;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,6 +27,10 @@ public abstract class BaseAdapter<E> extends RecyclerView.Adapter<BaseAdapter.Vi
     @Override
     public BaseAdapter.ViewHolder<E> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         throw new NullPointerException("BaseAdapter.ViewHolder is null");
+    }
+
+    protected View getInflatedView(int resource, @NonNull ViewGroup parent, boolean attachToRoot){
+        return LayoutInflater.from(parent.getContext()).inflate(resource, parent, attachToRoot);
     }
 
     @Override
