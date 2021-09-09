@@ -60,15 +60,11 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
 
         private final int[] viewIdList = new int[]{R.layout.zimu_floating_layout, R.layout.zimu_detail_layout};
 
-        private View inflateLayout(ViewGroup parent, int resource) {
-            return LayoutInflater.from(parent.getContext()).inflate(resource, parent, false);
-        }
-
-
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new ViewHolder(inflateLayout(parent, viewType), viewType);
+            View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
+            return new ViewHolder(view, viewType);
         }
 
         @Override
