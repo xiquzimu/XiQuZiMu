@@ -7,24 +7,17 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import me.xlgp.douyinzimu.databinding.ActivityNavMainBinding;
 
 public class NavMainActivity extends AppCompatActivity {
-
-    private ActivityNavMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityNavMainBinding.inflate(getLayoutInflater());
+        ActivityNavMainBinding binding = ActivityNavMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_nav_main);
         assert navHostFragment != null;
         NavController navController = navHostFragment.getNavController();
