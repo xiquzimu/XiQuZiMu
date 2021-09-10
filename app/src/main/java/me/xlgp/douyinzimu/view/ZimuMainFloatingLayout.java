@@ -68,12 +68,7 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
             tab.setText(names[i]);
             binding.zimuTabList.addTab(tab);
         }
-        new TabLayoutMediator(binding.zimuTabList, binding.zimuViewpager2, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                tab.setText(names[position]);
-            }
-        }).attach();
+        new TabLayoutMediator(binding.zimuTabList, binding.zimuViewpager2, (tab, position) -> tab.setText(names[position])).attach();
     }
 
     private class ZimuMainFloatingAdapter extends RecyclerView.Adapter<ZimuMainFloatingAdapter.ViewHolder> {
