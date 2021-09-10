@@ -11,4 +11,5 @@
     <color name="touming_btn">#56DDDDDD</color>
     <color name="defualt_touming_bg">#3E5D5D5D</color>
     <color name="black_touming_bg">#36606060</color>
+    <color name="ic_launcher_background">#780AF6</color>
 </resources>
