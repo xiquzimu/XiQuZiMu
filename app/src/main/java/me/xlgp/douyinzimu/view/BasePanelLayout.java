@@ -1,27 +1,28 @@
 package me.xlgp.douyinzimu.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 
 import me.xlgp.douyinzimu.R;
+import me.xlgp.douyinzimu.databinding.BasePanelLayoutBinding;
 import me.xlgp.douyinzimu.listener.FloatingMoveListener;
+import me.xlgp.douyinzimu.obj.ZWindowManager;
 
 /**
  * 基本面板
  */
-public class BasePanelLayout extends BaseFloatingLayout {
+public class BasePanelLayout extends BaseFloatingLayout implements OnCloseListener {
     private final int resource;
-    View titleBtn = null;
-    View closeBtn = null;
+
     private LinearLayout rootLayout;
-    private boolean isShou = false;
+    private boolean isShou = true;
     private int shouHeight;
+    private BasePanelLayoutBinding binding;
 
     public BasePanelLayout(@NonNull Context context, int resource, WindowManager.LayoutParams layoutParams) {
         super(context, R.layout.base_panel_layout, layoutParams);
@@ -33,14 +34,12 @@ public class BasePanelLayout extends BaseFloatingLayout {
     }
 
     private void init() {
-        this.rootLayout = (LinearLayout) getCurrentLayout();
+        binding = BasePanelLayoutBinding.bind(getCurrentLayout());
+
+        rootLayout = binding.getRoot();
         rootLayout.addView(inflateLayout(resource));
 
-        closeBtn = rootLayout.findViewById(R.id.closeFloatingBtn);
-        titleBtn = rootLayout.findViewById(R.id.titleBtn);
-
         shouHeight = 0;
-
         onViewListener();
     }
 
@@ -52,7 +51,7 @@ public class BasePanelLayout extends BaseFloatingLayout {
 
     public void setPanelTitle(String panelTitle) {
         String title = panelTitle == null ? "悬浮窗口" : panelTitle;
-        ((Button) titleBtn).setText(title);
+        binding.titleBtn.setText(title);
     }
 
     private int getShouHeight() {
@@ -73,32 +72,40 @@ public class BasePanelLayout extends BaseFloatingLayout {
     }
 
     public void setOnTitleClickListener(View.OnClickListener onClickListener) {
-        titleBtn.setOnClickListener(onClickListener);
+        binding.titleBtn.setOnClickListener(onClickListener);
     }
 
-    public void setOnCloseListener(View.OnClickListener onClickListener) {
-        closeBtn.setOnClickListener(onClickListener);
+    @Override
+    public void onClose() {
+        ZWindowManager.getInstance().removeView(rootLayout);
     }
 
+    private void updateViewLayout() {
+        rootLayout.getLayoutParams().height = isShou ? WindowManager.LayoutParams.WRAP_CONTENT : getShouHeight();
+        ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
+                .updateViewLayout(rootLayout, rootLayout.getLayoutParams());
+    }
+
+    private void updatekaiOrShouBtn() {
+        binding.kaiOrShouBtn.setImageResource(isShou ? R.drawable.ic_baseline_arrow_drop_up_24 : R.drawable.ic_baseline_arrow_drop_down_24);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
     private void onViewListener() {
-        titleBtn.setOnTouchListener(new FloatingMoveListener(rootLayout,
+        binding.titleBtn.setOnTouchListener(new FloatingMoveListener(rootLayout,
                 (WindowManager.LayoutParams) rootLayout.getLayoutParams(),
                 (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)));
 
-        this.rootLayout.findViewById(R.id.kaiOrShouBtn).setOnClickListener(v -> {
-            ImageButton imageButton = (ImageButton)v;
-            if (isShou) {
-                rootLayout.getLayoutParams().height = WindowManager.LayoutParams.WRAP_CONTENT;
-                imageButton.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24);
-                isShou = false;
-            } else {
-                rootLayout.getLayoutParams().height = getShouHeight();
-                imageButton.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
-                isShou = true;
-            }
-            ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
-                    .updateViewLayout(rootLayout, getLayoutParams());
+        binding.kaiOrShouBtn.setOnClickListener(v -> {
+            isShou = !isShou;
+            updateViewLayout();
+            updatekaiOrShouBtn();
         });
-    }
 
+        binding.closeFloatingBtn.setOnClickListener(v -> onClose());
+    }
+}
+
+interface OnCloseListener {
+    void onClose();
 }

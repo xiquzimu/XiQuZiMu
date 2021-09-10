@@ -1,7 +1,6 @@
 package me.xlgp.douyinzimu.service;
 
 import android.content.Intent;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.lifecycle.LifecycleService;
@@ -26,16 +25,10 @@ public class FloatingService extends LifecycleService {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    public void closeFloatingWindow(View view) {
+    public void stop() {
         ZWindowManager zWindowManager = ZWindowManager.getInstance();
-        if (view == null) {
-            zWindowManager.removeAllView();
+        if (zWindowManager.count() == 0) {
             stopSelf();
-        } else {
-            zWindowManager.removeView(view);
-            if (zWindowManager.count() == 0) {
-                stopSelf();
-            }
         }
     }
 

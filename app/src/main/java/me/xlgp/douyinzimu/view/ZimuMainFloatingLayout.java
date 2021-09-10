@@ -29,10 +29,8 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
     private final ZimuViewpager2LayoutBinding binding;
     private final FloatingService floatingService;
 
-
     public ZimuMainFloatingLayout(@NonNull FloatingService floatingService) {
         super(floatingService, R.layout.zimu_viewpager2_layout);
-
         this.floatingService = floatingService;
 
         super.build(new ZimuLayoutParams.WithFullWidth(), this.getClass().getName());
@@ -40,6 +38,12 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
         this.binding = ZimuViewpager2LayoutBinding.bind(getCurrentLayout());
 
         init();
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        floatingService.stop();
     }
 
     private void init() {
@@ -50,7 +54,6 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
 
         setPanelTitle("字幕列表");
 
-        setOnCloseListener(v -> floatingService.closeFloatingWindow(getCurrentLayout()));
         setOnTitleClickListener(new OnDoubleClickListener() {
             @Override
             public void doubleClick(View v) {
@@ -63,9 +66,9 @@ public class ZimuMainFloatingLayout extends BasePanelLayout {
 
     private void initTabList() {
         String[] names = new String[]{"黄梅戏", "唱词"};
-        for (int i = 0; i < names.length; i++) {
+        for (String name : names) {
             TabLayout.Tab tab = binding.zimuTabList.newTab();
-            tab.setText(names[i]);
+            tab.setText(name);
             binding.zimuTabList.addTab(tab);
         }
         new TabLayoutMediator(binding.zimuTabList, binding.zimuViewpager2, (tab, position) -> tab.setText(names[position])).attach();
