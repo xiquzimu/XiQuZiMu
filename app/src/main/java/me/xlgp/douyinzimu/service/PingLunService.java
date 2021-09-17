@@ -21,22 +21,25 @@ public class PingLunService {
     private static PingLunService instance = null;
     private ChangDuanInfo changDuanInfo = null;
     private DouYinAccessibilityService douYinAccessibilityService;
+    private boolean liveable;
     //todo 此处应该重构
     private long count = 0; //记录线程数量，用于判断即将执行的线程是不是当前应当执行的线程
 
     public static PingLunService getInstance() {
         if (instance == null) {
             instance = new PingLunService();
+            instance.builder();
         }
         return instance;
     }
 
-    public PingLunService builder(DouYinAccessibilityService douYinAccessibilityService) {
-        this.douYinAccessibilityService = douYinAccessibilityService;
+    public void builder() {
+        this.douYinAccessibilityService = DouYinAccessibilityService.getInstance();
+
+        douYinAccessibilityService.addObserver((o, arg) -> liveable = (boolean) arg);
         ChangDuanData changDuanData = ChangDuanData.getInstance();
-        PingLunService thiz = this;
-        changDuanData.observe((o, arg) -> thiz.setChangDuanInfo(((ChangDuanData) o).getData()));
-        return this;
+
+        changDuanData.observe((o, arg) -> setChangDuanInfo(((ChangDuanData) o).getData()));
     }
 
     public void start(long delayMillis) {
@@ -55,16 +58,12 @@ public class PingLunService {
         this.changDuanInfo = changDuanInfo;
     }
 
-    public void clear() {
-        changDuanInfo = null;
-    }
-
     public boolean hasChangeCi() {
         return changDuanInfo != null && changDuanInfo.getChangeCiList().hasNext();
     }
 
     public boolean enablePingLun() {
-        return !PingLun.getInstance().disabled() && hasChangeCi();
+        return liveable && !PingLun.getInstance().disabled() && hasChangeCi();
     }
 
     public void run() {

@@ -50,7 +50,9 @@ public class DianZanService {
         }
         dianZan.updateCount();
         //模拟点赞手势
-        service.dispatchGesture(dianZanGestureDescription, new DianZanGestureResultCallback((obj) -> dianZan()), null);
+        if (service != null) {
+            service.dispatchGesture(dianZanGestureDescription, new DianZanGestureResultCallback((obj) -> dianZan()), null);
+        }
     }
 }
 

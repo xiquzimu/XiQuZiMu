@@ -23,7 +23,8 @@ public class AccessibilitySettingsHelper {
         if (!manager.isEnabled()) {
             return false;
         }
-        List<AccessibilityServiceInfo> enabledServiceList = manager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
+        List<AccessibilityServiceInfo> enabledServiceList =
+                manager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_HAPTIC);
         List<AccessibilityServiceInfo> installedServiceList = manager.getInstalledAccessibilityServiceList();
         try {
             if (enabledServiceList == null || enabledServiceList.isEmpty()) return false;
