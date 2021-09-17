@@ -140,6 +140,7 @@ public class ZimuDetailFloatingLayout implements OnDouYinLiveListener {
             changDuanInfo.setChangDuan(changDuan);
 
             changDuanData.setData(changDuanInfo);
+            updateRecyclerView(0);
             callback.call(true);
         }, throwable -> callback.call(false));
         compositeDisposable.add(disposable);
