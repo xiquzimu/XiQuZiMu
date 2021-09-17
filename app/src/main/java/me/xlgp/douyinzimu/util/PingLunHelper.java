@@ -1,7 +1,6 @@
 package me.xlgp.douyinzimu.util;
 
 import android.accessibilityservice.AccessibilityService;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -48,21 +47,9 @@ public class PingLunHelper {
         }
     }
 
-    //评论按钮
-    private static boolean isInputLayout(Context context, List<CharSequence> list) {
-        if (list.isEmpty()) {
-            return false;
-        }
-        return context.getString(R.string.dy_input_layout_text).contentEquals(list.get(0));
-    }
-
-
     private static boolean isSendAccessibilityNodeInfo(AccessibilityNodeInfo nodeInfo) {
         if (nodeInfo == null) return false;
-
-        if ("android.widget.ImageView".equals(nodeInfo.getClassName()) && "发送".equals(nodeInfo.getContentDescription()))
-            return true;
-        return false;
+        return "android.widget.ImageView".contentEquals(nodeInfo.getClassName()) && "发送".contentEquals(nodeInfo.getContentDescription());
     }
 
     /**
@@ -94,10 +81,10 @@ public class PingLunHelper {
                 boolean sendSuccess = getSendNodeByInputNode(node).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 if (sendSuccess) { //发送成功之后，回调
                     callback.call(true);
-                }else{
+                } else {
                     throw new RuntimeException("发送操作异常");
                 }
-            }else{
+            } else {
                 throw new RuntimeException("输入内容异常");
             }
         } catch (Exception e) {
@@ -117,6 +104,10 @@ public class PingLunHelper {
      * 3：点击发送按钮
      */
     public static boolean pingLun(AccessibilityService service, AccessibilityEvent event) {
-        return isInputLayout(service, event.getText());
+        List<CharSequence> list = event.getText();
+        if (list.isEmpty()) {
+            return false;
+        }
+        return service.getString(R.string.dy_input_layout_text).contentEquals(list.get(0));
     }
 }
