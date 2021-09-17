@@ -22,14 +22,8 @@ public class PingLunHelper {
      */
 
     public static void openInputLayout(AccessibilityService service) {
-        if (!AppHelper.isDouYinWindows(service)) {
-            throw new NotFoundDouYinException("获取抖音界面失败");
-        }
-        if (!PingLunService.getInstance().enablePingLun()) {
-            return;
-        }
-        AccessibilityNodeInfo nodeInfo = service.getRootInActiveWindow();
 
+        AccessibilityNodeInfo nodeInfo = service.getRootInActiveWindow();
         try {
             if (nodeInfo != null) {
                 List<AccessibilityNodeInfo> nodeInfoList = nodeInfo.findAccessibilityNodeInfosByText(service.getString(R.string.dy_input_layout_text));

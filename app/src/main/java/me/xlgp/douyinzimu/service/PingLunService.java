@@ -93,7 +93,7 @@ public class PingLunService {
         @Override
         public void onNext(@NonNull Long count) {
             try {
-                if (count == pingLunService.count) {
+                if (count == pingLunService.count && enablePingLun()) {
                     PingLunHelper.openInputLayout(douYinAccessibilityService);
                 }
             } catch (Exception e) {
