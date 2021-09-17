@@ -115,7 +115,7 @@ public class ZimuDetailFloatingLayout implements OnDouYinLiveListener {
             ChangCi changCi = (ChangCi) arg;
             updateTitleView(changCi.getContent());
             updateRecyclerView(changCiList.currentIndex());
-            if (changCiList.currentIndex() == changCiList.size() -1){
+            if (!changCiList.hasNext()){
                 binding.pingLunSwitchMaterial.setChecked(false);
             }
         });
