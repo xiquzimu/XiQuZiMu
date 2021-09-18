@@ -1,5 +1,7 @@
 package me.xlgp.douyinzimu.service;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
@@ -69,11 +71,14 @@ public class PingLunService {
     public void run() {
         if (enablePingLun()) {
             ChangCiList changCiList = changDuanInfo.getChangeCiList();
-            PingLunHelper.input(douYinAccessibilityService, changCiList.next(), aBoolean -> {
+            //此处延时执行是因为先点击直播界面，还没有调出输入框时已执行输入操作，导致无法获取输入框。
+            new Handler(Looper.getMainLooper()).postDelayed(() ->
+                    PingLunHelper.input(douYinAccessibilityService, changCiList.next(), aBoolean -> {
                 if (enablePingLun()) {
                     start(changCiList.current().getDelayMillis());
                 }
-            });
+            }),6);
+
         }
     }
 
