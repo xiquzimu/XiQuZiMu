@@ -8,9 +8,9 @@ public abstract class OnDoubleClickListener implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        long  currentTimeMillis = System.currentTimeMillis();
+        long currentTimeMillis = System.currentTimeMillis();
         long DOUBLE_TIME = 400;
-        if (currentTimeMillis - lastClickTime < DOUBLE_TIME){
+        if (currentTimeMillis - lastClickTime < DOUBLE_TIME) {
             doubleClick(v);
         }
         lastClickTime = currentTimeMillis;

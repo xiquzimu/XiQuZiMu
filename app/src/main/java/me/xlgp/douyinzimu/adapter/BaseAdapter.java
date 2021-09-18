@@ -29,7 +29,7 @@ public abstract class BaseAdapter<E> extends RecyclerView.Adapter<BaseAdapter.Vi
         throw new NullPointerException("BaseAdapter.ViewHolder is null");
     }
 
-    protected View getInflatedView(int resource, @NonNull ViewGroup parent, boolean attachToRoot){
+    protected View getInflatedView(int resource, @NonNull ViewGroup parent, boolean attachToRoot) {
         return LayoutInflater.from(parent.getContext()).inflate(resource, parent, attachToRoot);
     }
 

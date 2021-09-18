@@ -29,11 +29,11 @@ import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
 public class ZimuDetailFloatingLayout implements OnDouYinLiveListener {
 
+    private final ZimuDetailLayoutBinding binding;
     private Context context;
     private ChangCiAdapter changCiAdapter;
     private ChangDuanData changDuanData;
     private CompositeDisposable compositeDisposable;
-    private final ZimuDetailLayoutBinding binding;
     private boolean liveable;
 
     public ZimuDetailFloatingLayout(View view) {
@@ -51,9 +51,9 @@ public class ZimuDetailFloatingLayout implements OnDouYinLiveListener {
         changDuanData = ChangDuanData.getInstance();
     }
 
-    private void addDouYinObserver(){
-        DouYinAccessibilityService douYinAccessibilityService =  DouYinAccessibilityService.getInstance();
-        if (douYinAccessibilityService != null){
+    private void addDouYinObserver() {
+        DouYinAccessibilityService douYinAccessibilityService = DouYinAccessibilityService.getInstance();
+        if (douYinAccessibilityService != null) {
             douYinAccessibilityService.addObserver(new DouYinObserver());
         }
     }
@@ -74,8 +74,8 @@ public class ZimuDetailFloatingLayout implements OnDouYinLiveListener {
         });
     }
 
-    private void pingLun(long delayMillis){
-        if (liveable){
+    private void pingLun(long delayMillis) {
+        if (liveable) {
             PingLunService.getInstance().start(delayMillis);
         }
     }
@@ -115,7 +115,7 @@ public class ZimuDetailFloatingLayout implements OnDouYinLiveListener {
             ChangCi changCi = (ChangCi) arg;
             updateTitleView(changCi.getContent());
             updateRecyclerView(changCiList.currentIndex());
-            if (!changCiList.hasNext()){
+            if (!changCiList.hasNext()) {
                 binding.pingLunSwitchMaterial.setChecked(false);
             }
         });
@@ -153,7 +153,7 @@ public class ZimuDetailFloatingLayout implements OnDouYinLiveListener {
     @Override
     public void onLive(boolean isLive) {
         liveable = isLive;
-        if (!liveable){
+        if (!liveable) {
             binding.pingLunSwitchMaterial.setChecked(false);
         }
     }
@@ -161,13 +161,14 @@ public class ZimuDetailFloatingLayout implements OnDouYinLiveListener {
     class DouYinObserver implements Observer {
         private boolean liveable;
 
-        public DouYinObserver(){
+        public DouYinObserver() {
             liveable = false;
         }
+
         @Override
         public void update(Observable o, Object arg) {
             boolean liveable = (boolean) arg;
-            if (liveable != this.liveable){
+            if (liveable != this.liveable) {
                 this.liveable = liveable;
                 ZimuDetailFloatingLayout.this.onLive(liveable);
             }

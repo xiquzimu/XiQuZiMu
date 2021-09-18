@@ -39,7 +39,9 @@ public class DashboardFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(ChangDuanViewModel.class);
         viewModel.deleteState.observe(getViewLifecycleOwner(), s -> {
-            if (s!= null){Toast.makeText(requireContext(), s, Toast.LENGTH_SHORT).show();}
+            if (s != null) {
+                Toast.makeText(requireContext(), s, Toast.LENGTH_SHORT).show();
+            }
         });
         initSearchRecyclerviewLayout();
 

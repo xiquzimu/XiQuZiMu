@@ -74,10 +74,10 @@ public class PingLunService {
             //此处延时执行是因为先点击直播界面，还没有调出输入框时已执行输入操作，导致无法获取输入框。
             new Handler(Looper.getMainLooper()).postDelayed(() ->
                     PingLunHelper.input(douYinAccessibilityService, changCiList.next(), aBoolean -> {
-                if (enablePingLun()) {
-                    start(changCiList.current().getDelayMillis());
-                }
-            }),6);
+                        if (enablePingLun()) {
+                            start(changCiList.current().getDelayMillis());
+                        }
+                    }), 6);
 
         }
     }

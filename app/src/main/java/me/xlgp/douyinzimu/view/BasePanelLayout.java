@@ -13,6 +13,10 @@ import me.xlgp.douyinzimu.databinding.BasePanelLayoutBinding;
 import me.xlgp.douyinzimu.listener.FloatingMoveListener;
 import me.xlgp.douyinzimu.obj.ZWindowManager;
 
+interface OnCloseListener {
+    void onClose();
+}
+
 /**
  * 基本面板
  */
@@ -104,8 +108,4 @@ public class BasePanelLayout extends BaseFloatingLayout implements OnCloseListen
 
         binding.closeFloatingBtn.setOnClickListener(v -> onClose());
     }
-}
-
-interface OnCloseListener {
-    void onClose();
 }

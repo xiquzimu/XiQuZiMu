@@ -25,9 +25,9 @@ import me.xlgp.douyinzimu.service.FloatingService;
 
 public class ZimuMainFloatingLayout extends BasePanelLayout {
 
-    private ZimuDetailFloatingLayout zimuDetailFloatingLayout;
     private final ZimuViewpager2LayoutBinding binding;
     private final FloatingService floatingService;
+    private ZimuDetailFloatingLayout zimuDetailFloatingLayout;
 
     public ZimuMainFloatingLayout(@NonNull FloatingService floatingService) {
         super(floatingService, R.layout.zimu_viewpager2_layout);

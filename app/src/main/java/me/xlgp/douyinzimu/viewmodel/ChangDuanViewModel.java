@@ -22,9 +22,8 @@ import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
 public class ChangDuanViewModel extends ViewModel {
 
-    MutableLiveData<List<ChangDuan>> changduanList = null;
     public MutableLiveData<String> deleteState = new MutableLiveData<>();
-
+    MutableLiveData<List<ChangDuan>> changduanList = null;
 
     public MutableLiveData<List<ChangDuan>> getChangduanList() {
         if (changduanList == null) {

@@ -22,9 +22,8 @@ public class ZimuListFloatinglayout {
     private final Context context;
     private final ZimuMainFloatingLayout.ChangDuanObservable changDuanObservable;
     private final CompositeDisposable compositeDisposable;
-
-    ChangDuanAdapter changDuanAdapter;
     private final ZimuFloatingLayoutBinding binding;
+    ChangDuanAdapter changDuanAdapter;
 
     public ZimuListFloatinglayout(View view, ZimuMainFloatingLayout.ChangDuanObservable changDuanObservable) {
         binding = ZimuFloatingLayoutBinding.bind(view);

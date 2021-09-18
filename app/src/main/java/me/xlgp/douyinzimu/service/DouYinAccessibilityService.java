@@ -34,7 +34,9 @@ public class DouYinAccessibilityService extends AccessibilityService {
         Toast.makeText(this, "请按返回键返回至应用", Toast.LENGTH_LONG).show();
     }
 
-    public void addObserver(Observer observer){observable.addObserver(observer);}
+    public void addObserver(Observer observer) {
+        observable.addObserver(observer);
+    }
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -42,7 +44,7 @@ public class DouYinAccessibilityService extends AccessibilityService {
             if (PingLunHelper.pingLun(this, event)) {
                 pingLunService.run();
             }
-        }else if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED){
+        } else if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             new Handler(getMainLooper()).postDelayed(() -> observable.setData(isDouYinLive()), 600);
         }
     }
@@ -52,15 +54,15 @@ public class DouYinAccessibilityService extends AccessibilityService {
 
     }
 
-    private boolean isDouYinLive(){
+    private boolean isDouYinLive() {
         AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
         try {
             List<AccessibilityNodeInfo> nodeInfoList =
                     nodeInfo.findAccessibilityNodeInfosByText(getString(R.string.dy_input_layout_text));
             return nodeInfoList != null && !nodeInfoList.isEmpty();
-        }catch (Exception e){
-            return  false;
-        }finally {
+        } catch (Exception e) {
+            return false;
+        } finally {
             if (nodeInfo != null) nodeInfo.recycle();
         }
     }
@@ -71,5 +73,6 @@ public class DouYinAccessibilityService extends AccessibilityService {
         douYinAccessibilityService = null;
     }
 
-    static class DouYinObservable extends BaseObservable<Boolean>{}
+    static class DouYinObservable extends BaseObservable<Boolean> {
+    }
 }
