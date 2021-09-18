@@ -6,7 +6,6 @@ import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableSource;
-import io.reactivex.rxjava3.core.SingleSource;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Consumer;
@@ -33,7 +32,7 @@ public class ChangDuanService {
 
     public Flowable<List<ChangDuan>> list() {
         ChangDuanDao changDuanDao = AppDatabase.getInstance().changDuanDao();
-        return changDuanDao.list().compose(ObserverHelper.flowableTransformer());
+        return changDuanDao.flowableList().compose(ObserverHelper.flowableTransformer());
     }
 
     public long save(ChangDuanInfo changDuanInfo) {
@@ -72,10 +71,8 @@ public class ChangDuanService {
         compositeDisposable.add(disposable);
     }
 
-    public @NonNull Flowable<Object> deleteAll() {
+    public void deleteAll() {
         ChangDuanDao changDuanDao = AppDatabase.getInstance().changDuanDao();
-        return changDuanDao.list()
-                .flatMapSingle((Function<List<ChangDuan>, SingleSource<?>>) changDuanDao::deleteAll)
-                .compose(ObserverHelper.flowableTransformer());
+        changDuanDao.deleteAll();
     }
 }

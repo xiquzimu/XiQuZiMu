@@ -15,5 +15,8 @@ public interface ChangCiDao extends IDao<ChangCi> {
     Flowable<List<ChangCi>> listByChangDuanId(long changDuanId);
 
     @Query("select * from changci")
-    Flowable<List<ChangCi>> list();
+    List<ChangCi> list();
+
+    @Query("delete from changci")
+    void deleteAll();
 }

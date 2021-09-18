@@ -4,7 +4,6 @@ import java.util.List;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Consumer;
@@ -39,21 +38,17 @@ public class ChangCiService {
                 .compose(ObserverHelper.flowableTransformer());
     }
 
-    public @NonNull Flowable<List<ChangCi>> list() {
-        ChangCiDao changCiDao = AppDatabase.getInstance().changCiDao();
-        return changCiDao.list().compose(ObserverHelper.flowableTransformer());
-    }
-
     public void deleteByChangDuanId(int id) {
         listByChangDuanId(id, this::deleteList);
     }
 
-    public @NonNull Single<Integer> deleteList(List<ChangCi> list) {
+    public void deleteList(List<ChangCi> list) {
         ChangCiDao changCiDao = AppDatabase.getInstance().changCiDao();
-        return changCiDao.deleteAll(list).compose(ObserverHelper.singleTransformer());
+        changCiDao.deleteAll(list).compose(ObserverHelper.singleTransformer());
     }
 
-    public @NonNull Flowable<Object> deleteAll() {
-        return list().flatMapSingle(this::deleteList);
+    public void deleteAll() {
+        ChangCiDao changCiDao = AppDatabase.getInstance().changCiDao();
+        changCiDao.deleteAll();
     }
 }

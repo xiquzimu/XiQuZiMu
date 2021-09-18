@@ -2,7 +2,6 @@ package me.xlgp.douyinzimu.ui.dashboard;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +38,9 @@ public class DashboardFragment extends Fragment {
         searchRecyclerviewLayout = binding.zimuListSearchRecyclerviewLayout;
 
         viewModel = new ViewModelProvider(this).get(ChangDuanViewModel.class);
+        viewModel.deleteState.observe(getViewLifecycleOwner(), s -> {
+            if (s!= null){Toast.makeText(requireContext(), s, Toast.LENGTH_SHORT).show();}
+        });
         initSearchRecyclerviewLayout();
 
         ChangDuanListAdapter changDuanListAdapter = new ChangDuanListAdapter();
@@ -78,13 +80,7 @@ public class DashboardFragment extends Fragment {
     }
 
     public void onClearList(View view) {
-        compositeDisposable.add(viewModel.deleteChangDuanList().subscribe(o -> {
-            Log.i("onClearList", "onClearList: " + o.toString());
-            Toast.makeText(requireContext(), "删除成功", Toast.LENGTH_SHORT).show();
-        }, throwable -> {
-            throwable.printStackTrace();
-            Toast.makeText(requireContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
-        }));
+        viewModel.deleteChangDuanList();
     }
 
     @Override

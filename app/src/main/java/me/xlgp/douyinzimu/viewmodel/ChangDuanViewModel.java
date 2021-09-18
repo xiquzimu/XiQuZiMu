@@ -10,8 +10,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableSource;
 import io.reactivex.rxjava3.functions.Function;
@@ -25,6 +23,8 @@ import me.xlgp.douyinzimu.util.ChangDuanHelper;
 public class ChangDuanViewModel extends ViewModel {
 
     MutableLiveData<List<ChangDuan>> changduanList = null;
+    public MutableLiveData<String> deleteState = new MutableLiveData<>();
+
 
     public MutableLiveData<List<ChangDuan>> getChangduanList() {
         if (changduanList == null) {
@@ -52,7 +52,12 @@ public class ChangDuanViewModel extends ViewModel {
                 .compose(ObserverHelper.transformer());
     }
 
-    public @NonNull Flowable<Object> deleteChangDuanList() {
-        return new ChangDuanService().deleteAll().concatWith(new ChangCiService().deleteAll());
+    public void deleteChangDuanList() {
+
+        Observable.concat(observer -> new ChangDuanService().deleteAll(),
+                observer -> new ChangCiService().deleteAll())
+                .flatMap(observableSource -> null)
+                .compose(ObserverHelper.transformer())
+                .subscribe(o -> deleteState.setValue("删除成功"), throwable -> deleteState.setValue("删除失败"));
     }
 }
