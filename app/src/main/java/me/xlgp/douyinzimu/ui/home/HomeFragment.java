@@ -17,7 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import io.reactivex.rxjava3.core.Observable;
-import me.xlgp.douyinzimu.ListActivity;
+import me.xlgp.douyinzimu.ui.fetchlist.ListActivity;
 import me.xlgp.douyinzimu.databinding.FragmentHomeBinding;
 import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
 import me.xlgp.douyinzimu.service.FloatingService;

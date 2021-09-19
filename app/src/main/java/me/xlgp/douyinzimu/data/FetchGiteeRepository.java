@@ -1,4 +1,4 @@
-package me.xlgp.douyinzimu.service;
+package me.xlgp.douyinzimu.data;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,7 +8,7 @@ import io.reactivex.rxjava3.core.ObservableSource;
 import io.reactivex.rxjava3.functions.Function;
 import me.xlgp.douyinzimu.retrofit.RetrofitFactory;
 
-public class FetchGiteeService {
+public class FetchGiteeRepository {
 
     /**
      * 远程获取namelist

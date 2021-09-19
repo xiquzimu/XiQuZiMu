@@ -8,20 +8,6 @@ import me.xlgp.douyinzimu.db.AppDatabase;
 import me.xlgp.douyinzimu.obj.ZWindowManager;
 
 public class ZimuApplication extends Application {
-
-    private static CompositeDisposable compositeDisposable;
-
-    public static CompositeDisposable getCompositeDisposable() {
-        if (compositeDisposable == null) {
-            synchronized (ZimuApplication.class) {
-                if (compositeDisposable == null) {
-                    compositeDisposable = new CompositeDisposable();
-                }
-            }
-        }
-        return compositeDisposable;
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();

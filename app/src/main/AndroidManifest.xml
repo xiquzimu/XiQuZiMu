@@ -20,10 +20,10 @@
         android:theme="@style/Theme.DouYinZiMu"
         tools:ignore="HardcodedDebugMode">
         <activity
-            android:name=".ListActivity"
+            android:name=".ui.fetchlist.ListActivity"
             android:exported="true" />
         <activity
-            android:name=".NavMainActivity"
+            android:name=".ui.main.NavMainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -35,10 +35,10 @@
             android:layout_weight="1" />
     </LinearLayout>
 
-    <me.xlgp.douyinzimu.ui.main.SearchRecyclerviewLayout
+    <me.xlgp.douyinzimu.view.SearchRecyclerviewLayout
         android:id="@+id/zimu_list_SearchRecyclerviewLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </me.xlgp.douyinzimu.ui.main.SearchRecyclerviewLayout>
+    </me.xlgp.douyinzimu.view.SearchRecyclerviewLayout>
 </LinearLayout>

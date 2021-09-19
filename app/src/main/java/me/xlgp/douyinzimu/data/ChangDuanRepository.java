@@ -1,4 +1,4 @@
-package me.xlgp.douyinzimu.service;
+package me.xlgp.douyinzimu.data;
 
 import java.util.List;
 
@@ -18,15 +18,15 @@ import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
-public class ChangDuanService {
+public class ChangDuanRepository {
 
     private final CompositeDisposable compositeDisposable;
 
-    public ChangDuanService(CompositeDisposable compositeDisposable) {
+    public ChangDuanRepository(CompositeDisposable compositeDisposable) {
         this.compositeDisposable = compositeDisposable;
     }
 
-    public ChangDuanService() {
+    public ChangDuanRepository() {
         this.compositeDisposable = new CompositeDisposable();
     }
 
@@ -52,20 +52,20 @@ public class ChangDuanService {
     }
 
     public @NonNull Observable<Long> update(String name) {
-        return new FetchGiteeService().changDuan(name.substring(1))
+        return new FetchGiteeRepository().changDuan(name.substring(1))
                 .flatMap((Function<List<String>, ObservableSource<Long>>) list -> saveAynsc(ChangDuanHelper.parse(list)))
                 .compose(ObserverHelper.transformer());
     }
 
     public Observable<List<String>> updateList() {
-        return new FetchGiteeService().getNameList();
+        return new FetchGiteeRepository().getNameList();
     }
 
     public void delete(ChangDuan data, Consumer<Object> consumer) {
         ChangDuanDao changDuanDao = AppDatabase.getInstance().changDuanDao();
         Disposable disposable = Observable.create(emitter -> {
             changDuanDao.delete(data);
-            new ChangCiService(compositeDisposable).deleteByChangDuanId(data.getId());
+            new ChangCiRepository(compositeDisposable).deleteByChangDuanId(data.getId());
             emitter.onNext(true);
         }).compose(ObserverHelper.transformer()).subscribe(consumer);
         compositeDisposable.add(disposable);

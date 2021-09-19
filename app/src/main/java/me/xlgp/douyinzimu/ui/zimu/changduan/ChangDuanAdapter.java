@@ -1,4 +1,4 @@
-package me.xlgp.douyinzimu.view;
+package me.xlgp.douyinzimu.ui.zimu.changduan;
 
 import android.annotation.SuppressLint;
 import android.view.View;

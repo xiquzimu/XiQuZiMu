@@ -1,4 +1,4 @@
-package me.xlgp.douyinzimu.ui.main;
+package me.xlgp.douyinzimu.view;
 
 import android.content.Context;
 import android.text.Editable;

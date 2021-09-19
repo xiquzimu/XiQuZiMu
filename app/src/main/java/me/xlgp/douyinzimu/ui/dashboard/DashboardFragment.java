@@ -16,21 +16,17 @@ import me.xlgp.douyinzimu.adapter.ChangDuanListAdapter;
 import me.xlgp.douyinzimu.databinding.FragmentDashboardBinding;
 import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.predicate.ChangDuanPredicate;
-import me.xlgp.douyinzimu.ui.main.SearchRecyclerviewLayout;
-import me.xlgp.douyinzimu.viewmodel.ChangDuanViewModel;
+import me.xlgp.douyinzimu.view.SearchRecyclerviewLayout;
 
 public class DashboardFragment extends Fragment {
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private DashboardViewModel dashboardViewModel;
     private FragmentDashboardBinding binding;
     private SearchRecyclerviewLayout<ChangDuan> searchRecyclerviewLayout;
     private ChangDuanViewModel viewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();

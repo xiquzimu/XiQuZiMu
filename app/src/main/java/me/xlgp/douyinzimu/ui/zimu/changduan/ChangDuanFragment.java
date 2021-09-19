@@ -17,7 +17,6 @@ import me.xlgp.douyinzimu.databinding.ChangDuanFragmentBinding;
 import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.ui.zimu.ZimuViewModel;
 import me.xlgp.douyinzimu.ui.zimu.main.ZimuMainFragment;
-import me.xlgp.douyinzimu.view.ChangDuanAdapter;
 
 public class ChangDuanFragment extends Fragment {
 

@@ -10,7 +10,6 @@ import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
-import me.xlgp.douyinzimu.designpatterns.ChangDuanData;
 import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
 import me.xlgp.douyinzimu.exception.NotFoundDouYinException;
 import me.xlgp.douyinzimu.obj.PingLun;
@@ -39,9 +38,6 @@ public class PingLunService {
         this.douYinAccessibilityService = DouYinAccessibilityService.getInstance();
 
         douYinAccessibilityService.addObserver((o, arg) -> liveable = (boolean) arg);
-        ChangDuanData changDuanData = ChangDuanData.getInstance();
-
-        changDuanData.observe((o, arg) -> setChangDuanInfo(((ChangDuanData) o).getData()));
     }
 
     public void start(long delayMillis) {

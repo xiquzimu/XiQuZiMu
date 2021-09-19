@@ -1,4 +1,4 @@
-package me.xlgp.douyinzimu.service;
+package me.xlgp.douyinzimu.data;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package me.xlgp.douyinzimu.viewmodel;
+package me.xlgp.douyinzimu.ui.fetchlist;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
-import me.xlgp.douyinzimu.service.FetchGiteeService;
+import me.xlgp.douyinzimu.data.FetchGiteeRepository;
 
 public class FetchViewModel extends ViewModel {
 
@@ -26,7 +26,7 @@ public class FetchViewModel extends ViewModel {
     }
 
     public void fetchNameList() {
-        new FetchGiteeService().getNameList().compose(ObserverHelper.transformer())
+        new FetchGiteeRepository().getNameList().compose(ObserverHelper.transformer())
                 .subscribe(list -> nameList.postValue(list), throwable -> nameList.setValue(new ArrayList<>()));
     }
 }

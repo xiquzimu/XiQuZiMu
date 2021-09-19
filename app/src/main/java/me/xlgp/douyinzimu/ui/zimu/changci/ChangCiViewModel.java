@@ -8,7 +8,7 @@ import java.util.Observer;
 import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
-import me.xlgp.douyinzimu.service.ChangCiService;
+import me.xlgp.douyinzimu.data.ChangCiRepository;
 import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
 public class ChangCiViewModel extends ViewModel {
@@ -25,9 +25,9 @@ public class ChangCiViewModel extends ViewModel {
     }
 
     public void loadData(ChangDuan changDuan, Observer observer) {
-        ChangCiService changCiService = new ChangCiService();
+        ChangCiRepository changCiRepository = new ChangCiRepository();
         loading.setValue(true);
-        changCiService.listByChangDuanId(changDuan.getId()).subscribe(list -> {
+        changCiRepository.listByChangDuanId(changDuan.getId()).subscribe(list -> {
             loading.setValue(false);
             ChangDuanInfo info = new ChangDuanInfo();
             if (list != null && !list.isEmpty()) {

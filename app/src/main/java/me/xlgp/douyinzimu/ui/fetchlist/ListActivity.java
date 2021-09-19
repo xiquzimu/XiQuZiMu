@@ -1,4 +1,4 @@
-package me.xlgp.douyinzimu;
+package me.xlgp.douyinzimu.ui.fetchlist;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -16,9 +16,8 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.douyinzimu.adapter.BaseAdapter.OnItemClickListener;
 import me.xlgp.douyinzimu.adapter.NameListAdapter;
 import me.xlgp.douyinzimu.databinding.ActivityListBinding;
-import me.xlgp.douyinzimu.service.ChangDuanService;
-import me.xlgp.douyinzimu.ui.main.SearchRecyclerviewLayout;
-import me.xlgp.douyinzimu.viewmodel.FetchViewModel;
+import me.xlgp.douyinzimu.data.ChangDuanRepository;
+import me.xlgp.douyinzimu.view.SearchRecyclerviewLayout;
 
 public class ListActivity extends AppCompatActivity {
 
@@ -66,7 +65,7 @@ public class ListActivity extends AppCompatActivity {
             CharSequence text = button.getText();
             button.setText("更新...");
             button.setEnabled(false);
-            compositeDisposable.add(new ChangDuanService().update(data).subscribe(id -> {
+            compositeDisposable.add(new ChangDuanRepository().update(data).subscribe(id -> {
                 Toast.makeText(this, "更新成功", Toast.LENGTH_SHORT).show();
                 button.setText(text);
                 button.setEnabled(true);

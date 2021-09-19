@@ -1,4 +1,4 @@
-package me.xlgp.douyinzimu;
+package me.xlgp.douyinzimu.ui.main;
 
 import android.os.Bundle;
 
@@ -7,6 +7,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.databinding.ActivityNavMainBinding;
 
 public class NavMainActivity extends AppCompatActivity {

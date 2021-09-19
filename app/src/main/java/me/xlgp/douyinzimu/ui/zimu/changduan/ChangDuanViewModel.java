@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel;
 import java.util.List;
 
 import me.xlgp.douyinzimu.model.ChangDuan;
-import me.xlgp.douyinzimu.service.ChangDuanService;
+import me.xlgp.douyinzimu.data.ChangDuanRepository;
 import me.xlgp.douyinzimu.util.PinYinHelper;
 
 public class ChangDuanViewModel extends ViewModel {
@@ -24,9 +24,9 @@ public class ChangDuanViewModel extends ViewModel {
     }
 
     public void loadChangDuan() {
-        ChangDuanService changDuanService = new ChangDuanService();
+        ChangDuanRepository changDuanRepository = new ChangDuanRepository();
         loading.setValue(true);
-        changDuanService.list().subscribe(list -> {
+        changDuanRepository.list().subscribe(list -> {
             loading.setValue(false);
             if (list == null || list.size() == 0) {
                 state.setValue("无数据可更新");

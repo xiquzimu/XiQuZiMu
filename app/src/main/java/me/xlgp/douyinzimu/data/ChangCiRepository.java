@@ -1,4 +1,4 @@
-package me.xlgp.douyinzimu.service;
+package me.xlgp.douyinzimu.data;
 
 import java.util.List;
 
@@ -12,15 +12,15 @@ import me.xlgp.douyinzimu.db.AppDatabase;
 import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
 import me.xlgp.douyinzimu.model.ChangCi;
 
-public class ChangCiService {
+public class ChangCiRepository {
 
     private final CompositeDisposable compositeDisposable;
 
-    public ChangCiService(CompositeDisposable compositeDisposable) {
+    public ChangCiRepository(CompositeDisposable compositeDisposable) {
         this.compositeDisposable = compositeDisposable;
     }
 
-    public ChangCiService() {
+    public ChangCiRepository() {
         this.compositeDisposable = new CompositeDisposable();
     }
 
