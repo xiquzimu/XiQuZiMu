@@ -14,16 +14,32 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import me.xlgp.douyinzimu.databinding.ZimuMainFragmentBinding;
+import me.xlgp.douyinzimu.listener.OnSwitchFragmentListener;
 import me.xlgp.douyinzimu.ui.zimu.changci.ChangCiFragment;
 import me.xlgp.douyinzimu.ui.zimu.changduan.ChangDuanFragment;
 
 public class ZimuMainFragment extends Fragment {
 
     private ZimuMainFragmentBinding binding;
+    private OnSwitchFragmentListener onSwitchFragmentListener;
     String[] names = new String[]{"黄梅戏", "唱词"};
 
     public static ZimuMainFragment newInstance() {
         return new ZimuMainFragment();
+    }
+
+    public void setOnSwitchFragmentListener(OnSwitchFragmentListener onSwitchFragmentListener) {
+        this.onSwitchFragmentListener = onSwitchFragmentListener;
+    }
+
+    public void forSkip() {
+        if (onSwitchFragmentListener != null) {
+            onSwitchFragmentListener.onSwitch(binding.zimuViewpager2);
+        }
+    }
+
+    public Integer getLastViewPager2Index() {
+        return names.length - 1;
     }
 
     @Nullable
@@ -46,7 +62,7 @@ public class ZimuMainFragment extends Fragment {
                 (tab, position) -> tab.setText(names[position])).attach();
     }
 
-    class ZimuMainStateAdapter extends FragmentStateAdapter{
+    class ZimuMainStateAdapter extends FragmentStateAdapter {
 
         private final Fragment[] fragments;
 
@@ -58,18 +74,18 @@ public class ZimuMainFragment extends Fragment {
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-            if (fragments[position] == null){
-                if (position == names.length-1) return createChangCiFragment();
+            if (fragments[position] == null) {
+                if (position == names.length - 1) return createChangCiFragment();
                 return createChangDuanFragment();
             }
             return fragments[position];
         }
 
-        private Fragment createChangDuanFragment(){
+        private Fragment createChangDuanFragment() {
             return new ChangDuanFragment();
         }
 
-        private Fragment createChangCiFragment(){
+        private Fragment createChangCiFragment() {
             return new ChangCiFragment();
         }
 

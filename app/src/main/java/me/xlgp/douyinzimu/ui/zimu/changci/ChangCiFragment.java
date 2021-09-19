@@ -14,18 +14,25 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.Objects;
+import java.util.Observable;
 
 import me.xlgp.douyinzimu.databinding.ChangCiFragmentBinding;
+import me.xlgp.douyinzimu.listener.OnDouYinLiveListener;
 import me.xlgp.douyinzimu.model.ChangCi;
+import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
+import me.xlgp.douyinzimu.service.DouYinAccessibilityService;
+import me.xlgp.douyinzimu.service.PingLunService;
 import me.xlgp.douyinzimu.ui.zimu.ZimuViewModel;
 import me.xlgp.douyinzimu.view.ChangCiAdapter;
+import me.xlgp.douyinzimu.view.ZimuDetailFloatingLayout;
 
-public class ChangCiFragment extends Fragment {
+public class ChangCiFragment extends Fragment implements OnDouYinLiveListener {
 
     private ChangCiViewModel mViewModel;
     private ChangCiFragmentBinding binding;
+    private boolean liveable =false;
 
     public static ChangCiFragment newInstance() {
         return new ChangCiFragment();
@@ -42,9 +49,23 @@ public class ChangCiFragment extends Fragment {
         ChangCiAdapter changCiAdapter = new ChangCiAdapter();
         changCiAdapter.setOnItemClickListener((itemView, view, data, position) -> {
             //todo 点击唱词 发送
+            pingLun(0);
             updateTitleView(data.getContent());
         });
         binding.zimuDetailRecyclerview.setAdapter(changCiAdapter);
+
+        binding.pingLunSwitchMaterial.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            PingLun.getInstance().change(isChecked);
+            if (PingLun.getInstance().disabled()) {
+                Toast.makeText(requireContext(), "评论已关闭", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (!PingLunService.getInstance().hasChangeCi()) {
+                Toast.makeText(requireContext(), "没有选择唱段", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            pingLun(PingLunService.getInstance().getChangDuanInfo().getChangeCiList().current().getDelayMillis());
+            Toast.makeText(requireContext(), "开始评论", Toast.LENGTH_SHORT).show();
+        });
 
         mViewModel.loading.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
@@ -58,8 +79,10 @@ public class ChangCiFragment extends Fragment {
         mViewModel.getChangDuanInfo().observe(getViewLifecycleOwner(), new Observer<ChangDuanInfo>() {
             @Override
             public void onChanged(ChangDuanInfo changDuanInfo) {
-                changCiAdapter.updateData(changDuanInfo.getChangeCiList());
+                ChangCiList changCiList = changDuanInfo.getChangeCiList();
+                changCiAdapter.updateData(changCiList);
                 updateRecyclerView(0);
+                binding.pingLunSwitchMaterial.setChecked(liveable && changCiList.hasNext());
             }
         });
         ZimuViewModel.getChangDuan().observe(getViewLifecycleOwner(), changDuan -> mViewModel.loadData(Objects.requireNonNull(ZimuViewModel.getChangDuan().getValue()), (o, arg) -> {
@@ -76,10 +99,54 @@ public class ChangCiFragment extends Fragment {
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        addDouYinObserver();
+    }
+
     private void updateTitleView(String text) {
         binding.currentZimuTitleTextView.setText(text);
     }
     private void updateRecyclerView(int position) {
         binding.zimuDetailRecyclerview.smoothScrollToPosition(position + 4);
+    }
+
+    private void pingLun(long delayMillis) {
+        if (liveable) {
+            PingLunService.getInstance().start(delayMillis);
+        }
+    }
+
+    @Override
+    public void onLive(boolean isLive) {
+        liveable = isLive;
+        if (!liveable) {
+            binding.pingLunSwitchMaterial.setChecked(false);
+        }
+    }
+
+    private void addDouYinObserver() {
+        DouYinAccessibilityService douYinAccessibilityService = DouYinAccessibilityService.getInstance();
+        if (douYinAccessibilityService != null) {
+            douYinAccessibilityService.addObserver(new DouYinObserver());
+        }
+    }
+
+    class DouYinObserver implements java.util.Observer {
+        private boolean liveable;
+
+        public DouYinObserver() {
+            liveable = false;
+        }
+
+        @Override
+        public void update(Observable o, Object arg) {
+            boolean liveable = (boolean) arg;
+            if (liveable != this.liveable) {
+                this.liveable = liveable;
+                onLive(liveable);
+            }
+        }
     }
 }
