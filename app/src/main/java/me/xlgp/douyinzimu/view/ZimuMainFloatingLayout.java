@@ -15,7 +15,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import me.xlgp.douyinzimu.R;
-import me.xlgp.douyinzimu.databinding.ZimuViewpager2LayoutBinding;
+import me.xlgp.douyinzimu.databinding.ZimuMainFragmentBinding;
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
 import me.xlgp.douyinzimu.listener.OnDoubleClickListener;
 import me.xlgp.douyinzimu.model.ChangDuan;
@@ -25,17 +25,17 @@ import me.xlgp.douyinzimu.service.FloatingService;
 
 public class ZimuMainFloatingLayout extends BasePanelLayout {
 
-    private final ZimuViewpager2LayoutBinding binding;
+    private final ZimuMainFragmentBinding binding;
     private final FloatingService floatingService;
     private ZimuDetailFloatingLayout zimuDetailFloatingLayout;
 
     public ZimuMainFloatingLayout(@NonNull FloatingService floatingService) {
-        super(floatingService, R.layout.zimu_viewpager2_layout);
+        super(floatingService, R.layout.zimu_main_fragment);
         this.floatingService = floatingService;
 
         super.build(new ZimuLayoutParams.WithFullWidth(), this.getClass().getName());
 
-        this.binding = ZimuViewpager2LayoutBinding.bind(getCurrentLayout());
+        this.binding = ZimuMainFragmentBinding.bind(getCurrentLayout());
 
         init();
     }

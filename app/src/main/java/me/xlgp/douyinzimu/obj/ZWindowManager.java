@@ -33,7 +33,7 @@ public class ZWindowManager {
     }
 
     public void addView(View view, ViewGroup.LayoutParams params) {
-        windowManager.addView(view, params);
+        addView(view, params, "floatinglayout" + ZWindowManager.getInstance().count());
     }
 
     public int count() {
@@ -41,7 +41,7 @@ public class ZWindowManager {
     }
 
     public void addView(View view, ViewGroup.LayoutParams params, String key) {
-        addView(view, params);
+        windowManager.addView(view, params);
         viewMap.put(key, view);
     }
 

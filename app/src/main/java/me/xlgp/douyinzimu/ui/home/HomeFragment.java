@@ -16,10 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import io.reactivex.rxjava3.core.Observable;
 import me.xlgp.douyinzimu.ListActivity;
 import me.xlgp.douyinzimu.databinding.FragmentHomeBinding;
-import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
 import me.xlgp.douyinzimu.service.FloatingService;
 import me.xlgp.douyinzimu.util.AccessibilitySettingsHelper;
 import me.xlgp.douyinzimu.util.FloatingHelper;
@@ -104,17 +102,19 @@ public class HomeFragment extends Fragment {
 
     public void onRun(View view) {
         Context context = requireContext();
-        if (!AccessibilitySettingsHelper.isEnabled(context)) {
-            Toast.makeText(context, "请先开启无障碍服务", Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        if (!AccessibilitySettingsHelper.isEnabled(context)) {
+//            Toast.makeText(context, "请先开启无障碍服务", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
         if (!FloatingHelper.enable(context)) {
             Toast.makeText(context, "请开启悬浮权限", Toast.LENGTH_SHORT).show();
             return;
         }
         Intent floatingIntent = new Intent(getActivity(), FloatingService.class);
-        Observable.create(emitter -> emitter.onNext(context.startService(floatingIntent)))
-                .compose(ObserverHelper.transformer()).subscribe();
+        floatingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startService(floatingIntent);
+//        Observable.create(emitter -> emitter.onNext(context.startService(floatingIntent)))
+//                .compose(ObserverHelper.transformer()).subscribe();
     }
 
     @Override

@@ -9,15 +9,9 @@ import androidx.annotation.NonNull;
 
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.adapter.BaseAdapter;
-import me.xlgp.douyinzimu.designpatterns.ChangDuanData;
 import me.xlgp.douyinzimu.model.ChangCi;
 
 public class ChangCiAdapter extends BaseAdapter<ChangCi> {
-
-    public ChangCiAdapter() {
-        ChangDuanData changDuanData = ChangDuanData.getInstance();
-        changDuanData.observe((o, arg) -> updateData(((ChangDuanData) o).getData().getChangeCiList()));
-    }
 
     @NonNull
     @Override
@@ -35,7 +29,6 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
             super(itemView);
             itemView.setOnClickListener(v -> {
                 // 设置当前唱词
-                ChangDuanData.getInstance().getData().getChangeCiList(getAdapterPosition());
                 onItemClickListener.onItemClick(itemView, v, data, getAdapterPosition());
             });
         }
