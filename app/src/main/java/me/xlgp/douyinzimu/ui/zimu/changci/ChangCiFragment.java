@@ -25,8 +25,6 @@ import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 import me.xlgp.douyinzimu.service.DouYinAccessibilityService;
 import me.xlgp.douyinzimu.service.PingLunService;
 import me.xlgp.douyinzimu.ui.zimu.ZimuViewModel;
-import me.xlgp.douyinzimu.view.ChangCiAdapter;
-import me.xlgp.douyinzimu.view.ZimuDetailFloatingLayout;
 
 public class ChangCiFragment extends Fragment implements OnDouYinLiveListener {
 
@@ -48,7 +46,7 @@ public class ChangCiFragment extends Fragment implements OnDouYinLiveListener {
 
         ChangCiAdapter changCiAdapter = new ChangCiAdapter();
         changCiAdapter.setOnItemClickListener((itemView, view, data, position) -> {
-            //todo 点击唱词 发送
+            PingLunService.getInstance().getChangDuanInfo().getChangeCiList(position);
             pingLun(0);
             updateTitleView(data.getContent());
         });
@@ -81,6 +79,8 @@ public class ChangCiFragment extends Fragment implements OnDouYinLiveListener {
             public void onChanged(ChangDuanInfo changDuanInfo) {
                 ChangCiList changCiList = changDuanInfo.getChangeCiList();
                 changCiAdapter.updateData(changCiList);
+                //todo 此处应该重新设计
+                PingLunService.getInstance().setChangDuanInfo(changDuanInfo);
                 updateRecyclerView(0);
                 binding.pingLunSwitchMaterial.setChecked(liveable && changCiList.hasNext());
             }
