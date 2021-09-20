@@ -1,6 +1,5 @@
 package me.xlgp.douyinzimu.service;
 
-import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.GestureDescription;
 import android.graphics.Rect;
 
@@ -12,19 +11,16 @@ import me.xlgp.douyinzimu.obj.DianZan;
 
 public class DianZanService {
     private final DianZan dianZan;
-    private final AccessibilityService service;
+    private final DouYinAccessibilityService service;
     private final GestureDescription dianZanGestureDescription;
-
-    public DianZanService(AccessibilityService service) {
-        this(service, null);
-    }
 
     public DianZanService() {
         this(DouYinAccessibilityService.getInstance(), null);
     }
 
-    public DianZanService(AccessibilityService service, DianZan dianZan) {
+    public DianZanService(DouYinAccessibilityService service, DianZan dianZan) {
         this.service = service;
+
         this.dianZan = dianZan == null ? new DianZan(500) : dianZan;
         dianZanGestureDescription = new DianZanGestureDescription(getPoint()).build();
     }
@@ -43,14 +39,15 @@ public class DianZanService {
      * 更新点赞数量，
      */
     public void dianZan() {
+        if (service == null || !service.canDianZan()) { //此处判断或许应使用代理模式．
+            return;
+        }
         if (dianZan.isEmpty()) { //先判断能否点赞，
             return;
         }
         dianZan.updateCount();
         //模拟点赞手势
-        if (service != null) {
-            service.dispatchGesture(dianZanGestureDescription, new DianZanGestureResultCallback((obj) -> dianZan()), null);
-        }
+        service.dispatchGesture(dianZanGestureDescription, new DianZanGestureResultCallback((obj) -> dianZan()), null);
     }
 }
 

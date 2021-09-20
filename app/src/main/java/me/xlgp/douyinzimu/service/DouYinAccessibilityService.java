@@ -1,7 +1,5 @@
 package me.xlgp.douyinzimu.service;
 
-import static android.view.accessibility.AccessibilityEvent.TYPE_VIEW_CLICKED;
-
 import android.accessibilityservice.AccessibilityService;
 import android.os.Handler;
 import android.view.accessibility.AccessibilityEvent;
@@ -13,13 +11,17 @@ import java.util.Observer;
 
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
+import me.xlgp.douyinzimu.listener.OnDianZanListener;
 import me.xlgp.douyinzimu.util.PingLunHelper;
 
-public class DouYinAccessibilityService extends AccessibilityService {
+import static android.view.accessibility.AccessibilityEvent.TYPE_VIEW_CLICKED;
+
+public class DouYinAccessibilityService extends AccessibilityService implements OnDianZanListener {
 
     private static DouYinAccessibilityService douYinAccessibilityService;
     private DouYinObservable observable;
     private PingLunService pingLunService;
+    private boolean liveable;
 
     public static DouYinAccessibilityService getInstance() {
         return douYinAccessibilityService;
@@ -45,7 +47,7 @@ public class DouYinAccessibilityService extends AccessibilityService {
                 pingLunService.run();
             }
         } else if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-            new Handler(getMainLooper()).postDelayed(() -> observable.setData(isDouYinLive()), 600);
+            new Handler(getMainLooper()).postDelayed(() -> observable.setData(isDouYinLive()), 1600);
         }
     }
 
@@ -59,18 +61,26 @@ public class DouYinAccessibilityService extends AccessibilityService {
         try {
             List<AccessibilityNodeInfo> nodeInfoList =
                     nodeInfo.findAccessibilityNodeInfosByText(getString(R.string.dy_input_layout_text));
-            return nodeInfoList != null && !nodeInfoList.isEmpty();
+            liveable = nodeInfoList != null && !nodeInfoList.isEmpty();
         } catch (Exception e) {
-            return false;
+            liveable = false;
         } finally {
             if (nodeInfo != null) nodeInfo.recycle();
         }
+        return liveable;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         douYinAccessibilityService = null;
+        liveable = false;
+    }
+
+    @Override
+    public boolean canDianZan() {
+        if (!liveable) isDouYinLive();
+        return liveable;
     }
 
     static class DouYinObservable extends BaseObservable<Boolean> {
