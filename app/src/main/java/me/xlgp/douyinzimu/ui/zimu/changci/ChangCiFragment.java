@@ -13,22 +13,18 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.Objects;
-import java.util.Observable;
 
 import me.xlgp.douyinzimu.databinding.ChangCiFragmentBinding;
-import me.xlgp.douyinzimu.listener.OnDouYinLiveListener;
 import me.xlgp.douyinzimu.model.ChangCi;
 import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
-import me.xlgp.douyinzimu.service.DouYinAccessibilityService;
 import me.xlgp.douyinzimu.service.PingLunService;
 import me.xlgp.douyinzimu.ui.zimu.ZimuViewModel;
 
-public class ChangCiFragment extends Fragment implements OnDouYinLiveListener {
+public class ChangCiFragment extends Fragment {
 
     private ChangCiViewModel mViewModel;
     private ChangCiFragmentBinding binding;
-    private boolean liveable = false;
 
     public static ChangCiFragment newInstance() {
         return new ChangCiFragment();
@@ -73,7 +69,7 @@ public class ChangCiFragment extends Fragment implements OnDouYinLiveListener {
             //todo 此处应该重新设计
             PingLunService.getInstance().setChangDuanInfo(changDuanInfo);
             updateRecyclerView(0);
-            binding.pingLunSwitchMaterial.setChecked(liveable && changCiList.hasNext());
+            binding.pingLunSwitchMaterial.setChecked(changCiList.hasNext());
         });
 
         ZimuViewModel.getChangDuan().observe(getViewLifecycleOwner(), changDuan -> mViewModel.loadData(changDuan, (o, arg) -> {
@@ -97,7 +93,6 @@ public class ChangCiFragment extends Fragment implements OnDouYinLiveListener {
     @Override
     public void onStart() {
         super.onStart();
-        addDouYinObserver();
     }
 
     private void updateTitleView(String text) {
@@ -109,43 +104,6 @@ public class ChangCiFragment extends Fragment implements OnDouYinLiveListener {
     }
 
     private void pingLun(long delayMillis) {
-        if (!liveable) {
-            DouYinAccessibilityService.getInstance().isDouYinLive();
-        }
-        if (liveable) {
-            PingLunService.getInstance().start(delayMillis);
-        }
-    }
-
-    @Override
-    public void onLive(boolean isLive) {
-        liveable = isLive;
-        if (!liveable) {
-            binding.pingLunSwitchMaterial.setChecked(false);
-        }
-    }
-
-    private void addDouYinObserver() {
-        DouYinAccessibilityService douYinAccessibilityService = DouYinAccessibilityService.getInstance();
-        if (douYinAccessibilityService != null) {
-            douYinAccessibilityService.addObserver(new DouYinObserver());
-        }
-    }
-
-    class DouYinObserver implements java.util.Observer {
-        private boolean liveable;
-
-        public DouYinObserver() {
-            liveable = false;
-        }
-
-        @Override
-        public void update(Observable o, Object arg) {
-            boolean liveable = (boolean) arg;
-            if (liveable != this.liveable) {
-                this.liveable = liveable;
-                onLive(liveable);
-            }
-        }
+        PingLunService.getInstance().start(delayMillis);
     }
 }

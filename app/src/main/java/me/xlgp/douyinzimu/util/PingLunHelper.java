@@ -21,8 +21,9 @@ public class PingLunHelper {
 
     public static void openInputLayout(AccessibilityService service) {
 
-        AccessibilityNodeInfo nodeInfo = service.getRootInActiveWindow();
+        AccessibilityNodeInfo nodeInfo = null;
         try {
+            nodeInfo = service.getRootInActiveWindow();
             if (nodeInfo != null) {
                 List<AccessibilityNodeInfo> nodeInfoList = nodeInfo.findAccessibilityNodeInfosByText(service.getString(R.string.dy_input_layout_text));
                 for (AccessibilityNodeInfo node : nodeInfoList) {
@@ -61,6 +62,10 @@ public class PingLunHelper {
      * @param callback 回调
      */
     public static void input(AccessibilityService service, ChangCi changCi, Callback<Boolean> callback) {
+        if (service == null){
+            callback.call(false);
+            return;
+        }
         AccessibilityNodeInfo node = null;
 
         try {

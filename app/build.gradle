@@ -10,8 +10,8 @@ android {
         applicationId "me.xlgp.douyinzimu"
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 45
-        versionName "1.7.5"
+        versionCode 46
+        versionName "1.7.6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

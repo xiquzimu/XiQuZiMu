@@ -82,11 +82,11 @@ public class ZimuMainFragment extends Fragment {
         }
 
         private Fragment createChangDuanFragment() {
-            return new ChangDuanFragment();
+            return ChangDuanFragment.newInstance();
         }
 
         private Fragment createChangCiFragment() {
-            return new ChangCiFragment();
+            return ChangCiFragment.newInstance();
         }
 
         @Override

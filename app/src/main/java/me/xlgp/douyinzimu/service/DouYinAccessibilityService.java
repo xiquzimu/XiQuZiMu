@@ -7,7 +7,6 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 
 import java.util.List;
-import java.util.Observer;
 
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
@@ -34,10 +33,6 @@ public class DouYinAccessibilityService extends AccessibilityService implements 
         observable = new DouYinObservable();
         pingLunService = PingLunService.getInstance();
         Toast.makeText(this, "请按返回键返回至应用", Toast.LENGTH_LONG).show();
-    }
-
-    public void addObserver(Observer observer) {
-        observable.addObserver(observer);
     }
 
     @Override

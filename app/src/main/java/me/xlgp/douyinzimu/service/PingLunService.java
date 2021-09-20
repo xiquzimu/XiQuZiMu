@@ -1,8 +1,6 @@
 package me.xlgp.douyinzimu.service;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.widget.Toast;
+import android.util.Log;
 
 import java.util.concurrent.TimeUnit;
 
@@ -11,7 +9,6 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
-import me.xlgp.douyinzimu.exception.NotFoundDouYinException;
 import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
 import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
@@ -21,23 +18,15 @@ public class PingLunService {
 
     private static PingLunService instance = null;
     private ChangDuanInfo changDuanInfo = null;
-    private DouYinAccessibilityService douYinAccessibilityService;
-    private boolean liveable;
+
     //todo 此处应该重构
     private long count = 0; //记录线程数量，用于判断即将执行的线程是不是当前应当执行的线程
 
     public static PingLunService getInstance() {
         if (instance == null) {
             instance = new PingLunService();
-            instance.builder();
         }
         return instance;
-    }
-
-    public void builder() {
-        this.douYinAccessibilityService = DouYinAccessibilityService.getInstance();
-
-        douYinAccessibilityService.addObserver((o, arg) -> liveable = (boolean) arg);
     }
 
     public void start(long delayMillis) {
@@ -61,20 +50,22 @@ public class PingLunService {
     }
 
     public boolean enablePingLun() {
-        return liveable && !PingLun.getInstance().disabled() && hasChangeCi();
+        return  !PingLun.getInstance().disabled() && hasChangeCi();
     }
 
     public void run() {
         if (enablePingLun()) {
             ChangCiList changCiList = changDuanInfo.getChangeCiList();
             //此处延时执行是因为先点击直播界面，还没有调出输入框时已执行输入操作，导致无法获取输入框。
-            new Handler(Looper.getMainLooper()).postDelayed(() ->
-                    PingLunHelper.input(douYinAccessibilityService, changCiList.next(), aBoolean -> {
-                        if (enablePingLun()) {
-                            start(changCiList.current().getDelayMillis());
-                        }
-                    }), 6);
-
+            try {
+                PingLunHelper.input(DouYinAccessibilityService.getInstance(), changCiList.next(), aBoolean -> {
+                    if (enablePingLun()) {
+                        start(changCiList.current().getDelayMillis());
+                    }
+                });
+            } catch (Exception e) {
+                Log.e("TAG", "run: ", e);
+            }
         }
     }
 
@@ -95,23 +86,16 @@ public class PingLunService {
         public void onNext(@NonNull Long count) {
             try {
                 if (count == pingLunService.count && enablePingLun()) {
-                    PingLunHelper.openInputLayout(douYinAccessibilityService);
+                    PingLunHelper.openInputLayout(DouYinAccessibilityService.getInstance());
                 }
             } catch (Exception e) {
-                if (e instanceof NotFoundDouYinException) {
-                    Toast.makeText(douYinAccessibilityService, e.getMessage(), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(douYinAccessibilityService, "评论时出错", Toast.LENGTH_SHORT).show();
-                }
-                e.printStackTrace();
+                Log.e("TAG", "run: ", e);
+                dispose();
             }
         }
 
         @Override
         public void onError(@NonNull Throwable e) {
-            if (e instanceof NotFoundDouYinException) {
-                Toast.makeText(douYinAccessibilityService, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
             dispose();
         }
 
