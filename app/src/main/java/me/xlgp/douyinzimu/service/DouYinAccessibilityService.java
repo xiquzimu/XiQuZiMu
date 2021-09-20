@@ -9,7 +9,6 @@ import android.widget.Toast;
 import java.util.List;
 
 import me.xlgp.douyinzimu.R;
-import me.xlgp.douyinzimu.designpatterns.BaseObservable;
 import me.xlgp.douyinzimu.listener.OnDianZanListener;
 import me.xlgp.douyinzimu.util.PingLunHelper;
 
@@ -18,7 +17,6 @@ import static android.view.accessibility.AccessibilityEvent.TYPE_VIEW_CLICKED;
 public class DouYinAccessibilityService extends AccessibilityService implements OnDianZanListener {
 
     private static DouYinAccessibilityService douYinAccessibilityService;
-    private DouYinObservable observable;
     private PingLunService pingLunService;
     private boolean liveable;
 
@@ -30,7 +28,6 @@ public class DouYinAccessibilityService extends AccessibilityService implements 
     protected void onServiceConnected() {
         super.onServiceConnected();
         douYinAccessibilityService = this;
-        observable = new DouYinObservable();
         pingLunService = PingLunService.getInstance();
         Toast.makeText(this, "请按返回键返回至应用", Toast.LENGTH_LONG).show();
     }
@@ -42,7 +39,7 @@ public class DouYinAccessibilityService extends AccessibilityService implements 
                 pingLunService.run();
             }
         } else if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-            new Handler(getMainLooper()).postDelayed(() -> observable.setData(isDouYinLive()), 1600);
+            new Handler(getMainLooper()).postDelayed(this::isDouYinLive, 1600);
         }
     }
 
@@ -51,7 +48,7 @@ public class DouYinAccessibilityService extends AccessibilityService implements 
 
     }
 
-    public boolean isDouYinLive() {
+    public void isDouYinLive() {
         AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
         try {
             List<AccessibilityNodeInfo> nodeInfoList =
@@ -62,7 +59,6 @@ public class DouYinAccessibilityService extends AccessibilityService implements 
         } finally {
             if (nodeInfo != null) nodeInfo.recycle();
         }
-        return liveable;
     }
 
     @Override
@@ -76,8 +72,5 @@ public class DouYinAccessibilityService extends AccessibilityService implements 
     public boolean canDianZan() {
         if (!liveable) isDouYinLive();
         return liveable;
-    }
-
-    static class DouYinObservable extends BaseObservable<Boolean> {
     }
 }
