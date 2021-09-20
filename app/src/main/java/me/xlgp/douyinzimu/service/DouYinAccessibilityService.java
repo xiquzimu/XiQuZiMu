@@ -56,7 +56,7 @@ public class DouYinAccessibilityService extends AccessibilityService implements 
 
     }
 
-    private boolean isDouYinLive() {
+    public boolean isDouYinLive() {
         AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
         try {
             List<AccessibilityNodeInfo> nodeInfoList =
