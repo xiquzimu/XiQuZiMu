@@ -22,13 +22,7 @@ public class DianZanService {
         this.service = service;
 
         this.dianZan = dianZan == null ? new DianZan(500) : dianZan;
-        dianZanGestureDescription = new DianZanGestureDescription(getPoint()).build();
-    }
-
-    private Point getPoint() {
-        Rect rect = new Rect();
-        service.getRootInActiveWindow().getBoundsInScreen(rect);
-        return new Point(10, rect.bottom - 60);
+        dianZanGestureDescription = new DianZanGestureDescription(new Point(10,300)).build();
     }
 
     /**
