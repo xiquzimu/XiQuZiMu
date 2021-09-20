@@ -4,8 +4,6 @@ import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.GestureDescription;
 import android.graphics.Rect;
 
-import java.util.Random;
-
 import me.xlgp.douyinzimu.obj.Callback;
 import me.xlgp.douyinzimu.obj.ClickGestureDescription;
 import me.xlgp.douyinzimu.obj.ClickGestureDescription.Point;
@@ -34,7 +32,7 @@ public class DianZanService {
     private Point getPoint() {
         Rect rect = new Rect();
         service.getRootInActiveWindow().getBoundsInScreen(rect);
-        return new Point((float) rect.centerX() / 2 - new Random().nextInt(10), (float) rect.centerY() * 2 / 3 - new Random().nextInt(10));
+        return new Point(10, rect.bottom - 60);
     }
 
     /**
