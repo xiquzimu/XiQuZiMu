@@ -69,6 +69,7 @@ public class ChangCiFragment extends Fragment {
             //todo 此处应该重新设计
             PingLunService.getInstance().setChangDuanInfo(changDuanInfo);
             updateRecyclerView(0);
+            binding.pingLunSwitchMaterial.setChecked(false);
             binding.pingLunSwitchMaterial.setChecked(changCiList.hasNext());
         });
 
