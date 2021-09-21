@@ -3,7 +3,6 @@ package me.xlgp.douyinzimu.ui.zimu.changduan;
 import android.annotation.SuppressLint;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -14,6 +13,7 @@ import java.util.List;
 
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.adapter.BaseAdapter;
+import me.xlgp.douyinzimu.databinding.ZimuListItemLayoutBinding;
 import me.xlgp.douyinzimu.model.ChangDuan;
 
 public class ChangDuanAdapter extends BaseAdapter<ChangDuan> {
@@ -33,15 +33,11 @@ public class ChangDuanAdapter extends BaseAdapter<ChangDuan> {
     }
 
     protected static class ViewHolder extends BaseAdapter.ViewHolder<ChangDuan> {
-        private final TextView titleView;
-        private final TextView subTitleView;
-        private final TextView noView;
+        private final ZimuListItemLayoutBinding binding;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            titleView = itemView.findViewById(R.id.title);
-            subTitleView = itemView.findViewById(R.id.subTitle);
-            noView = itemView.findViewById(R.id.no);
+            binding = ZimuListItemLayoutBinding.bind(itemView);
             //当点击唱段时，通知观察者
             itemView.setOnClickListener(v -> onItemClickListener.onItemClick(itemView, v, data, this.getAdapterPosition()));
         }
@@ -49,10 +45,10 @@ public class ChangDuanAdapter extends BaseAdapter<ChangDuan> {
         @SuppressLint("SetTextI18n")
         public void setData(ChangDuan changDuanInfo) {
             super.setData(changDuanInfo);
-            noView.setText(String.valueOf(getAdapterPosition() + 1));
-            titleView.setText(changDuanInfo.getName());
+            binding.title.setText(changDuanInfo.getName());
             char letter = Pinyin.toPinyin(changDuanInfo.getJuMu().charAt(0)).charAt(0);
-            subTitleView.setText(letter + " " + changDuanInfo.getJuZhong() + " " + changDuanInfo.getJuMu());
+            binding.letter.setText(String.valueOf(letter));
+            binding.subTitle.setText(changDuanInfo.getJuZhong() + " " + changDuanInfo.getJuMu());
         }
     }
 }

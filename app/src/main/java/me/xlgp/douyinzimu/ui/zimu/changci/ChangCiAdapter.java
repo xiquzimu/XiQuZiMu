@@ -3,12 +3,12 @@ package me.xlgp.douyinzimu.ui.zimu.changci;
 import android.annotation.SuppressLint;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.adapter.BaseAdapter;
+import me.xlgp.douyinzimu.databinding.ZimuDetailItemLayoutBinding;
 import me.xlgp.douyinzimu.model.ChangCi;
 
 public class ChangCiAdapter extends BaseAdapter<ChangCi> {
@@ -21,12 +21,11 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
 
     protected static class ViewHolder extends BaseAdapter.ViewHolder<ChangCi> {
 
-        TextView no = itemView.findViewById(R.id.no);
-        TextView title = itemView.findViewById(R.id.title);
-        TextView subTitle = itemView.findViewById(R.id.subTitle);
+        private final ZimuDetailItemLayoutBinding binding;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            binding = ZimuDetailItemLayoutBinding.bind(itemView);
             itemView.setOnClickListener(v -> {
                 // 设置当前唱词
                 onItemClickListener.onItemClick(itemView, v, data, getAdapterPosition());
@@ -37,9 +36,9 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
         @Override
         public void setData(ChangCi data) {
             super.setData(data);
-            no.setText(String.valueOf(getAdapterPosition() + 1));
-            title.setText(data.getContent());
-            subTitle.setText(data.getShowTime() + "  " + data.getDelayMillis());
+            binding.no.setText(String.valueOf(getAdapterPosition() + 1));
+            binding.title.setText(data.getContent());
+            binding.subTitle.setText(data.getShowTime() + "  " + data.getDelayMillis());
         }
     }
 }
