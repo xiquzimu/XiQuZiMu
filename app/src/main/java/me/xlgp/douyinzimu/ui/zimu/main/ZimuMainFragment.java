@@ -34,12 +34,8 @@ public class ZimuMainFragment extends Fragment {
 
     public void forSkip() {
         if (onSwitchFragmentListener != null) {
-            onSwitchFragmentListener.onSwitch(binding.zimuViewpager2);
+            onSwitchFragmentListener.onSwitch(binding.zimuViewpager2, binding.zimuViewpager2.getChildCount() - 1);
         }
-    }
-
-    public Integer getLastViewPager2Index() {
-        return names.length - 1;
     }
 
     @Nullable
@@ -75,8 +71,8 @@ public class ZimuMainFragment extends Fragment {
         @Override
         public Fragment createFragment(int position) {
             if (fragments[position] == null) {
-                if (position == names.length - 1) return createChangCiFragment();
-                return createChangDuanFragment();
+                if (position == names.length - 1) fragments[position] = createChangCiFragment();
+                fragments[position] = createChangDuanFragment();
             }
             return fragments[position];
         }
