@@ -8,8 +8,8 @@ public class FloatingMoveListener implements View.OnTouchListener {
     private int x;
     private int y;
     private WindowManager.LayoutParams layoutParams;
-    private WindowManager windowManager;
-    private View moveView;
+    private final WindowManager windowManager;
+    private final View moveView;
 
     public FloatingMoveListener(View moveView, WindowManager.LayoutParams layoutParams, WindowManager windowManager) {
         this.layoutParams = layoutParams;

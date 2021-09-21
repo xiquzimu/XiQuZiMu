@@ -20,7 +20,7 @@ import me.xlgp.douyinzimu.view.SearchRecyclerviewLayout;
 
 public class DashboardFragment extends Fragment {
 
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentDashboardBinding binding;
     private SearchRecyclerviewLayout<ChangDuan> searchRecyclerviewLayout;
     private ChangDuanViewModel viewModel;
