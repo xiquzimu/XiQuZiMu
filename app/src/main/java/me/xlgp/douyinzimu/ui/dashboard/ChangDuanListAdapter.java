@@ -1,4 +1,4 @@
-package me.xlgp.douyinzimu.adapter;
+package me.xlgp.douyinzimu.ui.dashboard;
 
 import android.annotation.SuppressLint;
 import android.view.View;
@@ -12,6 +12,8 @@ import com.github.promeg.pinyinhelper.Pinyin;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.douyinzimu.R;
+import me.xlgp.douyinzimu.adapter.BaseAdapter;
+import me.xlgp.douyinzimu.adapter.SearchListAdapter;
 import me.xlgp.douyinzimu.data.ChangDuanRepository;
 import me.xlgp.douyinzimu.databinding.ChangduanItemLayoutBinding;
 import me.xlgp.douyinzimu.model.ChangDuan;
@@ -52,12 +54,8 @@ public class ChangDuanListAdapter extends SearchListAdapter<ChangDuan> {
             AlertDialog.Builder builder = new AlertDialog.Builder(itemView.getContext());
             builder.setTitle("删除")
                     .setMessage(data.getJuMu() + " " + data.getName())
-                    .setPositiveButton("确定", (dialog, which) -> {
-                        deleteItem();
-                    })
-                    .setNegativeButton("取消", (dialog, which) -> {
-
-                    }).show();
+                    .setPositiveButton("确定", (dialog, which) -> deleteItem())
+                    .setNegativeButton("取消", (dialog, which) -> {}).show();
         }
 
         @SuppressLint("SetTextI18n")

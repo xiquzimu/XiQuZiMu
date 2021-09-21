@@ -14,7 +14,6 @@ import java.util.function.Predicate;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.douyinzimu.adapter.BaseAdapter.OnItemClickListener;
-import me.xlgp.douyinzimu.adapter.NameListAdapter;
 import me.xlgp.douyinzimu.databinding.ActivityListBinding;
 import me.xlgp.douyinzimu.data.ChangDuanRepository;
 import me.xlgp.douyinzimu.view.SearchRecyclerviewLayout;

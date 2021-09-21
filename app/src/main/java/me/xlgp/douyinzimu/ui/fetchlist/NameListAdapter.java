@@ -1,4 +1,4 @@
-package me.xlgp.douyinzimu.adapter;
+package me.xlgp.douyinzimu.ui.fetchlist;
 
 import android.annotation.SuppressLint;
 import android.view.View;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import me.xlgp.douyinzimu.R;
+import me.xlgp.douyinzimu.adapter.SearchListAdapter;
 import me.xlgp.douyinzimu.databinding.FetchItemLayoutBinding;
 
 public class NameListAdapter extends SearchListAdapter<String> {

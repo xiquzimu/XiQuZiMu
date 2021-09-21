@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import me.xlgp.douyinzimu.adapter.ChangDuanListAdapter;
 import me.xlgp.douyinzimu.databinding.FragmentDashboardBinding;
 import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.predicate.ChangDuanPredicate;
@@ -78,7 +78,11 @@ public class DashboardFragment extends Fragment {
     }
 
     public void onClearList(View view) {
-        viewModel.deleteChangDuanList();
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("清除")
+                .setMessage("删除所有唱段？")
+                .setPositiveButton("确定", (dialog, which) -> viewModel.deleteChangDuanList())
+                .setNegativeButton("取消", (dialog, which) -> {}).show();
     }
 
     @Override
