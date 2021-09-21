@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,10 +17,10 @@ import androidx.lifecycle.LifecycleService;
 import androidx.lifecycle.ViewModelStore;
 import androidx.lifecycle.ViewModelStoreOwner;
 
-import me.xlgp.douyinzimu.ui.floating.toolbar.FloatingToolBarFragment;
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.obj.ZWindowManager;
 import me.xlgp.douyinzimu.obj.ZimuLayoutParams;
+import me.xlgp.douyinzimu.ui.floating.toolbar.FloatingToolBarFragment;
 import me.xlgp.douyinzimu.ui.zimu.main.ZimuMainFragment;
 
 public class FloatingService extends LifecycleService {
@@ -31,14 +32,18 @@ public class FloatingService extends LifecycleService {
     public void onCreate() {
         super.onCreate();
         mFragments.attachHost(null);
-        addView();
     }
 
     @Override
-    public void onStart(@Nullable Intent intent, int startId) {
-        super.onStart(intent, startId);
-        mFragments.dispatchResume();
-        addFragment();
+    public int onStartCommand(@Nullable @org.jetbrains.annotations.Nullable Intent intent, int flags, int startId) {
+        if (rootView == null) {
+            addView();
+            mFragments.dispatchResume();
+            addFragment();
+        } else {
+            Toast.makeText(this, "已开启悬浮窗口", Toast.LENGTH_SHORT).show();
+        }
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @SuppressLint("InflateParams")
@@ -49,13 +54,14 @@ public class FloatingService extends LifecycleService {
         ZWindowManager.getInstance().addView(rootView, new ZimuLayoutParams.WithFullWidth());
     }
 
-    public View getRootView(){
+    public View getRootView() {
         return rootView;
     }
 
     void addFragment() {
+
         mFragments.getSupportFragmentManager().beginTransaction()
-                .add(R.id.floatingToolBar, FloatingToolBarFragment.newInstance())
+                .add(R.id.floatingToolBar, FloatingToolBarFragment.Factory.create())
                 .add(R.id.floatingContainer, ZimuMainFragment.newInstance()).commit();
     }
 

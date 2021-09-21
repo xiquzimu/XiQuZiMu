@@ -3,7 +3,6 @@ package me.xlgp.douyinzimu.ui.floating.toolbar;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,7 @@ public class FloatingToolBarFragment extends Fragment {
 
     private FloatingToolBarViewModel mViewModel;
     private FloatingToolBarFragmentBinding binding;
-
+    private String title;
     private boolean isShou = true;
     private Integer shouHeight = 0;
     private LinearLayout rootLayout;
@@ -38,15 +37,14 @@ public class FloatingToolBarFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FloatingToolBarFragmentBinding.inflate(inflater, container, false);
-        rootLayout = (LinearLayout) ((FloatingService)requireContext()).getRootView();
-
+        rootLayout = (LinearLayout) ((FloatingService) requireContext()).getRootView();
+        binding.titleBtn.setText(title);
         onViewListener();
         return binding.getRoot();
     }
 
     public void setPanelTitle(String panelTitle) {
-        String title = panelTitle == null ? "悬浮窗口" : panelTitle;
-        binding.titleBtn.setText(title);
+        title = panelTitle;
     }
 
     private int getShouHeight() {
@@ -96,27 +94,17 @@ public class FloatingToolBarFragment extends Fragment {
             }
         });
 
-        binding.closeFloatingBtn.setOnClickListener(v->{
+        binding.closeFloatingBtn.setOnClickListener(v -> {
             FloatingService service = (FloatingService) requireContext();
             service.stop();
         });
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.i("FloatingToolBarFragment", "onDetach: ");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.i("FloatingToolBarFragment", "onDestroy: ");
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.i("FloatingToolBarFragment", "onDestroyView: ");
+    public static class Factory {
+        public static FloatingToolBarFragment create() {
+            FloatingToolBarFragment floatingToolBarFragment = FloatingToolBarFragment.newInstance();
+            floatingToolBarFragment.setPanelTitle("唱段列表");
+            return floatingToolBarFragment;
+        }
     }
 }
