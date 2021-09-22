@@ -2,6 +2,7 @@ package me.xlgp.douyinzimu.obj;
 
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.view.Gravity;
 import android.view.WindowManager;
 
 public class ZimuLayoutParams {
@@ -32,9 +33,12 @@ public class ZimuLayoutParams {
         public WithFullWidth() {
             this.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
             this.format = PixelFormat.TRANSPARENT;
+            this.gravity = Gravity.TOP;
             this.width = WindowManager.LayoutParams.MATCH_PARENT;
             this.height = WindowManager.LayoutParams.WRAP_CONTENT;
             this.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+            x = 0;
+            y = 0;
         }
     }
 
