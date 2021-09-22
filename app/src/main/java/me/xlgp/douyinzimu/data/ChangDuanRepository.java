@@ -35,6 +35,11 @@ public class ChangDuanRepository {
         return changDuanDao.flowableList().compose(ObserverHelper.flowableTransformer());
     }
 
+    public Flowable<List<ChangDuan>> list(String juZhong){
+        ChangDuanDao changDuanDao = AppDatabase.getInstance().changDuanDao();
+        return changDuanDao.flowableList(juZhong).compose(ObserverHelper.flowableTransformer());
+    }
+
     public long save(ChangDuanInfo changDuanInfo) {
         AppDatabase db = AppDatabase.getInstance();
         long id = db.changDuanDao().insert(changDuanInfo.getChangDuan());

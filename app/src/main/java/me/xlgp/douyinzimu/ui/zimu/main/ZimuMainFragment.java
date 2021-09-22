@@ -22,7 +22,7 @@ public class ZimuMainFragment extends Fragment {
 
     private ZimuMainFragmentBinding binding;
     private OnSwitchFragmentListener onSwitchFragmentListener;
-    String[] names = new String[]{"黄梅戏", "唱词"};
+    String[] names = new String[]{"黄梅戏", "越剧","歌曲","小调", "唱词"};
 
     public static ZimuMainFragment newInstance() {
         return new ZimuMainFragment();
@@ -72,13 +72,9 @@ public class ZimuMainFragment extends Fragment {
         public Fragment createFragment(int position) {
             if (fragments[position] == null) {
                 if (position == names.length - 1) fragments[position] = createChangCiFragment();
-                else fragments[position] = createChangDuanFragment();
+                else fragments[position] = new ChangDuanFragment(names[position]);
             }
             return fragments[position];
-        }
-
-        private Fragment createChangDuanFragment() {
-            return ChangDuanFragment.newInstance();
         }
 
         private Fragment createChangCiFragment() {

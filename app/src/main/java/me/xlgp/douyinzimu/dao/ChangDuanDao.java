@@ -15,6 +15,9 @@ public interface ChangDuanDao extends IDao<ChangDuan> {
     @Query("select * from changduan")
     Flowable<List<ChangDuan>> flowableList();
 
+    @Query("select * from changduan where juZhong = :juZhong")
+    Flowable<List<ChangDuan>> flowableList(String juZhong);
+
     @Query("select * from changduan")
     List<ChangDuan> list();
 

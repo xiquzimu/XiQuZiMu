@@ -22,9 +22,14 @@ public class ChangDuanFragment extends Fragment {
 
     private ChangDuanViewModel mViewModel;
     private ChangDuanFragmentBinding binding;
+    private final String juZhong;
 
-    public static ChangDuanFragment newInstance() {
-        return new ChangDuanFragment();
+    public ChangDuanFragment() {
+        this.juZhong = "";
+    }
+
+    public ChangDuanFragment(String juZhong) {
+        this.juZhong = juZhong;
     }
 
     @Override
@@ -32,10 +37,10 @@ public class ChangDuanFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = ChangDuanFragmentBinding.inflate(inflater, container, false);
         mViewModel = new ViewModelProvider(this).get(ChangDuanViewModel.class);
-
+        mViewModel.setJuZhong(juZhong);
         ChangDuanAdapter changDuanAdapter = new ChangDuanAdapter();
 
-        binding.zimuListSwipeRefreshLayout.setOnRefreshListener(() -> mViewModel.loadChangDuan());
+        binding.zimuListSwipeRefreshLayout.setOnRefreshListener(() -> mViewModel.loadChangDuan(juZhong));
 
         binding.zimuListRecyclerview.setLayoutManager(new LinearLayoutManager(requireContext()));
         changDuanAdapter.setOnItemClickListener(getOnItemClickListener());
