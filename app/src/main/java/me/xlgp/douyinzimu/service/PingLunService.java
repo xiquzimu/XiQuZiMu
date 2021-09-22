@@ -19,6 +19,9 @@ public class PingLunService {
     private static PingLunService instance = null;
     private ChangDuanInfo changDuanInfo = null;
 
+    //标记是否按当前唱词间隔时间
+    public static Integer CURRENT_MILLIS = -1;
+
     //todo 此处应该重构
     private long count = 0; //记录线程数量，用于判断即将执行的线程是不是当前应当执行的线程
 
@@ -32,17 +35,20 @@ public class PingLunService {
     public void start(long delayMillis) {
         count++;
         if (enablePingLun()) {
+            if (delayMillis == CURRENT_MILLIS) {
+                delayMillis = changDuanInfo.getChangeCiList().current().getDelayMillis();
+            }
             Observable.just(count).delay(delayMillis, TimeUnit.MILLISECONDS).compose(ObserverHelper.transformer())
                     .subscribe(new StartObserver(instance));
         }
     }
 
-    public ChangDuanInfo getChangDuanInfo() {
-        return changDuanInfo;
-    }
-
     public void setChangDuanInfo(ChangDuanInfo changDuanInfo) {
         this.changDuanInfo = changDuanInfo;
+    }
+
+    public void setCurrentItem(int position) {
+        changDuanInfo.getChangeCiList(position);
     }
 
     public boolean hasChangeCi() {
@@ -50,17 +56,16 @@ public class PingLunService {
     }
 
     public boolean enablePingLun() {
-        return  !PingLun.getInstance().disabled() && hasChangeCi();
+        return !PingLun.getInstance().disabled() && hasChangeCi();
     }
 
     public void run() {
         if (enablePingLun()) {
             ChangCiList changCiList = changDuanInfo.getChangeCiList();
-            //此处延时执行是因为先点击直播界面，还没有调出输入框时已执行输入操作，导致无法获取输入框。
             try {
                 PingLunHelper.input(DouYinAccessibilityService.getInstance(), changCiList.next(), aBoolean -> {
                     if (enablePingLun()) {
-                        start(changCiList.current().getDelayMillis());
+                        start(CURRENT_MILLIS);
                     }
                 });
             } catch (Exception e) {

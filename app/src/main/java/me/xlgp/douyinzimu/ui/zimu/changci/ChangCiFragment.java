@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,11 +14,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.Objects;
+import java.util.Observer;
 
 import me.xlgp.douyinzimu.databinding.ChangCiFragmentBinding;
 import me.xlgp.douyinzimu.model.ChangCi;
 import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
+import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 import me.xlgp.douyinzimu.service.PingLunService;
 import me.xlgp.douyinzimu.ui.zimu.ZimuViewModel;
 
@@ -25,6 +28,7 @@ public class ChangCiFragment extends Fragment {
 
     private ChangCiViewModel mViewModel;
     private ChangCiFragmentBinding binding;
+    private ChangCiAdapter changCiAdapter = null;
 
     public static ChangCiFragment newInstance() {
         return new ChangCiFragment();
@@ -36,17 +40,23 @@ public class ChangCiFragment extends Fragment {
         binding = ChangCiFragmentBinding.inflate(inflater, container, false);
         mViewModel = new ViewModelProvider(this).get(ChangCiViewModel.class);
 
-        binding.zimuDetailRecyclerview.setLayoutManager(new LinearLayoutManager(requireContext()));
+        initRecyclerview();
 
-        ChangCiAdapter changCiAdapter = new ChangCiAdapter();
-        changCiAdapter.setOnItemClickListener((itemView, view, data, position) -> {
-            PingLunService.getInstance().getChangDuanInfo().getChangeCiList(position);
-            pingLun(0);
-            updateTitleView(data.getContent());
+        binding.pingLunSwitchMaterial.setOnCheckedChangeListener(getOnCheckedChangeListener());
+
+        mViewModel.changDuanState.observe(getViewLifecycleOwner(), s -> {
+            if (s != null) Toast.makeText(requireContext(), s, Toast.LENGTH_SHORT).show();
         });
-        binding.zimuDetailRecyclerview.setAdapter(changCiAdapter);
+        //观察唱词信息
+        mViewModel.getChangDuanInfo().observe(getViewLifecycleOwner(), getChangDuanInfoObserver());
 
-        binding.pingLunSwitchMaterial.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        ZimuViewModel.getChangDuan().observe(getViewLifecycleOwner(), changDuan -> mViewModel.loadData(changDuan, getChangDuanObserver()));
+        return binding.getRoot();
+
+    }
+
+    private CompoundButton.OnCheckedChangeListener getOnCheckedChangeListener() {
+        return (buttonView, isChecked) -> {
             PingLun.getInstance().change(isChecked);
             if (PingLun.getInstance().disabled()) {
                 Toast.makeText(requireContext(), "评论已关闭", Toast.LENGTH_SHORT).show();
@@ -55,15 +65,13 @@ public class ChangCiFragment extends Fragment {
                 Toast.makeText(requireContext(), "没有选择唱段", Toast.LENGTH_SHORT).show();
                 return;
             }
-            pingLun(PingLunService.getInstance().getChangDuanInfo().getChangeCiList().current().getDelayMillis());
+            pingLun(PingLunService.CURRENT_MILLIS);
             Toast.makeText(requireContext(), "开始评论", Toast.LENGTH_SHORT).show();
-        });
+        };
+    }
 
-        mViewModel.changDuanState.observe(getViewLifecycleOwner(), s -> {
-            if (s != null) Toast.makeText(requireContext(), s, Toast.LENGTH_SHORT).show();
-        });
-        //观察唱词信息
-        mViewModel.getChangDuanInfo().observe(getViewLifecycleOwner(), changDuanInfo -> {
+    private androidx.lifecycle.Observer<? super ChangDuanInfo> getChangDuanInfoObserver() {
+        return changDuanInfo -> {
             ChangCiList changCiList = changDuanInfo.getChangeCiList();
             changCiAdapter.updateData(changCiList);
             //todo 此处应该重新设计
@@ -71,9 +79,11 @@ public class ChangCiFragment extends Fragment {
             updateRecyclerView(0);
             binding.pingLunSwitchMaterial.setChecked(false);
             binding.pingLunSwitchMaterial.setChecked(changCiList.hasNext());
-        });
+        };
+    }
 
-        ZimuViewModel.getChangDuan().observe(getViewLifecycleOwner(), changDuan -> mViewModel.loadData(changDuan, (o, arg) -> {
+    private Observer getChangDuanObserver() {
+        return (o, arg) -> {
             try {
                 ChangCi changCi = (ChangCi) arg;
                 updateTitleView(changCi.getContent());
@@ -85,15 +95,19 @@ public class ChangCiFragment extends Fragment {
             } catch (Exception e) {
                 Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
-        }));
-
-        return binding.getRoot();
-
+        };
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    private void initRecyclerview() {
+        binding.zimuDetailRecyclerview.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        changCiAdapter = new ChangCiAdapter();
+        changCiAdapter.setOnItemClickListener((itemView, view, data, position) -> {
+            PingLunService.getInstance().setCurrentItem(position);
+            pingLun(0);
+            updateTitleView(data.getContent());
+        });
+        binding.zimuDetailRecyclerview.setAdapter(changCiAdapter);
     }
 
     private void updateTitleView(String text) {
@@ -101,10 +115,17 @@ public class ChangCiFragment extends Fragment {
     }
 
     private void updateRecyclerView(int position) {
-        binding.zimuDetailRecyclerview.smoothScrollToPosition(position + 4);
+        if (position < 4) binding.zimuDetailRecyclerview.smoothScrollToPosition(position);
+        else binding.zimuDetailRecyclerview.smoothScrollToPosition(position + 4);
     }
 
     private void pingLun(long delayMillis) {
         PingLunService.getInstance().start(delayMillis);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

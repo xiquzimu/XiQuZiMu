@@ -1,5 +1,7 @@
 package me.xlgp.douyinzimu.service;
 
+import static android.view.accessibility.AccessibilityEvent.TYPE_VIEW_CLICKED;
+
 import android.accessibilityservice.AccessibilityService;
 import android.os.Handler;
 import android.view.accessibility.AccessibilityEvent;
@@ -12,12 +14,9 @@ import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.listener.OnDianZanListener;
 import me.xlgp.douyinzimu.util.PingLunHelper;
 
-import static android.view.accessibility.AccessibilityEvent.TYPE_VIEW_CLICKED;
-
 public class DouYinAccessibilityService extends AccessibilityService implements OnDianZanListener {
 
     private static DouYinAccessibilityService douYinAccessibilityService;
-    private PingLunService pingLunService;
     private boolean liveable;
 
     public static DouYinAccessibilityService getInstance() {
@@ -28,7 +27,6 @@ public class DouYinAccessibilityService extends AccessibilityService implements 
     protected void onServiceConnected() {
         super.onServiceConnected();
         douYinAccessibilityService = this;
-        pingLunService = PingLunService.getInstance();
         Toast.makeText(this, "请按返回键返回至应用", Toast.LENGTH_LONG).show();
     }
 
@@ -36,7 +34,7 @@ public class DouYinAccessibilityService extends AccessibilityService implements 
     public void onAccessibilityEvent(AccessibilityEvent event) {
         if (event.getEventType() == TYPE_VIEW_CLICKED) {
             if (PingLunHelper.pingLun(this, event)) {
-                pingLunService.run();
+                PingLunService.getInstance().run();
             }
         } else if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             new Handler(getMainLooper()).postDelayed(this::isDouYinLive, 1600);
