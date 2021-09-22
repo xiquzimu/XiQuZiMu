@@ -5,7 +5,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.EditText;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
@@ -13,21 +13,20 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.function.Predicate;
 
 import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.adapter.SearchListAdapter;
+import me.xlgp.douyinzimu.databinding.SearchRecyclerviewLayoutBinding;
 
 public class SearchRecyclerviewLayout<T> extends LinearLayout {
 
     private SearchViewModel searchViewModel;
     private SearchListAdapter<T> searchListAdapter;
     private Predicate<T> predicate;
-    private RecyclerView recyclerView;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private SearchRecyclerviewLayoutBinding binding = null;
 
     public SearchRecyclerviewLayout(Context context) {
         super(context);
@@ -52,14 +51,14 @@ public class SearchRecyclerviewLayout<T> extends LinearLayout {
     private void init() {
         searchViewModel = new SearchViewModel();
 
-        LayoutInflater.from(getContext()).inflate(R.layout.search_recyclerview_layout, this);
-        EditText searchEditText = findViewById(R.id.searchEditText);
-        searchEditText.addTextChangedListener(new SearchTextWatcher(searchViewModel.getSearchTextLiveData()));
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.search_recyclerview_layout, this);
 
-        recyclerView = findViewById(R.id.recyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding = SearchRecyclerviewLayoutBinding.bind(view);
 
-        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        binding.searchEditText.addTextChangedListener(new SearchTextWatcher(searchViewModel.getSearchTextLiveData()));
+
+        binding.recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
+
     }
 
     public MutableLiveData<CharSequence> getFilterCharSequenceLiveData() {
@@ -71,16 +70,16 @@ public class SearchRecyclerviewLayout<T> extends LinearLayout {
     }
 
     public void setRefreshing(boolean refreshing) {
-        swipeRefreshLayout.setRefreshing(refreshing);
+        binding.swipeRefreshLayout.setRefreshing(refreshing);
     }
 
     public void setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener onRefreshListener) {
-        swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
+        binding.swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
     }
 
     public void setSearchListAdapter(SearchListAdapter<T> searchListAdapter) {
         this.searchListAdapter = searchListAdapter;
-        recyclerView.setAdapter(searchListAdapter);
+        binding.recyclerview.setAdapter(searchListAdapter);
     }
 
     /**

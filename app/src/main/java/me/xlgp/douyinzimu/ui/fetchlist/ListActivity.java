@@ -14,9 +14,9 @@ import java.util.function.Predicate;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.douyinzimu.adapter.BaseAdapter.OnItemClickListener;
-import me.xlgp.douyinzimu.databinding.ActivityListBinding;
 import me.xlgp.douyinzimu.data.ChangDuanRepository;
-import me.xlgp.douyinzimu.view.SearchRecyclerviewLayout;
+import me.xlgp.douyinzimu.databinding.ActivityListBinding;
+import me.xlgp.douyinzimu.view.StringSearchRecyclerviewLayout;
 
 public class ListActivity extends AppCompatActivity {
 
@@ -30,7 +30,7 @@ public class ListActivity extends AppCompatActivity {
         binding = ActivityListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        SearchRecyclerviewLayout<String> searchRecyclerviewLayout = binding.nameListSearchRecyclerviewLayout;
+        StringSearchRecyclerviewLayout searchRecyclerviewLayout = binding.nameListSearchRecyclerviewLayout;
         searchRecyclerviewLayout.build(this);
         searchRecyclerviewLayout.setPredicate(new StringPredicate(searchRecyclerviewLayout.getFilterCharSequenceLiveData()));
         searchRecyclerviewLayout.setRefreshing(true);

@@ -17,7 +17,6 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onClearList"
             android:text="清除唱词" />
 
         <Button
@@ -25,7 +24,6 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onFetch"
             android:text="更新唱词" />
 
         <TextView
@@ -35,10 +33,10 @@
             android:layout_weight="1" />
     </LinearLayout>
 
-    <me.xlgp.douyinzimu.view.SearchRecyclerviewLayout
+    <me.xlgp.douyinzimu.view.ChangDuanSearchRecyclerviewLayout
         android:id="@+id/zimu_list_SearchRecyclerviewLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </me.xlgp.douyinzimu.view.SearchRecyclerviewLayout>
+    </me.xlgp.douyinzimu.view.ChangDuanSearchRecyclerviewLayout>
 </LinearLayout>

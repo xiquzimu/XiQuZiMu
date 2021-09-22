@@ -14,15 +14,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.douyinzimu.databinding.FragmentDashboardBinding;
-import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.predicate.ChangDuanPredicate;
-import me.xlgp.douyinzimu.view.SearchRecyclerviewLayout;
+import me.xlgp.douyinzimu.view.ChangDuanSearchRecyclerviewLayout;
 
 public class DashboardFragment extends Fragment {
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentDashboardBinding binding;
-    private SearchRecyclerviewLayout<ChangDuan> searchRecyclerviewLayout;
+    private ChangDuanSearchRecyclerviewLayout searchRecyclerviewLayout;
     private ChangDuanViewModel viewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -82,7 +81,8 @@ public class DashboardFragment extends Fragment {
         builder.setTitle("清除")
                 .setMessage("删除所有唱段？")
                 .setPositiveButton("确定", (dialog, which) -> viewModel.deleteChangDuanList())
-                .setNegativeButton("取消", (dialog, which) -> {}).show();
+                .setNegativeButton("取消", (dialog, which) -> {
+                }).show();
     }
 
     @Override

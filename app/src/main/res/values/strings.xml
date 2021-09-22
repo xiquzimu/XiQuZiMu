@@ -28,4 +28,5 @@
     <string name="title_dashboard">列表</string>
     <string name="title_about">关于</string>
     <string name="searchEditTextHint">查询点什么...</string>
+    <string name="aboutApp">一款应用于抖音戏曲直播时自动发送字幕的软件</string>
 </resources>
