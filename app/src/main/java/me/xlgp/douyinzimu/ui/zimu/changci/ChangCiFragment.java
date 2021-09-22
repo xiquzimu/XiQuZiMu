@@ -38,6 +38,12 @@ public class ChangCiFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = ChangCiFragmentBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(ChangCiViewModel.class);
 
         initRecyclerview();
@@ -49,10 +55,7 @@ public class ChangCiFragment extends Fragment {
         });
         //观察唱词信息
         mViewModel.getChangDuanInfo().observe(getViewLifecycleOwner(), getChangDuanInfoObserver());
-
         ZimuViewModel.getChangDuan().observe(getViewLifecycleOwner(), changDuan -> mViewModel.loadData(changDuan, getChangDuanObserver()));
-        return binding.getRoot();
-
     }
 
     private CompoundButton.OnCheckedChangeListener getOnCheckedChangeListener() {
