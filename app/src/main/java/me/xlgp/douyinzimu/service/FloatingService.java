@@ -73,6 +73,7 @@ public class FloatingService extends LifecycleService {
     @Override
     public void onDestroy() {
         mFragments.dispatchDestroy();
+        rootView.setPadding(0, 0, 0, 0);
         ZWindowManager.getInstance().removeView(rootView);
         super.onDestroy();
     }
