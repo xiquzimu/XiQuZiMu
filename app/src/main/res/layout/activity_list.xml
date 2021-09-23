@@ -7,13 +7,38 @@
     android:orientation="vertical"
     tools:context=".ui.fetchlist.ListActivity">
 
-    <TextView
-        android:id="@+id/totalCountTextView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="10dp"
-        android:paddingTop="6dp"
-        android:paddingEnd="10dp" />
+        android:orientation="horizontal">
+
+        <RadioGroup
+            android:id="@+id/fetchRadioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/giteeRadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Gitee" />
+
+            <RadioButton
+                android:id="@+id/githubRadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Github" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/totalCountTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="10dp" />
+    </LinearLayout>
 
     <me.xlgp.douyinzimu.view.StringSearchRecyclerviewLayout
         android:id="@+id/nameListSearchRecyclerviewLayout"

@@ -3,6 +3,7 @@ package me.xlgp.douyinzimu.ui.fetchlist;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +14,9 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import me.xlgp.douyinzimu.ZimuApplication;
 import me.xlgp.douyinzimu.adapter.BaseAdapter.OnItemClickListener;
+import me.xlgp.douyinzimu.config.FetchRepositoryConfig;
 import me.xlgp.douyinzimu.data.ChangDuanRepository;
 import me.xlgp.douyinzimu.databinding.ActivityListBinding;
 import me.xlgp.douyinzimu.view.StringSearchRecyclerviewLayout;
@@ -51,6 +54,28 @@ public class ListActivity extends AppCompatActivity {
             setTotalCountTextView(list.size());
             nameListAdapter.updateData(list);
         });
+
+        binding.fetchRadioGroup.setOnCheckedChangeListener(getOnCheckedChangeListener());
+        initRadioButton();
+    }
+
+    private void initRadioButton(){
+        if (FetchRepositoryConfig.getRepositoryType() == FetchRepositoryConfig.REPOSITORY_ENUM.GITEE){
+            binding.giteeRadioButton.setChecked(true);
+        }else {
+            binding.githubRadioButton.setChecked(true);
+        }
+    }
+
+    private RadioGroup.OnCheckedChangeListener getOnCheckedChangeListener(){
+        return (group, checkedId) -> {
+            ZimuApplication zimuApplication = (ZimuApplication) getApplication();
+            if (checkedId == binding.giteeRadioButton.getId()){
+                zimuApplication.setFetchRepositoryConfig(FetchRepositoryConfig.REPOSITORY_ENUM.GITEE);
+            }else if (checkedId == binding.githubRadioButton.getId()){
+                zimuApplication.setFetchRepositoryConfig(FetchRepositoryConfig.REPOSITORY_ENUM.GITHUB);
+            }
+        };
     }
 
     @SuppressLint("SetTextI18n")
