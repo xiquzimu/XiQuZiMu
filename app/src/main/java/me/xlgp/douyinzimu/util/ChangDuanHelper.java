@@ -1,11 +1,7 @@
 package me.xlgp.douyinzimu.util;
 
-import android.content.Context;
-
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -48,13 +44,13 @@ public class ChangDuanHelper {
 
     private static void addAfterChangCi(ChangDuan changDuan, ChangCiList changCiList) {
         ChangCi afterChangCi = new ChangCi();
-        afterChangCi.setDelayMillis(5000);
+        afterChangCi.setDelayMillis(7000);
         afterChangCi.setShowTime(formatDate(changCiList.get(changCiList.size() - 1).getShowTime(), 5000));
         afterChangCi.setContent(EmojiManager.SMALL_BLUE_DIAMOND + "本曲出自" + changDuan.getJuZhong() + "《" + changDuan.getJuMu() + "》选段：" + changDuan.getName());
         changCiList.add(afterChangCi);
 
         ChangCi thankChangCi = new ChangCi();
-        thankChangCi.setDelayMillis(2000);
+        thankChangCi.setDelayMillis(3000);
         thankChangCi.setShowTime(formatDate(changCiList.get(changCiList.size() - 1).getShowTime(), 2000));
         thankChangCi.setContent(EmojiManager.SMALL_BLUE_DIAMOND + "谢谢各位聆听");
         changCiList.add(thankChangCi);
@@ -74,24 +70,14 @@ public class ChangDuanHelper {
         return changCiList;
     }
 
-    /**
-     * 从存储中加载唱段名称
-     *
-     * @param context context
-     * @return list
-     */
-    public static List<File> loadFileList(Context context) {
-        List<File> fileList = new ArrayList<>();
-        FileHelper.getFileList(FileHelper.getSourceDir(context), fileList);
-        return fileList;
-    }
-
     public static void parseChangCiListByDelayMillis(ChangDuanInfo changDuanInfo) {
         ChangCiList changCiList = changDuanInfo.getChangeCiList();
         long beforeDelaymillis = getDelayMillis("00:00.00");
         for (int i = 0; i < changCiList.size(); i++) {
             //时间间隔 = 本句的时间-前句时间+时间补偿值（offset）,offset:一般表示唱词先于唱段声音出现
-            long curDelay = getDelayMillis(changCiList.get(i).getShowTime()) + changDuanInfo.getChangDuan().getOffset() * 1000;
+            long curDelay = getDelayMillis(changCiList.get(i).getShowTime());
+            long offset = changDuanInfo.getChangDuan().getOffset() * 1000;
+            if (curDelay + offset > 0) curDelay += offset;
             long delayMillis = curDelay - beforeDelaymillis;
             changCiList.get(i).setDelayMillis(delayMillis);
             beforeDelaymillis = curDelay;

@@ -2,9 +2,14 @@ package me.xlgp.douyinzimu.db;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
+
+import java.util.Calendar;
 
 import me.xlgp.douyinzimu.constant.AppConstant;
 import me.xlgp.douyinzimu.dao.ChangCiDao;
@@ -12,7 +17,7 @@ import me.xlgp.douyinzimu.dao.ChangDuanDao;
 import me.xlgp.douyinzimu.model.ChangCi;
 import me.xlgp.douyinzimu.model.ChangDuan;
 
-@Database(entities = {ChangCi.class, ChangDuan.class}, version = 1)
+@Database(entities = {ChangCi.class, ChangDuan.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase instance;
@@ -21,12 +26,24 @@ public abstract class AppDatabase extends RoomDatabase {
         return instance;
     }
 
+    static final Migration MIGRATION_1_2 = new Migration(1,2) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(1970,1,1);
+            database.execSQL("ALTER TABLE changduan ADD COLUMN createTime INTEGER not null default " + calendar.getTime().getTime());
+        }
+    };
+
     public static void build(Context context) {
         if (instance == null) {
             synchronized (AppDatabase.class) {
                 if (instance == null) {
                     instance = Room.databaseBuilder(context.getApplicationContext(),
-                            AppDatabase.class, AppConstant.SQLITE_DB_NAME).build();
+                            AppDatabase.class, AppConstant.SQLITE_DB_NAME)
+                            .fallbackToDestructiveMigration()
+                            .addMigrations(MIGRATION_1_2)
+                            .build();
                 }
             }
         }

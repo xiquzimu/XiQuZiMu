@@ -3,6 +3,8 @@ package me.xlgp.douyinzimu.model;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Date;
+
 @Entity
 public class ChangDuan {
     @PrimaryKey(autoGenerate = true)
@@ -24,9 +26,20 @@ public class ChangDuan {
      */
     private Integer offset;
 
+    private long createTime;
+
     public ChangDuan() {
-        //默认提前2s
-        this.offset = -2;
+        //默认提前8s
+        this.offset = -8;
+        createTime = (new Date()).getTime();
+    }
+
+    public long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
     }
 
     public Integer getId() {
