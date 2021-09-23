@@ -71,9 +71,17 @@ public class DashboardFragment extends Fragment {
     }
 
     public void onFetch(View view) {
-        searchRecyclerviewLayout.setRefreshing(true);
-        compositeDisposable.add(viewModel.fetchChangDuanList().subscribe(id -> {
-        }, throwable -> Toast.makeText(requireContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show()));
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("更新唱段")
+                .setMessage("确认更新唱段?")
+                .setPositiveButton("确定", (dialog, which) -> {
+                    searchRecyclerviewLayout.setRefreshing(true);
+                    compositeDisposable.add(viewModel.fetchChangDuanList().subscribe(id -> {
+                    }, throwable -> Toast.makeText(requireContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show()));
+                })
+                .setNegativeButton("取消", (dialog, which) -> {
+                }).show();
+
     }
 
     public void onClearList(View view) {
