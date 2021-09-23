@@ -19,15 +19,13 @@ public class RetrofitFactory {
     }
 
     /**
-     * github比较慢，使用jsdelivr中转
-     * baseUrl = https://cdn.jsdelivr.net/gh/{username}/{repository}@{branch}/{path}/{filename};
-     *
+     * github比较慢，使用fastgit中转
      * @param tClass class
      * @param <T>    type
      * @return T
      */
     public static <T> T fromGithub(Class<T> tClass) {
-        String baseUrl = "https://cdn.jsdelivr.net/gh/xlgp/opera-lyrics@master/";
+        String baseUrl = "https://raw.fastgit.org/xlgp/opera-lyrics/master/";
         return get(tClass, baseUrl);
     }
 }

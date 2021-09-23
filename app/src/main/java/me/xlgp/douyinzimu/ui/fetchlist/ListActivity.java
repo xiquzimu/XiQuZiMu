@@ -13,7 +13,10 @@ import androidx.lifecycle.ViewModelProvider;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 import me.xlgp.douyinzimu.ZimuApplication;
 import me.xlgp.douyinzimu.adapter.BaseAdapter.OnItemClickListener;
 import me.xlgp.douyinzimu.config.FetchRepositoryConfig;
@@ -59,20 +62,20 @@ public class ListActivity extends AppCompatActivity {
         initRadioButton();
     }
 
-    private void initRadioButton(){
-        if (FetchRepositoryConfig.getRepositoryType() == FetchRepositoryConfig.REPOSITORY_ENUM.GITEE){
+    private void initRadioButton() {
+        if (FetchRepositoryConfig.getRepositoryType() == FetchRepositoryConfig.REPOSITORY_ENUM.GITEE) {
             binding.giteeRadioButton.setChecked(true);
-        }else {
+        } else {
             binding.githubRadioButton.setChecked(true);
         }
     }
 
-    private RadioGroup.OnCheckedChangeListener getOnCheckedChangeListener(){
+    private RadioGroup.OnCheckedChangeListener getOnCheckedChangeListener() {
         return (group, checkedId) -> {
             ZimuApplication zimuApplication = (ZimuApplication) getApplication();
-            if (checkedId == binding.giteeRadioButton.getId()){
+            if (checkedId == binding.giteeRadioButton.getId()) {
                 zimuApplication.setFetchRepositoryConfig(FetchRepositoryConfig.REPOSITORY_ENUM.GITEE);
-            }else if (checkedId == binding.githubRadioButton.getId()){
+            } else if (checkedId == binding.githubRadioButton.getId()) {
                 zimuApplication.setFetchRepositoryConfig(FetchRepositoryConfig.REPOSITORY_ENUM.GITHUB);
             }
         };
@@ -89,15 +92,41 @@ public class ListActivity extends AppCompatActivity {
             CharSequence text = button.getText();
             button.setText("更新...");
             button.setEnabled(false);
-            compositeDisposable.add(new ChangDuanRepository().update(data).subscribe(id -> {
-                Toast.makeText(this, "更新成功", Toast.LENGTH_SHORT).show();
-                button.setText(text);
-                button.setEnabled(true);
-            }, throwable -> {
-                Toast.makeText(this, "更新失败", Toast.LENGTH_SHORT).show();
-                button.setText(text);
-                button.setEnabled(true);
-            }));
+            new ChangDuanRepository().update(data).subscribe(new Observer<Long>() {
+
+                Disposable disposable;
+
+                @Override
+                public void onSubscribe(@NonNull Disposable d) {
+                    disposable = d;
+                }
+
+                @Override
+                public void onNext(@NonNull Long aLong) {
+                    Toast.makeText(button.getContext(), "更新成功", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                @Override
+                public void onError(@NonNull Throwable e) {
+                    Toast.makeText(button.getContext(), "更新失败" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                @Override
+                public void onComplete() {
+                    Toast.makeText(button.getContext(), "获取唱段失败", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                private void finish() {
+                    button.setText(text);
+                    button.setEnabled(true);
+                    if (disposable != null && !disposable.isDisposed()) {
+                        disposable.dispose();
+                    }
+                }
+            });
         };
     }
 
