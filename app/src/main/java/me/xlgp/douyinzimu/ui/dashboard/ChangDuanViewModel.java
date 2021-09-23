@@ -13,11 +13,11 @@ import java.util.NoSuchElementException;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableSource;
 import io.reactivex.rxjava3.functions.Function;
-import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
-import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.data.ChangCiRepository;
 import me.xlgp.douyinzimu.data.ChangDuanRepository;
-import me.xlgp.douyinzimu.data.FetchGiteeRepository;
+import me.xlgp.douyinzimu.data.FetchRemoteRepository;
+import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
+import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
 public class ChangDuanViewModel extends ViewModel {
@@ -46,7 +46,7 @@ public class ChangDuanViewModel extends ViewModel {
                 .flatMap((Function<List<String>, ObservableSource<String>>) list -> {
                     if (list.size() == 0) throw new NoSuchElementException("没有远程数据");
                     return Observable.fromIterable(list);
-                }).flatMap((Function<String, ObservableSource<List<String>>>) s -> new FetchGiteeRepository().changDuan(s.substring(1)))
+                }).flatMap((Function<String, ObservableSource<List<String>>>) s -> new FetchRemoteRepository().changDuan(s.substring(1)))
                 .flatMap((Function<List<String>, ObservableSource<Long>>) list -> changDuanRepository.saveAynsc(ChangDuanHelper.parse(list)))
                 .compose(ObserverHelper.transformer());
     }

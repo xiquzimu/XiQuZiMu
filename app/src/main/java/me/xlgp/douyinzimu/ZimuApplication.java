@@ -3,7 +3,6 @@ package me.xlgp.douyinzimu;
 import android.app.Application;
 import android.view.WindowManager;
 
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.douyinzimu.db.AppDatabase;
 import me.xlgp.douyinzimu.obj.ZWindowManager;
 

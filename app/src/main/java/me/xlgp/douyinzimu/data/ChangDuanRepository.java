@@ -57,13 +57,13 @@ public class ChangDuanRepository {
     }
 
     public @NonNull Observable<Long> update(String name) {
-        return new FetchGiteeRepository().changDuan(name.substring(1))
+        return new FetchRemoteRepository().changDuan(name.substring(1))
                 .flatMap((Function<List<String>, ObservableSource<Long>>) list -> saveAynsc(ChangDuanHelper.parse(list)))
                 .compose(ObserverHelper.transformer());
     }
 
     public Observable<List<String>> updateList() {
-        return new FetchGiteeRepository().getNameList();
+        return new FetchRemoteRepository().getNameList();
     }
 
     public void delete(ChangDuan data, Consumer<Object> consumer) {
