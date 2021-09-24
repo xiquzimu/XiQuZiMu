@@ -19,7 +19,6 @@ public class NavMainActivity extends AppCompatActivity {
 
         ActivityNavMainBinding binding = ActivityNavMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_nav_main);
         assert navHostFragment != null;
         NavController navController = navHostFragment.getNavController();

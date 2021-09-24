@@ -14,9 +14,10 @@
         <item name="android:windowLightStatusBar">true</item>
         <!-- Customize your theme here. -->
     </style>
-    <style name="StartWindowTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="android:windowFullscreen">true</item><!--全屏-->
-        <item name="android:windowIsTranslucent">true</item><!--半透明-->
+    <style name="Theme.DouYinZiMu.StartWindowTheme" parent="Theme.DouYinZiMu">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/ic_launcher_background</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowBackground">@drawable/start_window_background</item>
     </style>
 </resources>
