@@ -20,7 +20,7 @@
     <fragment
         android:id="@+id/navigation_about"
         android:name="me.xlgp.douyinzimu.ui.about.AboutFragment"
-        android:label="@string/title_dashboard"
+        android:label="@string/title_about"
         tools:layout="@layout/fragment_dashboard" />
 
 </navigation>
