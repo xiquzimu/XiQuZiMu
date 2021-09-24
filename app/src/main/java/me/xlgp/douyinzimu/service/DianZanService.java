@@ -26,10 +26,8 @@ public class DianZanService {
     }
 
     private Point getPoint() {
-        if (service == null) return new Point(100, 10);
-        Rect rect = new Rect();
-        service.getRootInActiveWindow().getBoundsInScreen(rect);
-        return new Point(rect.centerX(), rect.bottom - 10);
+        //不知道为什么点击屏幕底部会出现异常
+        return new Point(6, 200);
     }
 
     /**
