@@ -29,7 +29,7 @@ public class DianZanService {
         if (service == null) return new Point(100, 10);
         Rect rect = new Rect();
         service.getRootInActiveWindow().getBoundsInScreen(rect);
-        return new Point(rect.centerX(), rect.bottom - 10);
+        return new Point(10, rect.bottom - 300);
     }
 
     /**
