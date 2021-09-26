@@ -14,8 +14,8 @@ import me.xlgp.douyinzimu.dao.ChangDuanDao;
 import me.xlgp.douyinzimu.db.AppDatabase;
 import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
 import me.xlgp.douyinzimu.model.ChangDuan;
-import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
-import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
+import me.xlgp.douyinzimu.model.ChangCiList;
+import me.xlgp.douyinzimu.model.ChangDuanInfo;
 import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
 public class ChangDuanRepository {

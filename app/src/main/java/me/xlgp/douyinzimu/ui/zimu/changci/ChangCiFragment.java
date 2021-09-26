@@ -18,9 +18,9 @@ import java.util.Observer;
 
 import me.xlgp.douyinzimu.databinding.ChangCiFragmentBinding;
 import me.xlgp.douyinzimu.model.ChangCi;
+import me.xlgp.douyinzimu.model.ChangCiList;
+import me.xlgp.douyinzimu.model.ChangDuanInfo;
 import me.xlgp.douyinzimu.obj.PingLun;
-import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
-import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
 import me.xlgp.douyinzimu.service.PingLunService;
 import me.xlgp.douyinzimu.ui.zimu.ZimuViewModel;
 

@@ -1,11 +1,10 @@
-package me.xlgp.douyinzimu.obj.changduan;
+package me.xlgp.douyinzimu.model;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.Observer;
 
 import me.xlgp.douyinzimu.designpatterns.BaseObservable;
-import me.xlgp.douyinzimu.model.ChangCi;
 
 public class ChangCiList extends ArrayList<ChangCi> {
     private final ChangCiObservable changCiObservable;

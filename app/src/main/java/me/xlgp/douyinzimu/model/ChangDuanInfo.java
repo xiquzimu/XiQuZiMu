@@ -1,7 +1,5 @@
-package me.xlgp.douyinzimu.obj.changduan;
+package me.xlgp.douyinzimu.model;
 
-
-import me.xlgp.douyinzimu.model.ChangDuan;
 
 /**
  * 唱词：内容，时间，时间间隔，

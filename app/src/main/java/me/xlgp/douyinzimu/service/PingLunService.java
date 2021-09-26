@@ -10,8 +10,8 @@ import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
 import me.xlgp.douyinzimu.obj.PingLun;
-import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
-import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
+import me.xlgp.douyinzimu.model.ChangCiList;
+import me.xlgp.douyinzimu.model.ChangDuanInfo;
 import me.xlgp.douyinzimu.util.PingLunHelper;
 
 public class PingLunService {
