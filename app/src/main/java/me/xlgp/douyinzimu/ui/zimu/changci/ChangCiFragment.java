@@ -1,5 +1,6 @@
 package me.xlgp.douyinzimu.ui.zimu.changci;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Observer;
 
@@ -22,9 +24,10 @@ import me.xlgp.douyinzimu.model.ChangCiList;
 import me.xlgp.douyinzimu.model.ChangDuanInfo;
 import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.service.PingLunService;
-import me.xlgp.douyinzimu.ui.zimu.ZimuViewModel;
+import me.xlgp.douyinzimu.service.PinglunLifecycleService;
+import me.xlgp.douyinzimu.ui.zimu.main.ZimuMainFragment;
 
-public class ChangCiFragment extends Fragment {
+public class ChangCiFragment extends Fragment implements Serializable {
 
     private ChangCiViewModel mViewModel;
     private ChangCiFragmentBinding binding;
@@ -54,8 +57,12 @@ public class ChangCiFragment extends Fragment {
             if (s != null) Toast.makeText(requireContext(), s, Toast.LENGTH_SHORT).show();
         });
         //观察唱词信息
-        mViewModel.getChangDuanInfo().observe(getViewLifecycleOwner(), getChangDuanInfoObserver());
-        ZimuViewModel.getChangDuan().observe(getViewLifecycleOwner(), changDuan -> mViewModel.loadData(changDuan, getChangDuanObserver()));
+        mViewModel.changDuanInfo.observe(getViewLifecycleOwner(), getChangDuanInfoObserver());
+
+        mViewModel.changDuanInfo.addSource(mViewModel.changDuanLiveData, changDuan -> mViewModel.loadData(changDuan, getChangDuanObserver()));
+
+        assert getParentFragment() != null;
+        mViewModel.changDuanLiveData.setValue(((ZimuMainFragment) getParentFragment()).getChangDuan());
     }
 
     private CompoundButton.OnCheckedChangeListener getOnCheckedChangeListener() {
@@ -75,6 +82,8 @@ public class ChangCiFragment extends Fragment {
 
     private androidx.lifecycle.Observer<? super ChangDuanInfo> getChangDuanInfoObserver() {
         return changDuanInfo -> {
+            if (changDuanInfo == null) return;
+            startService();
             ChangCiList changCiList = changDuanInfo.getChangeCiList();
             changCiAdapter.updateData(changCiList);
             //todo 此处应该重新设计
@@ -85,12 +94,17 @@ public class ChangCiFragment extends Fragment {
         };
     }
 
+    private void startService() {
+        Intent intent = new Intent(requireContext(), PinglunLifecycleService.class);
+        requireContext().startService(intent);
+    }
+
     private Observer getChangDuanObserver() {
         return (o, arg) -> {
             try {
                 ChangCi changCi = (ChangCi) arg;
                 updateTitleView(changCi.getContent());
-                ChangCiList changCiList = Objects.requireNonNull(mViewModel.getChangDuanInfo().getValue()).getChangeCiList();
+                ChangCiList changCiList = Objects.requireNonNull(mViewModel.changDuanInfo.getValue()).getChangeCiList();
                 updateRecyclerView(changCiList.currentIndex());
                 if (!changCiList.hasNext()) {
                     binding.pingLunSwitchMaterial.setChecked(false);

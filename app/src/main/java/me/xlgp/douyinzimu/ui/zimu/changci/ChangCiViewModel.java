@@ -1,5 +1,6 @@
 package me.xlgp.douyinzimu.ui.zimu.changci;
 
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -14,14 +15,8 @@ import me.xlgp.douyinzimu.util.ChangDuanHelper;
 public class ChangCiViewModel extends ViewModel {
 
     public MutableLiveData<String> changDuanState = new MutableLiveData<>(null);
-    MutableLiveData<ChangDuanInfo> changDuanInfo;
-
-    public MutableLiveData<ChangDuanInfo> getChangDuanInfo() {
-        if (changDuanInfo == null) {
-            changDuanInfo = new MutableLiveData<>();
-        }
-        return changDuanInfo;
-    }
+    MediatorLiveData<ChangDuanInfo> changDuanInfo = new MediatorLiveData<>();
+    MutableLiveData<ChangDuan> changDuanLiveData = new MutableLiveData<>();
 
     public void loadData(ChangDuan changDuan, Observer observer) {
         ChangCiRepository changCiRepository = new ChangCiRepository();

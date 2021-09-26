@@ -61,7 +61,7 @@ public class ChangDuanFragment extends Fragment {
             ZimuMainFragment fragment = (ZimuMainFragment) getParentFragment();
             if (fragment != null) {
                 fragment.setOnSwitchFragmentListener((viewPager2, index) -> viewPager2.setCurrentItem(index, true));
-                fragment.forSkip();
+                fragment.forSkip(data);
             }
         };
     }
