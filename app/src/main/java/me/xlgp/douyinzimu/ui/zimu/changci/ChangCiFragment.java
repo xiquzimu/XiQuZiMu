@@ -19,19 +19,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.io.Serializable;
-import java.util.Objects;
-import java.util.Observer;
 
 import io.reactivex.rxjava3.disposables.Disposable;
 import me.xlgp.douyinzimu.databinding.ChangCiFragmentBinding;
-import me.xlgp.douyinzimu.model.ChangCi;
-import me.xlgp.douyinzimu.model.ChangCiList;
-import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.model.ChangDuanInfo;
-import me.xlgp.douyinzimu.obj.PingLun;
-import me.xlgp.douyinzimu.service.PingLunService;
 import me.xlgp.douyinzimu.service.PinglunLifecycleService;
-import me.xlgp.douyinzimu.ui.zimu.main.ZimuMainFragment;
 
 public class ChangCiFragment extends Fragment implements Serializable {
 
@@ -48,6 +40,7 @@ public class ChangCiFragment extends Fragment implements Serializable {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = ChangCiFragmentBinding.inflate(inflater, container, false);
+        initRecyclerview();
         return binding.getRoot();
     }
 
@@ -56,7 +49,9 @@ public class ChangCiFragment extends Fragment implements Serializable {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(ChangCiViewModel.class);
 
-        initRecyclerview();
+        if (savedInstanceState != null) {
+            changCiAdapter.setPosition(savedInstanceState.getInt("position", 0));
+        }
 
         binding.pingLunSwitchMaterial.setOnCheckedChangeListener(getOnCheckedChangeListener());
 
@@ -64,7 +59,12 @@ public class ChangCiFragment extends Fragment implements Serializable {
             if (s != null) Toast.makeText(requireContext(), s, Toast.LENGTH_SHORT).show();
         });
         //观察唱词信息
-        mViewModel.changDuanInfo.observe(getViewLifecycleOwner(), changDuanInfo -> changCiAdapter.updateData(changDuanInfo.getChangeCiList()));
+        mViewModel.changDuanInfo.observe(getViewLifecycleOwner(), changDuanInfo -> {
+            changCiAdapter.updateData(changDuanInfo.getChangeCiList());
+            updateRecyclerView(changCiAdapter.getPosition());
+            updateTitleView(changDuanInfo.getChangeCiList().current().getContent());
+        });
+
 
     }
 
@@ -74,60 +74,21 @@ public class ChangCiFragment extends Fragment implements Serializable {
         startService();
     }
 
-    private CompoundButton.OnCheckedChangeListener getOnCheckedChangeListener() {
-        return (buttonView, isChecked) -> {
-            PingLun.getInstance().change(isChecked);
-            if (PingLun.getInstance().disabled()) {
-                Toast.makeText(requireContext(), "评论已关闭", Toast.LENGTH_SHORT).show();
-                return;
-            } else if (!PingLunService.getInstance().hasChangeCi()) {
-                Toast.makeText(requireContext(), "没有选择唱段", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            pingLun(PingLunService.CURRENT_MILLIS);
-            Toast.makeText(requireContext(), "开始评论", Toast.LENGTH_SHORT).show();
-        };
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        if (pinglunBinder != null) {
+            outState.putInt("position", pinglunBinder.getCurrentPosition());
+        }
     }
 
-    private androidx.lifecycle.Observer<? super ChangDuanInfo> getChangDuanInfoObserver() {
-        return changDuanInfo -> {
-            if (changDuanInfo == null) return;
-
-            ChangCiList changCiList = changDuanInfo.getChangeCiList();
-            changCiAdapter.updateData(changCiList);
-            //todo 此处应该重新设计
-            PingLunService.getInstance().setChangDuanInfo(changDuanInfo);
-            updateRecyclerView(0);
-            binding.pingLunSwitchMaterial.setChecked(false);
-            binding.pingLunSwitchMaterial.setChecked(changCiList.hasNext());
+    private CompoundButton.OnCheckedChangeListener getOnCheckedChangeListener() {
+        return (buttonView, isChecked) -> {
         };
     }
 
     private void startService() {
         Intent intent = new Intent(requireContext(), PinglunLifecycleService.class);
-        assert getParentFragment() != null;
-        ChangDuan changDuan = ((ZimuMainFragment) getParentFragment()).getChangDuan();
-        if (changDuan == null) {
-            return;
-        }
-        intent.putExtra("changDuanId", changDuan.getId());
         requireContext().bindService(intent, new PinglunServiceConnection(), Context.BIND_AUTO_CREATE);
-    }
-
-    private Observer getChangDuanObserver() {
-        return (o, arg) -> {
-            try {
-                ChangCi changCi = (ChangCi) arg;
-                updateTitleView(changCi.getContent());
-                ChangCiList changCiList = Objects.requireNonNull(mViewModel.changDuanInfo.getValue()).getChangeCiList();
-                updateRecyclerView(changCiList.currentIndex());
-                if (!changCiList.hasNext()) {
-                    binding.pingLunSwitchMaterial.setChecked(false);
-                }
-            } catch (Exception e) {
-                Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        };
     }
 
     private void initRecyclerview() {
@@ -135,8 +96,8 @@ public class ChangCiFragment extends Fragment implements Serializable {
 
         changCiAdapter = new ChangCiAdapter();
         changCiAdapter.setOnItemClickListener((itemView, view, data, position) -> {
-            PingLunService.getInstance().setCurrentItem(position);
-            pingLun(0);
+            pinglunBinder.start(position);
+            updateRecyclerView(pinglunBinder.getCurrentPosition());
             updateTitleView(data.getContent());
         });
         binding.zimuDetailRecyclerview.setAdapter(changCiAdapter);
@@ -149,10 +110,6 @@ public class ChangCiFragment extends Fragment implements Serializable {
     private void updateRecyclerView(int position) {
         if (position < 4) binding.zimuDetailRecyclerview.smoothScrollToPosition(position);
         else binding.zimuDetailRecyclerview.smoothScrollToPosition(position + 4);
-    }
-
-    private void pingLun(long delayMillis) {
-        PingLunService.getInstance().start(delayMillis);
     }
 
     @Override

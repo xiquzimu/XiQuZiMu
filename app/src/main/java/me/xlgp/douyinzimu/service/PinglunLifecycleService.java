@@ -20,22 +20,28 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableSource;
 import io.reactivex.rxjava3.functions.Function;
 import me.xlgp.douyinzimu.data.ChangDuanInfoRepository;
+import me.xlgp.douyinzimu.model.ChangCiList;
 import me.xlgp.douyinzimu.model.ChangDuanInfo;
 
-public class PinglunLifecycleService extends LifecycleService implements ViewModelStoreOwner {
+public class PinglunLifecycleService extends LifecycleService implements ViewModelStoreOwner, OnPinglunRunListener {
 
     private final String TAG = PinglunLifecycleService.class.getName();
 
     public static final String CHANG_DUAN_ID = "changDuanId";
 
-    private Integer changDuanId;
+    private int changDuanId = 0;
 
     private ChangDuanInfo changDuanInfo;
+    private ChangCiList changCiList;
 
     //标志能否评论
     private boolean call = false;
 
     private PinglunViewModel viewModel;
+
+    private DouYinAccessibilityService accessibilityService;
+
+    private PingLunService pingLunService;
 
     public PinglunLifecycleService() {
     }
@@ -44,10 +50,15 @@ public class PinglunLifecycleService extends LifecycleService implements ViewMod
     public void onCreate() {
         super.onCreate();
         Log.i(TAG, "onCreate: " + toString());
+        accessibilityService = DouYinAccessibilityService.getInstance();
+        accessibilityService.onPinglunRunListener(this);
         viewModel = new ViewModelProvider(this).get(PinglunViewModel.class);
         viewModel.getChangDuanInfo().observe(this, changDuanInfo -> {
             this.changDuanInfo = changDuanInfo;
-            call = false;
+            this.changCiList = changDuanInfo.getChangeCiList(0);
+            call = true;
+            //开始pinglun
+            pinglun();
         });
     }
 
@@ -73,6 +84,7 @@ public class PinglunLifecycleService extends LifecycleService implements ViewMod
     private void init() {
         if (this.changDuanInfo != null && !this.changDuanInfo.getChangDuan().getId().equals(changDuanId)) {
             this.changDuanInfo = null;
+            pingLunService = new PingLunService();
             call = false;
         }
     }
@@ -80,7 +92,7 @@ public class PinglunLifecycleService extends LifecycleService implements ViewMod
     private Observable<ChangDuanInfo> getChangDuanInfo() {
         return Observable.create(emitter -> {
             if (changDuanInfo == null)
-                emitter.onError(new NoSuchElementException("没有数据"));
+                emitter.onError(new NoSuchElementException("没有唱词"));
             else emitter.onNext(changDuanInfo);
         });
     }
@@ -91,11 +103,23 @@ public class PinglunLifecycleService extends LifecycleService implements ViewMod
                 ObservableSource<ChangDuanInfo>>) changDuanInfo -> {
             viewModel.getChangDuanInfo().postValue(changDuanInfo);
             this.changDuanInfo = changDuanInfo;
-
             return getChangDuanInfo();
         });
 
     }
+
+    private void pinglun(long currentMillis) {
+        if (call) {
+            pingLunService.start(currentMillis);
+        }
+    }
+
+    private void pinglun() {
+        if (call) {
+            pingLunService.start(changCiList.current().getDelayMillis());
+        }
+    }
+
 
     @Override
     public void onDestroy() {
@@ -106,6 +130,13 @@ public class PinglunLifecycleService extends LifecycleService implements ViewMod
     @Override
     public ViewModelStore getViewModelStore() {
         return new ViewModelStore();
+    }
+
+    @Override
+    public void onRun() {
+        if (call) {
+            pingLunService.run(changCiList.next(), aBoolean -> pinglun(PingLunService.CURRENT_MILLIS));
+        }
     }
 
     public static class PinglunViewModel extends ViewModel {
@@ -121,6 +152,7 @@ public class PinglunLifecycleService extends LifecycleService implements ViewMod
 
     public static class PinglunBinder extends Binder {
         PinglunLifecycleService service = null;
+        private int position = 0;
 
         public PinglunBinder(PinglunLifecycleService service) {
             this.service = service;
@@ -128,29 +160,37 @@ public class PinglunLifecycleService extends LifecycleService implements ViewMod
 
 
         public Observable<ChangDuanInfo> load() {
-            if (service.changDuanInfo == null) {
+            if (service.changDuanInfo == null && service.changDuanId > 0) {
                 return service.initChangDuanInfo(service.changDuanId);
             }
             return service.getChangDuanInfo();
         }
 
         public Integer getCurrentPosition() {
-            if (service.changDuanInfo != null) {
-                return 0;
+            return position;
+        }
+
+        public void start(int position) {
+            if (service.call) {
+                Log.i(service.TAG, "start: " + position);
+                service.changDuanInfo.getChangeCiList(position);
+                service.call = service.changCiList.hasNext();
+                service.pinglun(PingLunService.CURRENT_MILLIS);
+                this.position = position;
             }
-            return 0;
         }
 
         public void start() {
-            Log.i(service.TAG, "start: ");
+            service.pinglun();
         }
 
         public void pause() {
-            Log.i(service.TAG, "pause: ");
+            service.call = false;
         }
 
         public void stop() {
             Log.i(service.TAG, "stop: ");
+            service.call = false;
         }
     }
 }
