@@ -6,7 +6,6 @@ import androidx.room.Query;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.core.Single;
 import me.xlgp.douyinzimu.model.ChangDuan;
 
 @Dao
@@ -22,7 +21,7 @@ public interface ChangDuanDao extends IDao<ChangDuan> {
     List<ChangDuan> list();
 
     @Query("select * from changduan where id = :id")
-    Single<ChangDuan> get(Integer id);
+    ChangDuan get(Integer id);
 
     @Query("delete from changduan")
     void deleteAll();

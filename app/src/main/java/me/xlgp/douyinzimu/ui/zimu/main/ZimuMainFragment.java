@@ -41,6 +41,9 @@ public class ZimuMainFragment extends Fragment {
         if (onSwitchFragmentListener != null) {
             onSwitchFragmentListener.onSwitch(binding.zimuViewpager2, names.length-1);
             this.changDuan = changDuan;
+            intent = new Intent(requireContext(), PinglunLifecycleService.class);
+            intent.putExtra(PinglunLifecycleService.CHANG_DUAN_ID, changDuan.getId());
+            requireContext().startService(intent);
         }
     }
 
@@ -55,13 +58,6 @@ public class ZimuMainFragment extends Fragment {
         binding.zimuViewpager2.setAdapter(new ZimuMainStateAdapter(this));
         initTabList();
         return binding.getRoot();
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        intent = new Intent(requireContext(), PinglunLifecycleService.class);
-        requireContext().startService(intent);
     }
 
     @Override

@@ -1,7 +1,11 @@
 package me.xlgp.douyinzimu.ui.zimu.changci;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +22,11 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Observer;
 
+import io.reactivex.rxjava3.disposables.Disposable;
 import me.xlgp.douyinzimu.databinding.ChangCiFragmentBinding;
 import me.xlgp.douyinzimu.model.ChangCi;
 import me.xlgp.douyinzimu.model.ChangCiList;
+import me.xlgp.douyinzimu.model.ChangDuan;
 import me.xlgp.douyinzimu.model.ChangDuanInfo;
 import me.xlgp.douyinzimu.obj.PingLun;
 import me.xlgp.douyinzimu.service.PingLunService;
@@ -32,6 +38,7 @@ public class ChangCiFragment extends Fragment implements Serializable {
     private ChangCiViewModel mViewModel;
     private ChangCiFragmentBinding binding;
     private ChangCiAdapter changCiAdapter = null;
+    private PinglunLifecycleService.PinglunBinder pinglunBinder;
 
     public static ChangCiFragment newInstance() {
         return new ChangCiFragment();
@@ -57,12 +64,14 @@ public class ChangCiFragment extends Fragment implements Serializable {
             if (s != null) Toast.makeText(requireContext(), s, Toast.LENGTH_SHORT).show();
         });
         //观察唱词信息
-        mViewModel.changDuanInfo.observe(getViewLifecycleOwner(), getChangDuanInfoObserver());
+        mViewModel.changDuanInfo.observe(getViewLifecycleOwner(), changDuanInfo -> changCiAdapter.updateData(changDuanInfo.getChangeCiList()));
 
-        mViewModel.changDuanInfo.addSource(mViewModel.changDuanLiveData, changDuan -> mViewModel.loadData(changDuan, getChangDuanObserver()));
+    }
 
-        assert getParentFragment() != null;
-        mViewModel.changDuanLiveData.setValue(((ZimuMainFragment) getParentFragment()).getChangDuan());
+    @Override
+    public void onStart() {
+        super.onStart();
+        startService();
     }
 
     private CompoundButton.OnCheckedChangeListener getOnCheckedChangeListener() {
@@ -83,7 +92,7 @@ public class ChangCiFragment extends Fragment implements Serializable {
     private androidx.lifecycle.Observer<? super ChangDuanInfo> getChangDuanInfoObserver() {
         return changDuanInfo -> {
             if (changDuanInfo == null) return;
-            startService();
+
             ChangCiList changCiList = changDuanInfo.getChangeCiList();
             changCiAdapter.updateData(changCiList);
             //todo 此处应该重新设计
@@ -96,7 +105,13 @@ public class ChangCiFragment extends Fragment implements Serializable {
 
     private void startService() {
         Intent intent = new Intent(requireContext(), PinglunLifecycleService.class);
-        requireContext().startService(intent);
+        assert getParentFragment() != null;
+        ChangDuan changDuan = ((ZimuMainFragment) getParentFragment()).getChangDuan();
+        if (changDuan == null) {
+            return;
+        }
+        intent.putExtra("changDuanId", changDuan.getId());
+        requireContext().bindService(intent, new PinglunServiceConnection(), Context.BIND_AUTO_CREATE);
     }
 
     private Observer getChangDuanObserver() {
@@ -144,5 +159,63 @@ public class ChangCiFragment extends Fragment implements Serializable {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    class PinglunServiceConnection implements ServiceConnection {
+        public PinglunServiceConnection() {
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            pinglunBinder = (PinglunLifecycleService.PinglunBinder) service;
+            pinglunBinder.load().subscribe(new ChangDuanInfoObservable());
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+
+        @Override
+        public void onBindingDied(ComponentName name) {
+
+        }
+
+        @Override
+        public void onNullBinding(ComponentName name) {
+
+        }
+    }
+
+    class ChangDuanInfoObservable implements io.reactivex.rxjava3.core.Observer<ChangDuanInfo> {
+        Disposable disposable;
+
+        @Override
+        public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+            disposable = d;
+        }
+
+        @Override
+        public void onNext(@io.reactivex.rxjava3.annotations.NonNull ChangDuanInfo changDuanInfo) {
+            mViewModel.changDuanInfo.postValue(changDuanInfo);
+            finish();
+        }
+
+        @Override
+        public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+            mViewModel.changDuanState.postValue(e.getMessage());
+            finish();
+        }
+
+        @Override
+        public void onComplete() {
+            finish();
+        }
+
+        private void finish() {
+            if (disposable != null && !disposable.isDisposed()) {
+                disposable.dispose();
+            }
+        }
     }
 }
