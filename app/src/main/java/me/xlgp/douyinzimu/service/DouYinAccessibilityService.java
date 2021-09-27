@@ -14,10 +14,15 @@ import me.xlgp.douyinzimu.R;
 import me.xlgp.douyinzimu.listener.OnDianZanListener;
 import me.xlgp.douyinzimu.util.PingLunHelper;
 
+interface OnPinglunRunListener{
+    void onRun();
+}
+
 public class DouYinAccessibilityService extends AccessibilityService implements OnDianZanListener {
 
     private static DouYinAccessibilityService douYinAccessibilityService;
     private boolean liveable;
+    private OnPinglunRunListener onPinglunRunListener;
 
     public static DouYinAccessibilityService getInstance() {
         return douYinAccessibilityService;
@@ -30,11 +35,15 @@ public class DouYinAccessibilityService extends AccessibilityService implements 
         Toast.makeText(this, "请按返回键返回至应用", Toast.LENGTH_LONG).show();
     }
 
+    public void onPinglunRunListener(OnPinglunRunListener pinglunRunListener){
+        onPinglunRunListener = pinglunRunListener;
+    }
+
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         if (event.getEventType() == TYPE_VIEW_CLICKED) {
             if (PingLunHelper.pingLun(this, event)) {
-                PingLunService.getInstance().run();
+                onPinglunRunListener.onRun();
             }
         } else if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             new Handler(getMainLooper()).postDelayed(this::isDouYinLive, 1600);

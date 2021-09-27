@@ -26,16 +26,21 @@ public class ChangCiRepository {
 
     public void listByChangDuanId(int id, Consumer<List<ChangCi>> consumer) {
         ChangCiDao changCiDao = AppDatabase.getInstance().changCiDao();
-        Disposable disposable = changCiDao.listByChangDuanId(id)
+        Disposable disposable = changCiDao.flowListByChangDuanId(id)
                 .compose(ObserverHelper.flowableTransformer())
                 .subscribe(consumer);
         compositeDisposable.add(disposable);
     }
 
-    public @NonNull Flowable<List<ChangCi>> listByChangDuanId(int id) {
+    public @NonNull Flowable<List<ChangCi>> flowListByChangDuanId(int id) {
         ChangCiDao changCiDao = AppDatabase.getInstance().changCiDao();
-        return changCiDao.listByChangDuanId(id)
+        return changCiDao.flowListByChangDuanId(id)
                 .compose(ObserverHelper.flowableTransformer());
+    }
+
+    public List<ChangCi> listByChangDuanId(int id) {
+        ChangCiDao changCiDao = AppDatabase.getInstance().changCiDao();
+        return changCiDao.listByChangDuanId(id);
     }
 
     public void deleteByChangDuanId(int id) {

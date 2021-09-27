@@ -1,5 +1,6 @@
 package me.xlgp.douyinzimu.ui.zimu.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 import me.xlgp.douyinzimu.databinding.ZimuMainFragmentBinding;
 import me.xlgp.douyinzimu.listener.OnSwitchFragmentListener;
+import me.xlgp.douyinzimu.model.ChangDuan;
+import me.xlgp.douyinzimu.service.PinglunLifecycleService;
 import me.xlgp.douyinzimu.ui.zimu.changci.ChangCiFragment;
 import me.xlgp.douyinzimu.ui.zimu.changduan.ChangDuanFragment;
 
@@ -23,6 +26,8 @@ public class ZimuMainFragment extends Fragment {
     private ZimuMainFragmentBinding binding;
     private OnSwitchFragmentListener onSwitchFragmentListener;
     String[] names = new String[]{"黄梅戏", "越剧","歌曲","小调", "唱词"};
+    private Intent intent = null;
+    private ChangDuan changDuan;
 
     public static ZimuMainFragment newInstance() {
         return new ZimuMainFragment();
@@ -32,10 +37,18 @@ public class ZimuMainFragment extends Fragment {
         this.onSwitchFragmentListener = onSwitchFragmentListener;
     }
 
-    public void forSkip() {
+    public void forSkip(ChangDuan changDuan) {
         if (onSwitchFragmentListener != null) {
             onSwitchFragmentListener.onSwitch(binding.zimuViewpager2, names.length-1);
+            this.changDuan = changDuan;
+            intent = new Intent(requireContext(), PinglunLifecycleService.class);
+            intent.putExtra(PinglunLifecycleService.CHANG_DUAN_ID, changDuan.getId());
+            requireContext().startService(intent);
         }
+    }
+
+    public ChangDuan getChangDuan() {
+        return changDuan;
     }
 
     @Nullable
@@ -45,6 +58,12 @@ public class ZimuMainFragment extends Fragment {
         binding.zimuViewpager2.setAdapter(new ZimuMainStateAdapter(this));
         initTabList();
         return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        requireContext().stopService(intent);
     }
 
     private void initTabList() {

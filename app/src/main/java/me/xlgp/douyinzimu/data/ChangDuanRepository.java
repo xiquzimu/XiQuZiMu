@@ -13,9 +13,9 @@ import io.reactivex.rxjava3.functions.Function;
 import me.xlgp.douyinzimu.dao.ChangDuanDao;
 import me.xlgp.douyinzimu.db.AppDatabase;
 import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
+import me.xlgp.douyinzimu.model.ChangCiList;
 import me.xlgp.douyinzimu.model.ChangDuan;
-import me.xlgp.douyinzimu.obj.changduan.ChangCiList;
-import me.xlgp.douyinzimu.obj.changduan.ChangDuanInfo;
+import me.xlgp.douyinzimu.model.ChangDuanInfo;
 import me.xlgp.douyinzimu.util.ChangDuanHelper;
 
 public class ChangDuanRepository {
@@ -64,6 +64,11 @@ public class ChangDuanRepository {
 
     public Observable<List<String>> updateList() {
         return new FetchRemoteRepository().getNameList();
+    }
+
+    public ChangDuan get(Integer id){
+        ChangDuanDao changDuanDao = AppDatabase.getInstance().changDuanDao();
+        return changDuanDao.get(id);
     }
 
     public void delete(ChangDuan data, Consumer<Object> consumer) {

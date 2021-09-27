@@ -13,6 +13,16 @@ import me.xlgp.douyinzimu.model.ChangCi;
 
 public class ChangCiAdapter extends BaseAdapter<ChangCi> {
 
+    private Integer position;
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
     @NonNull
     @Override
     public BaseAdapter.ViewHolder<ChangCi> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

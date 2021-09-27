@@ -1,7 +1,5 @@
-package me.xlgp.douyinzimu.obj.changduan;
+package me.xlgp.douyinzimu.model;
 
-
-import me.xlgp.douyinzimu.model.ChangDuan;
 
 /**
  * 唱词：内容，时间，时间间隔，
@@ -34,7 +32,8 @@ public class ChangDuanInfo {
         return changCiList;
     }
 
-    public void getChangeCiList(int cursor) {
+    public ChangCiList getChangeCiList(int cursor) {
         changCiList.setCursor(cursor);
+        return changCiList;
     }
 }
