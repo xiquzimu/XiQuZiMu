@@ -39,11 +39,11 @@ public class ZimuMainFragment extends Fragment {
 
     public void forSkip(ChangDuan changDuan) {
         if (onSwitchFragmentListener != null) {
-            onSwitchFragmentListener.onSwitch(binding.zimuViewpager2, names.length-1);
             this.changDuan = changDuan;
             intent = new Intent(requireContext(), PinglunLifecycleService.class);
             intent.putExtra(PinglunLifecycleService.CHANG_DUAN_ID, changDuan.getId());
             requireContext().startService(intent);
+            onSwitchFragmentListener.onSwitch(binding.zimuViewpager2, names.length-1);
         }
     }
 

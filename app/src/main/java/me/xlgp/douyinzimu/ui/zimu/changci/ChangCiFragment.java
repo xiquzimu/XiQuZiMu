@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,19 +19,22 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import java.io.Serializable;
+import java.util.Observable;
+import java.util.Observer;
 
 import io.reactivex.rxjava3.disposables.Disposable;
 import me.xlgp.douyinzimu.databinding.ChangCiFragmentBinding;
+import me.xlgp.douyinzimu.model.ChangCi;
 import me.xlgp.douyinzimu.model.ChangDuanInfo;
 import me.xlgp.douyinzimu.service.PinglunLifecycleService;
 
-public class ChangCiFragment extends Fragment implements Serializable {
+public class ChangCiFragment extends Fragment {
 
     private ChangCiViewModel mViewModel;
     private ChangCiFragmentBinding binding;
     private ChangCiAdapter changCiAdapter = null;
     private PinglunLifecycleService.PinglunBinder pinglunBinder;
+    private PinglunServiceConnection pinglunServiceConnection = null;
 
     public static ChangCiFragment newInstance() {
         return new ChangCiFragment();
@@ -83,12 +87,14 @@ public class ChangCiFragment extends Fragment implements Serializable {
 
     private CompoundButton.OnCheckedChangeListener getOnCheckedChangeListener() {
         return (buttonView, isChecked) -> {
+            if (isChecked) pinglunBinder.start();
+            else pinglunBinder.pause();
         };
     }
 
     private void startService() {
-        Intent intent = new Intent(requireContext(), PinglunLifecycleService.class);
-        requireContext().bindService(intent, new PinglunServiceConnection(), Context.BIND_AUTO_CREATE);
+        pinglunServiceConnection = new PinglunServiceConnection();
+        requireContext().bindService(new Intent(requireContext(), PinglunLifecycleService.class), pinglunServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     private void initRecyclerview() {
@@ -116,6 +122,44 @@ public class ChangCiFragment extends Fragment implements Serializable {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (pinglunBinder != null) {
+            pinglunBinder.observe(new PinglunObserver(this));
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (pinglunBinder != null) {
+            pinglunBinder.observe(null);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (pinglunServiceConnection != null)
+            requireContext().unbindService(pinglunServiceConnection);
+        Log.i("TAG", "onDestroy: ");
+    }
+
+    static class PinglunObserver implements Observer {
+        private ChangCiFragment fragment;
+
+        public PinglunObserver(ChangCiFragment changCiFragment) {
+            fragment = changCiFragment;
+        }
+
+        @Override
+        public void update(Observable o, Object arg) {
+            ChangCi changCi = (ChangCi) arg;
+            fragment.updateTitleView(changCi.getContent());
+        }
     }
 
     class PinglunServiceConnection implements ServiceConnection {

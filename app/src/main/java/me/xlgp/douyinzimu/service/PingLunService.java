@@ -27,9 +27,9 @@ public class PingLunService {
                 .subscribe(new StartObserver(this));
     }
 
-    public void run(ChangCi changCi, Callback<Boolean> callback) {
+    public void run(CharSequence content, Callback<Boolean> callback) {
         try {
-            PingLunHelper.input(DouYinAccessibilityService.getInstance(), changCi, callback);
+            PingLunHelper.input(DouYinAccessibilityService.getInstance(), content, callback);
         } catch (Exception e) {
             Log.e("TAG", "run: ", e);
         }

@@ -13,13 +13,13 @@ import me.xlgp.douyinzimu.model.ChangCi;
 
 public class ChangCiAdapter extends BaseAdapter<ChangCi> {
 
-    private Integer position;
+    private int position = 0;
 
-    public Integer getPosition() {
+    public int getPosition() {
         return position;
     }
 
-    public void setPosition(Integer position) {
+    public void setPosition(int position) {
         this.position = position;
     }
 

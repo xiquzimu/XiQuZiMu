@@ -58,10 +58,10 @@ public class PingLunHelper {
      * 输入评论内容
      *
      * @param service  AccessibilityService
-     * @param changCi  唱词
+     * @param content  唱词
      * @param callback 回调
      */
-    public static void input(AccessibilityService service, ChangCi changCi, Callback<Boolean> callback) {
+    public static void input(AccessibilityService service, CharSequence content, Callback<Boolean> callback) {
         if (service == null){
             callback.call(false);
             return;
@@ -72,7 +72,7 @@ public class PingLunHelper {
             node = service.getRootInActiveWindow().findFocus(AccessibilityNodeInfo.FOCUS_INPUT);
             //输入数据
             Bundle arguments = new Bundle();
-            arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, changCi.getContent());
+            arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, content);
             boolean setTextSuccess = Objects.requireNonNull(node).performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
             if (setTextSuccess) {
                 boolean sendSuccess = getSendNodeByInputNode(node).performAction(AccessibilityNodeInfo.ACTION_CLICK);
