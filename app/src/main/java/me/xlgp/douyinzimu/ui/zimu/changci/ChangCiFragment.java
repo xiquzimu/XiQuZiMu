@@ -149,6 +149,7 @@ public class ChangCiFragment extends Fragment {
         if (pinglunServiceConnection != null) {
             requireContext().unbindService(pinglunServiceConnection);
             pinglunServiceConnection = null;
+            pinglunBinder = null;
         }
     }
 

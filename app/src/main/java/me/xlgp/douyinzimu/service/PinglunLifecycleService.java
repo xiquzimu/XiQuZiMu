@@ -7,8 +7,6 @@ import android.os.IBinder;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleService;
-import androidx.lifecycle.ViewModelStore;
-import androidx.lifecycle.ViewModelStoreOwner;
 
 import java.util.NoSuchElementException;
 
@@ -21,7 +19,7 @@ import me.xlgp.douyinzimu.model.ChangCi;
 import me.xlgp.douyinzimu.model.ChangCiList;
 import me.xlgp.douyinzimu.model.ChangDuanInfo;
 
-public class PinglunLifecycleService extends LifecycleService implements ViewModelStoreOwner, OnPinglunRunListener {
+public class PinglunLifecycleService extends LifecycleService {
 
     private final String TAG = PinglunLifecycleService.class.getName();
 
@@ -42,8 +40,14 @@ public class PinglunLifecycleService extends LifecycleService implements ViewMod
     @Override
     public void onCreate() {
         super.onCreate();
+        setPinglunRunListener();
+    }
+
+    private void setPinglunRunListener() {
         DouYinAccessibilityService accessibilityService = DouYinAccessibilityService.getInstance();
-        accessibilityService.onPinglunRunListener(this);
+        if (accessibilityService != null) {
+            accessibilityService.onPinglunRunListener(this::run);
+        }
     }
 
     @Override
@@ -132,14 +136,7 @@ public class PinglunLifecycleService extends LifecycleService implements ViewMod
         }
     }
 
-    @NonNull
-    @Override
-    public ViewModelStore getViewModelStore() {
-        return new ViewModelStore();
-    }
-
-    @Override
-    public void onRun() {
+    public void run() {
         if (call && enablePinglun()) {
             ChangCi changCi = changCiList.next();
             sendPinglunBroadcast(changCi);
