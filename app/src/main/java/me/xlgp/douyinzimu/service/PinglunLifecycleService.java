@@ -130,6 +130,8 @@ public class PinglunLifecycleService extends LifecycleService {
     public void onDestroy() {
         super.onDestroy();
         call = false;
+        changDuanInfo = null;
+        changCiList = null;
         if (pingLunService != null) {
             pingLunService.disable();
             pingLunService = null;
