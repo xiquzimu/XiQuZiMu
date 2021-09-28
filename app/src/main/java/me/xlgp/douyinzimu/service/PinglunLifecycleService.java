@@ -126,6 +126,10 @@ public class PinglunLifecycleService extends LifecycleService implements ViewMod
     public void onDestroy() {
         super.onDestroy();
         call = false;
+        if (pingLunService != null) {
+            pingLunService.disable();
+            pingLunService = null;
+        }
     }
 
     @NonNull
@@ -163,7 +167,7 @@ public class PinglunLifecycleService extends LifecycleService implements ViewMod
     }
 
     public static class PinglunBinder extends Binder {
-        PinglunLifecycleService service = null;
+        PinglunLifecycleService service;
 
         public PinglunBinder(PinglunLifecycleService service) {
             this.service = service;
@@ -185,9 +189,7 @@ public class PinglunLifecycleService extends LifecycleService implements ViewMod
             if (service.changCiList != null && !service.changCiList.isEmpty()) {
                 service.changDuanInfo.getChangeCiList(position);
             }
-            if (service.call) {
-                service.pinglun(PingLunService.CURRENT_MILLIS);
-            }
+            service.pinglun(PingLunService.CURRENT_MILLIS);
         }
 
         public void start() {

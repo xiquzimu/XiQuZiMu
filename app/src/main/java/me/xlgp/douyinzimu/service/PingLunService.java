@@ -1,14 +1,9 @@
 package me.xlgp.douyinzimu.service;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.disposables.Disposable;
-import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
 import me.xlgp.douyinzimu.obj.Callback;
 import me.xlgp.douyinzimu.util.PingLunHelper;
 
@@ -21,9 +16,9 @@ public class PingLunService {
     private long count = 0; //记录线程数量，用于判断即将执行的线程是不是当前应当执行的线程
 
     public void start(long delayMillis) {
+        if (count < 0)return;
         count++;
-        Observable.just(count).delay(delayMillis, TimeUnit.MILLISECONDS).compose(ObserverHelper.transformer())
-                .subscribe(new StartObserver(this));
+        new Handler(Looper.getMainLooper()).postDelayed(new PinglunRunnable(count), delayMillis);
     }
 
     public void run(CharSequence content, Callback<Boolean> callback) {
@@ -34,44 +29,25 @@ public class PingLunService {
         }
     }
 
-    private static class StartObserver implements Observer<Long> {
-        private final PingLunService pingLunService;
-        private Disposable disposable;
+    public void disable() {
+        count = -1;
+    }
 
-        public StartObserver(PingLunService pingLunService) {
-            this.pingLunService = pingLunService;
+    class PinglunRunnable implements Runnable {
+        long count;
+
+        public PinglunRunnable(long count) {
+            this.count = count;
         }
 
         @Override
-        public void onSubscribe(@NonNull Disposable d) {
-            disposable = d;
-        }
-
-        @Override
-        public void onNext(@NonNull Long count) {
+        public void run() {
             try {
-                if (count == pingLunService.count) {
+                if (count == PingLunService.this.count) {
                     PingLunHelper.openInputLayout(DouYinAccessibilityService.getInstance());
                 }
             } catch (Exception e) {
                 Log.e("TAG", "run: ", e);
-                dispose();
-            }
-        }
-
-        @Override
-        public void onError(@NonNull Throwable e) {
-            dispose();
-        }
-
-        @Override
-        public void onComplete() {
-            dispose();
-        }
-
-        public void dispose() {
-            if (disposable != null && !disposable.isDisposed()) {
-                disposable.dispose();
             }
         }
     }
