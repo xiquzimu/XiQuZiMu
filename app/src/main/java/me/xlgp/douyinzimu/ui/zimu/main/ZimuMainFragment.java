@@ -25,7 +25,7 @@ public class ZimuMainFragment extends Fragment {
 
     private ZimuMainFragmentBinding binding;
     private OnSwitchFragmentListener onSwitchFragmentListener;
-    String[] names = new String[]{"黄梅戏", "越剧","歌曲","小调", "唱词"};
+    String[] names = new String[]{"黄梅戏", "越剧", "歌曲", "小调", "唱词"};
     private Intent intent = null;
 
     public static ZimuMainFragment newInstance() {
@@ -41,7 +41,7 @@ public class ZimuMainFragment extends Fragment {
             intent = new Intent(requireContext(), PinglunLifecycleService.class);
             intent.putExtra(PinglunLifecycleService.CHANG_DUAN_ID, changDuan.getId());
             requireContext().startService(intent);
-            onSwitchFragmentListener.onSwitch(binding.zimuViewpager2, names.length-1);
+            onSwitchFragmentListener.onSwitch(binding.zimuViewpager2, names.length - 1);
         }
     }
 
@@ -57,7 +57,9 @@ public class ZimuMainFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        requireContext().stopService(intent);
+        if (intent != null) {
+            requireContext().stopService(intent);
+        }
     }
 
     private void initTabList() {

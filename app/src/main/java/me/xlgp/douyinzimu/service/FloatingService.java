@@ -50,8 +50,8 @@ public class FloatingService extends LifecycleService {
     private void addView() {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         rootView = inflater.inflate(R.layout.view_floating_container, null);
-
         ZWindowManager.getInstance().addView(rootView, new ZimuLayoutParams.WithFullWidth());
+        rootView.setVisibility(View.GONE);
     }
 
     public View getRootView() {
@@ -62,7 +62,7 @@ public class FloatingService extends LifecycleService {
 
         mFragments.getSupportFragmentManager().beginTransaction()
                 .add(R.id.floatingToolBar, FloatingToolBarFragment.Factory.create())
-                .add(R.id.floatingContainer, ZimuMainFragment.newInstance()).commit();
+                .add(R.id.floatingContainer, ZimuMainFragment.newInstance()).runOnCommit(() -> rootView.setVisibility(View.VISIBLE)).commit();
     }
 
 
@@ -73,7 +73,7 @@ public class FloatingService extends LifecycleService {
     @Override
     public void onDestroy() {
         mFragments.dispatchDestroy();
-        rootView.setPadding(0, 0, 0, 0);
+        rootView.setVisibility(View.GONE);
         ZWindowManager.getInstance().removeView(rootView);
         super.onDestroy();
     }
