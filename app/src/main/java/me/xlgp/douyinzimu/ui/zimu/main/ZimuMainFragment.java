@@ -27,7 +27,6 @@ public class ZimuMainFragment extends Fragment {
     private OnSwitchFragmentListener onSwitchFragmentListener;
     String[] names = new String[]{"黄梅戏", "越剧","歌曲","小调", "唱词"};
     private Intent intent = null;
-    private ChangDuan changDuan;
 
     public static ZimuMainFragment newInstance() {
         return new ZimuMainFragment();
@@ -39,16 +38,11 @@ public class ZimuMainFragment extends Fragment {
 
     public void forSkip(ChangDuan changDuan) {
         if (onSwitchFragmentListener != null) {
-            this.changDuan = changDuan;
             intent = new Intent(requireContext(), PinglunLifecycleService.class);
             intent.putExtra(PinglunLifecycleService.CHANG_DUAN_ID, changDuan.getId());
             requireContext().startService(intent);
             onSwitchFragmentListener.onSwitch(binding.zimuViewpager2, names.length-1);
         }
-    }
-
-    public ChangDuan getChangDuan() {
-        return changDuan;
     }
 
     @Nullable

@@ -9,14 +9,13 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import me.xlgp.douyinzimu.designpatterns.ObserverHelper;
-import me.xlgp.douyinzimu.model.ChangCi;
 import me.xlgp.douyinzimu.obj.Callback;
 import me.xlgp.douyinzimu.util.PingLunHelper;
 
 public class PingLunService {
 
     //标记是否按当前唱词间隔时间
-    public static Integer CURRENT_MILLIS = -1;
+    public static Integer CURRENT_MILLIS = 0;
 
     //todo 此处应该重构
     private long count = 0; //记录线程数量，用于判断即将执行的线程是不是当前应当执行的线程

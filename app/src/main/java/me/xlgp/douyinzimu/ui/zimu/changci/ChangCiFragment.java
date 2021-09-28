@@ -1,12 +1,13 @@
 package me.xlgp.douyinzimu.ui.zimu.changci;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,22 +20,25 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import io.reactivex.rxjava3.disposables.Disposable;
+import me.xlgp.douyinzimu.constant.AppConstant;
 import me.xlgp.douyinzimu.databinding.ChangCiFragmentBinding;
-import me.xlgp.douyinzimu.model.ChangCi;
 import me.xlgp.douyinzimu.model.ChangDuanInfo;
 import me.xlgp.douyinzimu.service.PinglunLifecycleService;
 
 public class ChangCiFragment extends Fragment {
 
     private ChangCiViewModel mViewModel;
+
     private ChangCiFragmentBinding binding;
+
     private ChangCiAdapter changCiAdapter = null;
+
     private PinglunLifecycleService.PinglunBinder pinglunBinder;
+
     private PinglunServiceConnection pinglunServiceConnection = null;
+
+    private PinglunBroadcastReceiver pinglunBroadcastReceiver;
 
     public static ChangCiFragment newInstance() {
         return new ChangCiFragment();
@@ -45,18 +49,19 @@ public class ChangCiFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = ChangCiFragmentBinding.inflate(inflater, container, false);
         initRecyclerview();
+        mViewModel = new ViewModelProvider(this).get(ChangCiViewModel.class);
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(ChangCiViewModel.class);
 
         if (savedInstanceState != null) {
             changCiAdapter.setPosition(savedInstanceState.getInt("position", 0));
         }
 
+        binding.pingLunSwitchMaterial.setChecked(false);
         binding.pingLunSwitchMaterial.setOnCheckedChangeListener(getOnCheckedChangeListener());
 
         mViewModel.changDuanState.observe(getViewLifecycleOwner(), s -> {
@@ -68,8 +73,6 @@ public class ChangCiFragment extends Fragment {
             updateRecyclerView(changCiAdapter.getPosition());
             updateTitleView(changDuanInfo.getChangeCiList().current().getContent());
         });
-
-
     }
 
     @Override
@@ -87,8 +90,10 @@ public class ChangCiFragment extends Fragment {
 
     private CompoundButton.OnCheckedChangeListener getOnCheckedChangeListener() {
         return (buttonView, isChecked) -> {
-            if (isChecked) pinglunBinder.start();
-            else pinglunBinder.pause();
+            if (pinglunBinder != null) {
+                if (isChecked) pinglunBinder.start();
+                else pinglunBinder.pause();
+            }
         };
     }
 
@@ -127,44 +132,50 @@ public class ChangCiFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (pinglunBinder != null) {
-            pinglunBinder.observe(new PinglunObserver(this));
-        }
+        pinglunBroadcastReceiver = new PinglunBroadcastReceiver();
+        requireContext().registerReceiver(pinglunBroadcastReceiver, pinglunBroadcastReceiver.getIntentFilter());
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (pinglunBinder != null) {
-            pinglunBinder.observe(null);
-        }
+        requireContext().unregisterReceiver(pinglunBroadcastReceiver);
+        pinglunBroadcastReceiver = null;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (pinglunServiceConnection != null)
+        if (pinglunServiceConnection != null) {
             requireContext().unbindService(pinglunServiceConnection);
-        Log.i("TAG", "onDestroy: ");
+            pinglunServiceConnection = null;
+        }
     }
 
-    static class PinglunObserver implements Observer {
-        private ChangCiFragment fragment;
+    class PinglunBroadcastReceiver extends BroadcastReceiver {
 
-        public PinglunObserver(ChangCiFragment changCiFragment) {
-            fragment = changCiFragment;
+        public PinglunBroadcastReceiver() {
+        }
+
+        public IntentFilter getIntentFilter() {
+            IntentFilter intentFilter = new IntentFilter();
+            String intentFilterAction = AppConstant.INTENT_FILTER_ACTION;
+            intentFilter.addAction(intentFilterAction);
+            return intentFilter;
         }
 
         @Override
-        public void update(Observable o, Object arg) {
-            ChangCi changCi = (ChangCi) arg;
-            fragment.updateTitleView(changCi.getContent());
+        public void onReceive(Context context, Intent intent) {
+            String content = intent.getStringExtra("content");
+            int position = intent.getIntExtra("position", 0);
+            boolean enable = intent.getBooleanExtra("enable", true);
+            if (!enable) binding.pingLunSwitchMaterial.setChecked(false);
+            updateRecyclerView(position);
+            updateTitleView(content);
         }
     }
 
     class PinglunServiceConnection implements ServiceConnection {
-        public PinglunServiceConnection() {
-        }
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -174,16 +185,6 @@ public class ChangCiFragment extends Fragment {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-
-        }
-
-        @Override
-        public void onBindingDied(ComponentName name) {
-
-        }
-
-        @Override
-        public void onNullBinding(ComponentName name) {
 
         }
     }
@@ -199,12 +200,15 @@ public class ChangCiFragment extends Fragment {
         @Override
         public void onNext(@io.reactivex.rxjava3.annotations.NonNull ChangDuanInfo changDuanInfo) {
             mViewModel.changDuanInfo.postValue(changDuanInfo);
+            binding.pingLunSwitchMaterial.setChecked(false);
+            binding.pingLunSwitchMaterial.setChecked(true);
             finish();
         }
 
         @Override
         public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
             mViewModel.changDuanState.postValue(e.getMessage());
+            binding.pingLunSwitchMaterial.setChecked(false);
             finish();
         }
 
