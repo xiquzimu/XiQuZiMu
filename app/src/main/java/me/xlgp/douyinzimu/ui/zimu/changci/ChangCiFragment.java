@@ -23,7 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import io.reactivex.rxjava3.disposables.Disposable;
 import me.xlgp.douyinzimu.constant.AppConstant;
 import me.xlgp.douyinzimu.databinding.ChangCiFragmentBinding;
-import me.xlgp.douyinzimu.model.ChangDuanInfo;
+import me.xlgp.douyinzimu.model.ChangCiList;
 import me.xlgp.douyinzimu.service.PinglunLifecycleService;
 
 public class ChangCiFragment extends Fragment {
@@ -57,21 +57,18 @@ public class ChangCiFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (savedInstanceState != null) {
-            changCiAdapter.setPosition(savedInstanceState.getInt("position", 0));
-        }
-
-        binding.pingLunSwitchMaterial.setChecked(false);
         binding.pingLunSwitchMaterial.setOnCheckedChangeListener(getOnCheckedChangeListener());
 
         mViewModel.changDuanState.observe(getViewLifecycleOwner(), s -> {
             if (s != null) Toast.makeText(requireContext(), s, Toast.LENGTH_SHORT).show();
         });
         //观察唱词信息
-        mViewModel.changDuanInfo.observe(getViewLifecycleOwner(), changDuanInfo -> {
-            changCiAdapter.updateData(changDuanInfo.getChangeCiList());
-            updateRecyclerView(changCiAdapter.getPosition());
-            updateTitleView(changDuanInfo.getChangeCiList().current().getContent());
+        mViewModel.changCiList.observe(getViewLifecycleOwner(), changCiList -> {
+            changCiAdapter.updateData(changCiList);
+            updateRecyclerView(changCiList.currentIndex());
+            updateTitleView(changCiList.current().getContent());
+            binding.pingLunSwitchMaterial.setChecked(false);
+            binding.pingLunSwitchMaterial.setChecked(true);
         });
     }
 
@@ -79,13 +76,6 @@ public class ChangCiFragment extends Fragment {
     public void onStart() {
         super.onStart();
         startService();
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        if (pinglunBinder != null) {
-            outState.putInt("position", pinglunBinder.getCurrentPosition());
-        }
     }
 
     private CompoundButton.OnCheckedChangeListener getOnCheckedChangeListener() {
@@ -108,7 +98,7 @@ public class ChangCiFragment extends Fragment {
         changCiAdapter = new ChangCiAdapter();
         changCiAdapter.setOnItemClickListener((itemView, view, data, position) -> {
             pinglunBinder.start(position);
-            updateRecyclerView(pinglunBinder.getCurrentPosition());
+            updateRecyclerView(position);
             updateTitleView(data.getContent());
         });
         binding.zimuDetailRecyclerview.setAdapter(changCiAdapter);
@@ -155,13 +145,9 @@ public class ChangCiFragment extends Fragment {
 
     class PinglunBroadcastReceiver extends BroadcastReceiver {
 
-        public PinglunBroadcastReceiver() {
-        }
-
         public IntentFilter getIntentFilter() {
             IntentFilter intentFilter = new IntentFilter();
-            String intentFilterAction = AppConstant.INTENT_FILTER_ACTION;
-            intentFilter.addAction(intentFilterAction);
+            intentFilter.addAction(AppConstant.INTENT_FILTER_ACTION);
             return intentFilter;
         }
 
@@ -181,7 +167,7 @@ public class ChangCiFragment extends Fragment {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             pinglunBinder = (PinglunLifecycleService.PinglunBinder) service;
-            pinglunBinder.load().subscribe(new ChangDuanInfoObservable());
+            pinglunBinder.load().subscribe(new ChangCiListObservable());
         }
 
         @Override
@@ -190,7 +176,7 @@ public class ChangCiFragment extends Fragment {
         }
     }
 
-    class ChangDuanInfoObservable implements io.reactivex.rxjava3.core.Observer<ChangDuanInfo> {
+    class ChangCiListObservable implements io.reactivex.rxjava3.core.Observer<ChangCiList> {
         Disposable disposable;
 
         @Override
@@ -199,10 +185,8 @@ public class ChangCiFragment extends Fragment {
         }
 
         @Override
-        public void onNext(@io.reactivex.rxjava3.annotations.NonNull ChangDuanInfo changDuanInfo) {
-            mViewModel.changDuanInfo.postValue(changDuanInfo);
-            binding.pingLunSwitchMaterial.setChecked(false);
-            binding.pingLunSwitchMaterial.setChecked(true);
+        public void onNext(@io.reactivex.rxjava3.annotations.NonNull ChangCiList changCiList) {
+            mViewModel.changCiList.postValue(changCiList);
             finish();
         }
 

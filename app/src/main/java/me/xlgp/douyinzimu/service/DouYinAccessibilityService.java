@@ -3,6 +3,7 @@ package me.xlgp.douyinzimu.service;
 import static android.view.accessibility.AccessibilityEvent.TYPE_VIEW_CLICKED;
 
 import android.accessibilityservice.AccessibilityService;
+import android.content.Intent;
 import android.os.Handler;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -11,18 +12,14 @@ import android.widget.Toast;
 import java.util.List;
 
 import me.xlgp.douyinzimu.R;
+import me.xlgp.douyinzimu.constant.DouYinConstant;
 import me.xlgp.douyinzimu.listener.OnDianZanListener;
 import me.xlgp.douyinzimu.util.PingLunHelper;
-
-interface OnPinglunRunListener {
-    void onRun();
-}
 
 public class DouYinAccessibilityService extends AccessibilityService implements OnDianZanListener {
 
     private static DouYinAccessibilityService douYinAccessibilityService;
     private boolean liveable;
-    private OnPinglunRunListener onPinglunRunListener;
 
     public static DouYinAccessibilityService getInstance() {
         return douYinAccessibilityService;
@@ -35,21 +32,22 @@ public class DouYinAccessibilityService extends AccessibilityService implements 
         Toast.makeText(this, "请按返回键返回至应用", Toast.LENGTH_LONG).show();
     }
 
-    public void onPinglunRunListener(OnPinglunRunListener pinglunRunListener) {
-        onPinglunRunListener = pinglunRunListener;
-    }
-
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         if (event.getEventType() == TYPE_VIEW_CLICKED) {
             if (PingLunHelper.pingLun(this, event)) {
-                if (onPinglunRunListener != null) {
-                    onPinglunRunListener.onRun();
-                }
+                sendBroadcast(getIntent());
             }
         } else if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             new Handler(getMainLooper()).postDelayed(this::isDouYinLive, 1600);
         }
+    }
+
+    private Intent getIntent(){
+        Intent intent = new Intent();
+        intent.setAction(DouYinConstant.INTENT_DY_SERVICE_ACTION);
+        intent.putExtra("action", "run");
+        return intent;
     }
 
     @Override

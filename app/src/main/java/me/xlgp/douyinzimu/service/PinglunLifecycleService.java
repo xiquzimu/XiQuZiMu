@@ -1,6 +1,9 @@
 package me.xlgp.douyinzimu.service;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
 
@@ -14,6 +17,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableSource;
 import io.reactivex.rxjava3.functions.Function;
 import me.xlgp.douyinzimu.constant.AppConstant;
+import me.xlgp.douyinzimu.constant.DouYinConstant;
 import me.xlgp.douyinzimu.data.ChangDuanInfoRepository;
 import me.xlgp.douyinzimu.model.ChangCi;
 import me.xlgp.douyinzimu.model.ChangCiList;
@@ -25,9 +29,8 @@ public class PinglunLifecycleService extends LifecycleService {
 
     public static final String CHANG_DUAN_ID = "changDuanId";
 
-    private int changDuanId = 0;
+    private int changDuanId = -1;
 
-    private ChangDuanInfo changDuanInfo;
     private ChangCiList changCiList;
 
     //标志能否评论
@@ -37,25 +40,21 @@ public class PinglunLifecycleService extends LifecycleService {
 
     private PinglunBinder pinglunBinder;
 
+    private DouYinBroadcastReceiver douYinBroadcastReceiver;
+
     @Override
     public void onCreate() {
         super.onCreate();
-        setPinglunRunListener();
-    }
-
-    private void setPinglunRunListener() {
-        DouYinAccessibilityService accessibilityService = DouYinAccessibilityService.getInstance();
-        if (accessibilityService != null) {
-            accessibilityService.onPinglunRunListener(this::run);
-        }
+        douYinBroadcastReceiver = new DouYinBroadcastReceiver();
+        registerReceiver(douYinBroadcastReceiver, douYinBroadcastReceiver.getIntentFilter());
     }
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
         if (intent != null) {
-            changDuanId = intent.getIntExtra(CHANG_DUAN_ID, -1);
+            int changDuanId = intent.getIntExtra(CHANG_DUAN_ID, -1);
             if (changDuanId > 0) {
-                init();
+                init(changDuanId);
             }
         }
         return super.onStartCommand(intent, flags, startId);
@@ -75,42 +74,39 @@ public class PinglunLifecycleService extends LifecycleService {
         return super.onUnbind(intent);
     }
 
-    private void init() {
-        if (this.changDuanInfo == null) {
+    private void init(int changDuanId) {
+        if (this.changDuanId != changDuanId) {
+            changCiList = null;
             pingLunService = new PingLunService();
             call = false;
-            return;
-        }
-        if (!this.changDuanInfo.getChangDuan().getId().equals(changDuanId)) {
-            this.changDuanInfo = null;
+            this.changDuanId = changDuanId;
+        } else if (changCiList == null) {
             pingLunService = new PingLunService();
             call = false;
         }
     }
 
-    private Observable<ChangDuanInfo> getChangDuanInfo() {
+    private Observable<ChangCiList> getChangCiList() {
         return Observable.create(emitter -> {
-            if (changDuanInfo == null) {
+            if (changCiList == null || changCiList.isEmpty()) {
                 emitter.onError(new NoSuchElementException("没有唱词"));
             } else {
-                emitter.onNext(changDuanInfo);
+                emitter.onNext(changCiList);
             }
         });
     }
 
-    private Observable<ChangDuanInfo> initChangDuanInfo(Integer changDuanId) {
+    private Observable<ChangCiList> initChangDuanInfo(Integer changDuanId) {
         ChangDuanInfoRepository changDuanInfoRepository = new ChangDuanInfoRepository();
         return changDuanInfoRepository.getChangDuanInfo(changDuanId).flatMap((Function<ChangDuanInfo,
-                ObservableSource<ChangDuanInfo>>) changDuanInfo -> {
-            this.changDuanInfo = changDuanInfo;
+                ObservableSource<ChangCiList>>) changDuanInfo -> {
             this.changCiList = changDuanInfo.getChangeCiList(0);
-            return getChangDuanInfo();
+            return getChangCiList();
         });
-
     }
 
     private boolean enablePinglun() {
-        return changDuanInfo != null && changCiList != null && changCiList.hasNext();
+        return changCiList != null && changCiList.hasNext();
     }
 
     private void pinglun(long currentMillis) {
@@ -130,8 +126,10 @@ public class PinglunLifecycleService extends LifecycleService {
     public void onDestroy() {
         super.onDestroy();
         call = false;
-        changDuanInfo = null;
         changCiList = null;
+        if (douYinBroadcastReceiver != null) {
+            unregisterReceiver(douYinBroadcastReceiver);
+        }
         if (pingLunService != null) {
             pingLunService.disable();
             pingLunService = null;
@@ -145,15 +143,15 @@ public class PinglunLifecycleService extends LifecycleService {
             pingLunService.run(changCi.getContent(), aBoolean -> {
                 if (enablePinglun()) {
                     pinglun();
-                } else sendPinglunBroadcast(false);
+                } else sendPinglunBroadcast();
             });
         }
     }
 
-    private void sendPinglunBroadcast(boolean b) {
+    private void sendPinglunBroadcast() {
         Intent intent = new Intent();
         intent.setAction(AppConstant.INTENT_FILTER_ACTION);
-        intent.putExtra("enable", b);
+        intent.putExtra("enable", false);
         sendBroadcast(intent);
     }
 
@@ -165,6 +163,24 @@ public class PinglunLifecycleService extends LifecycleService {
         sendBroadcast(intent);
     }
 
+    class DouYinBroadcastReceiver extends BroadcastReceiver {
+        public IntentFilter getIntentFilter() {
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(DouYinConstant.INTENT_DY_SERVICE_ACTION);
+            return intentFilter;
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(DouYinConstant.INTENT_DY_SERVICE_ACTION)) {
+                String action = intent.getStringExtra("action");
+                if ("run".equals(action)) {
+                    run();
+                }
+            }
+        }
+    }
+
     public static class PinglunBinder extends Binder {
         PinglunLifecycleService service;
 
@@ -172,11 +188,11 @@ public class PinglunLifecycleService extends LifecycleService {
             this.service = service;
         }
 
-        public Observable<ChangDuanInfo> load() {
-            if (service.changDuanInfo == null && service.changDuanId > 0) {
+        public Observable<ChangCiList> load() {
+            if (service.changCiList == null && service.changDuanId > 0) {
                 return service.initChangDuanInfo(service.changDuanId);
             }
-            return service.getChangDuanInfo();
+            return service.getChangCiList();
         }
 
         public Integer getCurrentPosition() {
@@ -186,14 +202,16 @@ public class PinglunLifecycleService extends LifecycleService {
 
         public void start(int position) {
             if (service.changCiList != null && !service.changCiList.isEmpty()) {
-                service.changDuanInfo.getChangeCiList(position);
+                service.changCiList.setCursor(position);
             }
             service.pinglun(PingLunService.CURRENT_MILLIS);
         }
 
         public void start() {
-            service.call = true;
-            service.pinglun();
+            if (!service.call) {
+                service.call = true;
+                service.pinglun();
+            }
         }
 
         public void pause() {
