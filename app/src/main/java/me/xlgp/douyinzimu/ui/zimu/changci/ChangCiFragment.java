@@ -65,10 +65,12 @@ public class ChangCiFragment extends Fragment {
         //观察唱词信息
         mViewModel.changCiList.observe(getViewLifecycleOwner(), changCiList -> {
             changCiAdapter.updateData(changCiList);
-            updateRecyclerView(changCiList.currentIndex());
-            updateTitleView(changCiList.current().getContent());
             binding.pingLunSwitchMaterial.setChecked(false);
-            binding.pingLunSwitchMaterial.setChecked(true);
+            if (changCiList.hasNext()) {
+                updateRecyclerView(changCiList.currentIndex());
+                updateTitleView(changCiList.current().getContent());
+                binding.pingLunSwitchMaterial.setChecked(true);
+            }
         });
     }
 

@@ -115,7 +115,6 @@ public class PinglunLifecycleService extends LifecycleService {
         }
     }
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -137,7 +136,9 @@ public class PinglunLifecycleService extends LifecycleService {
             pingLunService.run(changCi.getContent(), aBoolean -> {
                 if (enablePinglun()) {
                     pinglun();
-                } else sendPinglunBroadcast();
+                } else {
+                    sendPinglunBroadcast();
+                }
             });
         }
     }
