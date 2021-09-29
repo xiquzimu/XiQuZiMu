@@ -68,12 +68,6 @@ public class PinglunLifecycleService extends LifecycleService {
         return pinglunBinder;
     }
 
-    @Override
-    public boolean onUnbind(Intent intent) {
-        call = false;
-        return super.onUnbind(intent);
-    }
-
     private void init(int changDuanId) {
         if (this.changDuanId != changDuanId) {
             changCiList = null;
