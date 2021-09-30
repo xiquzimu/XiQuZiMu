@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">DouYinZiMu</string>
-    <string name="app_zh_name">抖音字幕</string>
-    <string name="accessibility_service_label">抖音字幕</string>
-    <string name="accessibility_service_description">开启辅助服务，用于快速地自动评论。\n\n提示：打开辅助功能时可能会收到系统的警示提醒。\n\n承诺：抖音字幕不会有侵害用户利益行为，不会收集用户任何信息，请放心开启。</string>
+    <string name="app_name">XiQuZiMu</string>
+    <string name="app_zh_name">戏曲字幕</string>
+    <string name="accessibility_service_label">戏曲字幕</string>
+    <string name="accessibility_service_description">开启辅助服务，用于快速地自动评论。\n\n提示：打开辅助功能时可能会收到系统的警示提醒。\n\n承诺：戏曲字幕不会有侵害用户利益行为，不会收集用户任何信息，请放心开启。</string>
     <string name="pinglunBtn">评论</string>
     <string name="pinglunSwitch">评论</string>
     <string name="pinglinList">列表</string>
@@ -24,9 +24,9 @@
     <string name="floatingTitle">悬浮窗口</string>
     <string name="fetchChangDuan">更新唱段</string>
     <string name="title_activity_nav_main">NavMainActivity</string>
-    <string name="title_home">Home</string>
+    <string name="title_home">首页</string>
     <string name="title_dashboard">列表</string>
     <string name="title_about">关于</string>
     <string name="searchEditTextHint">查询点什么...</string>
-    <string name="aboutApp">一款应用于抖音戏曲直播时自动发送字幕的软件</string>
+    <string name="aboutApp">一款应用于戏曲直播时自动发送字幕的软件</string>
 </resources>

@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="me.xlgp.douyinzimu.ui.home.HomeFragment"
+        android:name="me.xlgp.xiquzimu.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="me.xlgp.douyinzimu.ui.dashboard.DashboardFragment"
+        android:name="me.xlgp.xiquzimu.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
         android:id="@+id/navigation_about"
-        android:name="me.xlgp.douyinzimu.ui.about.AboutFragment"
+        android:name="me.xlgp.xiquzimu.ui.about.AboutFragment"
         android:label="@string/title_about"
         tools:layout="@layout/fragment_dashboard" />
 

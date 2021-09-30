@@ -40,7 +40,7 @@
             android:paddingEnd="10dp" />
     </LinearLayout>
 
-    <me.xlgp.douyinzimu.view.StringSearchRecyclerviewLayout
+    <me.xlgp.xiquzimu.view.StringSearchRecyclerviewLayout
         android:id="@+id/nameListSearchRecyclerviewLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -53,5 +53,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-    </me.xlgp.douyinzimu.view.StringSearchRecyclerviewLayout>
+    </me.xlgp.xiquzimu.view.StringSearchRecyclerviewLayout>
 </LinearLayout>

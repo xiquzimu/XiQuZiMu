@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="me.xlgp.douyinzimu">
+    package="me.xlgp.xiquzimu">
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".ZimuApplication"
+        android:name="me.xlgp.xiquzimu.ZimuApplication"
         android:allowBackup="false"
         android:debuggable="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_zh_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.DouYinZiMu"
+        android:theme="@style/Theme.XiQuZiMu"
         tools:ignore="HardcodedDebugMode">
         <activity
-            android:name=".ui.fetchlist.ListActivity"
+            android:name="me.xlgp.xiquzimu.ui.fetchlist.ListActivity"
             android:exported="true" />
         <activity
-            android:name=".ui.main.NavMainActivity"
-            android:theme="@style/Theme.DouYinZiMu.StartWindowTheme"
+            android:name="me.xlgp.xiquzimu.ui.main.NavMainActivity"
+            android:theme="@style/Theme.XiQuZiMu.StartWindowTheme"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,10 +31,10 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.FloatingService" />
-        <service android:name=".service.PinglunLifecycleService"/>
+        <service android:name="me.xlgp.xiquzimu.service.FloatingService" />
+        <service android:name="me.xlgp.xiquzimu.service.PinglunLifecycleService"/>
         <service
-            android:name=".service.DouYinAccessibilityService"
+            android:name="me.xlgp.xiquzimu.service.DouYinAccessibilityService"
             android:exported="false"
             android:label="@string/accessibility_service_label"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
