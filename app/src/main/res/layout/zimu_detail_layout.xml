@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.zimu.changci.ChangCiFragment"
-    android:theme="@style/Theme.DouYinZiMu">
+    android:theme="@style/Theme.XiQuZiMu">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
