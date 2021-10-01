@@ -14,7 +14,7 @@ public class NavMainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.Theme_DouYinZiMu);
+        setTheme(R.style.Theme_XiQuZiMu);
         super.onCreate(savedInstanceState);
 
         ActivityNavMainBinding binding = ActivityNavMainBinding.inflate(getLayoutInflater());
