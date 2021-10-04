@@ -3,10 +3,7 @@ package me.xlgp.xiquzimu.ui.dashboard;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.github.promeg.pinyinhelper.Pinyin;
-
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -19,6 +16,7 @@ import me.xlgp.xiquzimu.data.FetchRemoteRepository;
 import me.xlgp.xiquzimu.designpatterns.ObserverHelper;
 import me.xlgp.xiquzimu.model.ChangDuan;
 import me.xlgp.xiquzimu.util.ChangDuanHelper;
+import me.xlgp.xiquzimu.util.PinYinHelper;
 
 public class ChangDuanViewModel extends ViewModel {
 
@@ -33,9 +31,10 @@ public class ChangDuanViewModel extends ViewModel {
         return changduanList;
     }
 
+
     public void loadChangDuanList() {
         new ChangDuanRepository().list().subscribe(changDuanList -> {
-            changDuanList.sort(Comparator.comparing(o -> Pinyin.toPinyin(o.getJuMu().charAt(0))));
+            PinYinHelper.sortByPYAndName(changDuanList);
             changduanList.postValue(changDuanList);
         }, throwable -> changduanList.postValue(new ArrayList<>()));
     }

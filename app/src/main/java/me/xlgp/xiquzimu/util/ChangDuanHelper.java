@@ -2,6 +2,7 @@ package me.xlgp.xiquzimu.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -12,11 +13,28 @@ import java.util.regex.Pattern;
 import me.xlgp.xiquzimu.EmojiManager;
 import me.xlgp.xiquzimu.constant.LycConstant;
 import me.xlgp.xiquzimu.model.ChangCi;
-import me.xlgp.xiquzimu.model.ChangDuan;
 import me.xlgp.xiquzimu.model.ChangCiList;
+import me.xlgp.xiquzimu.model.ChangDuan;
 import me.xlgp.xiquzimu.model.ChangDuanInfo;
+import me.xlgp.xiquzimu.params.LeftChangDuan;
 
 public class ChangDuanHelper {
+
+    public static List<LeftChangDuan> setChangDuan(List<ChangDuan> list) {
+        List<LeftChangDuan> leftchangDuanList = new ArrayList<>();
+        String name = "";
+        for (int i = 0; i < list.size(); i++) {
+            ChangDuan changDuan = list.get(i);
+            if (!name.equals(changDuan.getJuMu())) {
+                LeftChangDuan leftchangDuan = new LeftChangDuan();
+                leftchangDuan.setName(changDuan.getJuMu());
+                leftchangDuan.setId(i);
+                name = changDuan.getJuMu();
+                leftchangDuanList.add(leftchangDuan);
+            }
+        }
+        return leftchangDuanList;
+    }
 
     /**
      * 添加字幕前后缀

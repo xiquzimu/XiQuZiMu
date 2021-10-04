@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="me.xlgp.xiquzimu.ui.dashboard.DashboardFragment"
+        android:name="me.xlgp.xiquzimu.ui.tablist.TabListFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
