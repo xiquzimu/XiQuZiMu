@@ -19,7 +19,7 @@ import me.xlgp.xiquzimu.listener.OnSwitchFragmentListener;
 import me.xlgp.xiquzimu.model.ChangDuan;
 import me.xlgp.xiquzimu.service.PinglunLifecycleService;
 import me.xlgp.xiquzimu.ui.zimu.changci.ChangCiFragment;
-import me.xlgp.xiquzimu.ui.zimu.changduan.ChangDuanFragment;
+import me.xlgp.xiquzimu.ui.zimu.changduan.ChangDuanTabListFragment;
 
 public class ZimuMainFragment extends Fragment {
 
@@ -87,7 +87,7 @@ public class ZimuMainFragment extends Fragment {
         public Fragment createFragment(int position) {
             if (fragments[position] == null) {
                 if (position == names.length - 1) fragments[position] = createChangCiFragment();
-                else fragments[position] = new ChangDuanFragment(names[position]);
+                else fragments[position] = new ChangDuanTabListFragment(names[position]);
             }
             return fragments[position];
         }

@@ -1,9 +1,12 @@
 package me.xlgp.xiquzimu.ui.tablist;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+
+import com.github.promeg.pinyinhelper.Pinyin;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -31,10 +34,16 @@ public class LeftAdapter extends BaseAdapter<LeftChangDuan> {
             itemView.setOnClickListener(v -> onItemClickListener.onItemClick(itemView, itemView, data, getAdapterPosition()));
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         public void setData(LeftChangDuan data) {
             super.setData(data);
-            binding.textView5.setText(data.getName());
+            char letter = '#';
+            try {
+                letter = Pinyin.toPinyin(data.getName().charAt(0)).charAt(0);
+            } catch (Exception ignored) {
+            }
+            binding.textView5.setText(" " + letter + " " + data.getName());
         }
     }
 }
