@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import me.xlgp.xiquzimu.adapter.BaseAdapter;
 import me.xlgp.xiquzimu.databinding.ChangDuanFragmentBinding;
 import me.xlgp.xiquzimu.model.ChangDuan;
-import me.xlgp.xiquzimu.ui.zimu.ZimuViewModel;
 import me.xlgp.xiquzimu.ui.zimu.main.ZimuMainFragment;
 
 public class ChangDuanFragment extends Fragment {
@@ -57,7 +56,6 @@ public class ChangDuanFragment extends Fragment {
 
     private BaseAdapter.OnItemClickListener<ChangDuan> getOnItemClickListener() {
         return (itemView, view, data, position) -> {
-            ZimuViewModel.getChangDuan().postValue(data);
             ZimuMainFragment fragment = (ZimuMainFragment) getParentFragment();
             if (fragment != null) {
                 fragment.setOnSwitchFragmentListener((viewPager2, index) -> viewPager2.setCurrentItem(index, true));
