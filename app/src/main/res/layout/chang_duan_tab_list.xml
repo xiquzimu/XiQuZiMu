@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.zimu.changduan.ChangDuanTabListFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/zimu_list_SwipeRefreshLayout"
         android:layout_width="match_parent"

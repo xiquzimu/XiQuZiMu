@@ -22,7 +22,6 @@ import me.xlgp.xiquzimu.service.FloatingService;
 
 public class FloatingToolBarFragment extends Fragment {
 
-    private FloatingToolBarViewModel mViewModel;
     private FloatingToolBarFragmentBinding binding;
     private String title;
     private boolean isShou = true;
