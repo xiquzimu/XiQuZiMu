@@ -43,7 +43,7 @@ public class ChangDuanHelper {
         ChangCi preChangCi = new ChangCi();
         preChangCi.setDelayMillis(1000);
         preChangCi.setShowTime(formatDate("00:00.00", 1000));
-        preChangCi.setContent(EmojiManager.SMALL_BLUE_DIAMOND + "请欣赏" + changDuan.getJuZhong() + "《" + changDuan.getJuMu() + "》" + "选段：" + changDuan.getName());
+        preChangCi.setContent(EmojiManager.SMALL_BLUE_DIAMOND + "请欣赏" + EmojiManager.SPARKLES + changDuan.getJuZhong() + "《" + changDuan.getJuMu() + "》" + "选段：" + changDuan.getName());
         changCiList.add(preChangCi);
     }
 
@@ -62,14 +62,16 @@ public class ChangDuanHelper {
 
     private static void addAfterChangCi(ChangDuan changDuan, ChangCiList changCiList) {
         ChangCi afterChangCi = new ChangCi();
-        afterChangCi.setDelayMillis(7000);
-        afterChangCi.setShowTime(formatDate(changCiList.get(changCiList.size() - 1).getShowTime(), 5000));
+        long afterDelayMillis = 7000;
+        afterChangCi.setDelayMillis(afterDelayMillis);
+        afterChangCi.setShowTime(formatDate(changCiList.get(changCiList.size() - 1).getShowTime(), afterDelayMillis));
         afterChangCi.setContent(EmojiManager.SMALL_BLUE_DIAMOND + "本曲出自" + changDuan.getJuZhong() + "《" + changDuan.getJuMu() + "》选段：" + changDuan.getName());
         changCiList.add(afterChangCi);
 
         ChangCi thankChangCi = new ChangCi();
-        thankChangCi.setDelayMillis(3000);
-        thankChangCi.setShowTime(formatDate(changCiList.get(changCiList.size() - 1).getShowTime(), 2000));
+        long thankDelayMillis = 3000;
+        thankChangCi.setDelayMillis(thankDelayMillis);
+        thankChangCi.setShowTime(formatDate(changCiList.get(changCiList.size() - 1).getShowTime(), thankDelayMillis));
         thankChangCi.setContent(EmojiManager.SMALL_BLUE_DIAMOND + "谢谢各位聆听");
         changCiList.add(thankChangCi);
     }
