@@ -12,13 +12,18 @@ public class PingLunService {
     //标记是否按当前唱词间隔时间
     public static Integer CURRENT_MILLIS = 0;
 
-    //todo 此处应该重构
-    private long count = 0; //记录线程数量，用于判断即将执行的线程是不是当前应当执行的线程
+    private final Handler handler;
+
+    private Runnable runnable;
+
+    public PingLunService(){
+        handler = new Handler(Looper.getMainLooper());
+    }
 
     public void start(long delayMillis) {
-        if (count < 0)return;
-        count++;
-        new Handler(Looper.getMainLooper()).postDelayed(new PinglunRunnable(count), delayMillis);
+        handler.removeCallbacks(runnable);
+        runnable = new PinglunRunnable();
+        handler.postDelayed(runnable, delayMillis);
     }
 
     public void run(CharSequence content, Callback<Boolean> callback) {
@@ -30,22 +35,15 @@ public class PingLunService {
     }
 
     public void disable() {
-        count = -1;
+        handler.removeCallbacks(runnable);
     }
 
-    class PinglunRunnable implements Runnable {
-        long count;
-
-        public PinglunRunnable(long count) {
-            this.count = count;
-        }
+    static class PinglunRunnable implements Runnable {
 
         @Override
         public void run() {
             try {
-                if (count == PingLunService.this.count) {
-                    PingLunHelper.openInputLayout(DouYinAccessibilityService.getInstance());
-                }
+                PingLunHelper.openInputLayout(DouYinAccessibilityService.getInstance());
             } catch (Exception e) {
                 Log.e("TAG", "run: ", e);
             }

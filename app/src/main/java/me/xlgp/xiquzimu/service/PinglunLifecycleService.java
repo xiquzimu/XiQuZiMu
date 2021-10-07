@@ -211,6 +211,7 @@ public class PinglunLifecycleService extends LifecycleService {
 
         public void pause() {
             service.call = false;
+            service.pingLunService.disable();
         }
     }
 }
