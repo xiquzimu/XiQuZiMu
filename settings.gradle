@@ -1,3 +1,2 @@
-rootProject.name = "DouYinZiMu"
+rootProject.name = "XiQuZiMu"
 include ':app'
-include ':app:lib'
