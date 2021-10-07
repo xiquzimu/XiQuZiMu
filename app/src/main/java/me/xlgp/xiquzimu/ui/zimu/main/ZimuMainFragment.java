@@ -15,7 +15,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import me.xlgp.xiquzimu.databinding.ZimuMainFragmentBinding;
-import me.xlgp.xiquzimu.listener.OnSwitchFragmentListener;
 import me.xlgp.xiquzimu.model.ChangDuan;
 import me.xlgp.xiquzimu.service.PinglunLifecycleService;
 import me.xlgp.xiquzimu.ui.zimu.changci.ChangCiFragment;
@@ -24,7 +23,6 @@ import me.xlgp.xiquzimu.ui.zimu.changduan.ChangDuanTabListFragment;
 public class ZimuMainFragment extends Fragment {
 
     private ZimuMainFragmentBinding binding;
-    private OnSwitchFragmentListener onSwitchFragmentListener;
     String[] names = new String[]{"黄梅戏", "越剧", "歌曲", "小调", "唱词"};
     private Intent intent = null;
 
@@ -32,17 +30,11 @@ public class ZimuMainFragment extends Fragment {
         return new ZimuMainFragment();
     }
 
-    public void setOnSwitchFragmentListener(OnSwitchFragmentListener onSwitchFragmentListener) {
-        this.onSwitchFragmentListener = onSwitchFragmentListener;
-    }
-
     public void forSkip(ChangDuan changDuan) {
-        if (onSwitchFragmentListener != null) {
-            intent = new Intent(requireContext(), PinglunLifecycleService.class);
-            intent.putExtra(PinglunLifecycleService.CHANG_DUAN_ID, changDuan.getId());
-            requireContext().startService(intent);
-            onSwitchFragmentListener.onSwitch(binding.zimuViewpager2, names.length - 1);
-        }
+        intent = new Intent(requireContext(), PinglunLifecycleService.class);
+        intent.putExtra(PinglunLifecycleService.CHANG_DUAN_ID, changDuan.getId());
+        requireContext().startService(intent);
+        binding.zimuViewpager2.setCurrentItem(names.length - 1, true);
     }
 
     @Nullable

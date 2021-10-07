@@ -79,7 +79,6 @@ public class ChangDuanTabListFragment extends Fragment {
         return (itemView, view, data, position) -> {
             ZimuMainFragment fragment = (ZimuMainFragment) getParentFragment();
             if (fragment != null) {
-                fragment.setOnSwitchFragmentListener((viewPager2, index) -> viewPager2.setCurrentItem(index, true));
                 fragment.forSkip(data);
             }
         };
