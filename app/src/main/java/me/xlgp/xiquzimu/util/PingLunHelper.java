@@ -48,8 +48,18 @@ public class PingLunHelper {
      * 获取发送按钮
      */
     private static AccessibilityNodeInfo getSendNodeByInputNode(AccessibilityNodeInfo rootNodeInfo) throws Exception {
-        AccessibilityNodeInfo node = rootNodeInfo.getParent().getParent().getParent().getChild(2);
-        if (isSendAccessibilityNodeInfo(node)) return node;
+        AccessibilityNodeInfo node = null;
+        try {
+            node = rootNodeInfo.getParent().getParent().getParent();
+            //douyin v17.9.0
+            if (isSendAccessibilityNodeInfo(node.getChild(1))) return node.getChild(1);
+            //douyin <= 17.8.0
+            if (isSendAccessibilityNodeInfo(node.getChild(2))) return node.getChild(2);
+        } catch (Exception e) {
+            throw new NotFoundNodeException("没有找到发送按钮");
+        } finally {
+            if (node != null) node.recycle();
+        }
         throw new NotFoundNodeException("没有找到发送按钮");
     }
 
@@ -61,20 +71,20 @@ public class PingLunHelper {
      * @param callback 回调
      */
     public static void input(AccessibilityService service, CharSequence content, Callback<Boolean> callback) {
-        if (service == null){
+        if (service == null) {
             callback.call(false);
             return;
         }
-        AccessibilityNodeInfo node = null;
+        AccessibilityNodeInfo inputNode = null;
 
         try {
-            node = service.getRootInActiveWindow().findFocus(AccessibilityNodeInfo.FOCUS_INPUT);
+            inputNode = service.getRootInActiveWindow().findFocus(AccessibilityNodeInfo.FOCUS_INPUT);
             //输入数据
             Bundle arguments = new Bundle();
             arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, content);
-            boolean setTextSuccess = Objects.requireNonNull(node).performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
+            boolean setTextSuccess = Objects.requireNonNull(inputNode).performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
             if (setTextSuccess) {
-                boolean sendSuccess = getSendNodeByInputNode(node).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                boolean sendSuccess = getSendNodeByInputNode(inputNode).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 if (sendSuccess) { //发送成功之后，回调
                     callback.call(true);
                 } else {
@@ -87,7 +97,7 @@ public class PingLunHelper {
             e.printStackTrace();
             callback.call(false);
         } finally {
-            if (node != null) node.recycle();
+            if (inputNode != null) inputNode.recycle();
         }
     }
 
