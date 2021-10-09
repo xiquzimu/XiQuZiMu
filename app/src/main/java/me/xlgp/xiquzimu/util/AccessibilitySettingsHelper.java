@@ -1,50 +1,43 @@
 package me.xlgp.xiquzimu.util;
 
-import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.Context;
-import android.view.accessibility.AccessibilityManager;
-import android.widget.Toast;
-
-import java.util.List;
+import android.provider.Settings;
+import android.text.TextUtils;
+import android.util.Log;
 
 import me.xlgp.xiquzimu.service.DouYinAccessibilityService;
 
 public class AccessibilitySettingsHelper {
 
+    public static boolean isEnabled(Context context){
+        return findBySettingsSecure(context);
+    }
+
     /**
-     * 是否可用，true:表示服务启动，可以使用
-     *
+     *     是否可用，true:表示服务启动，可以使用
      * @param context context
-     * @return bool
+     * @return
      */
-    public static boolean isEnabled(Context context) {
-        String serviceClassName = DouYinAccessibilityService.class.getName();
-        AccessibilityManager manager = (AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
-        if (!manager.isEnabled()) {
-            return false;
-        }
-        List<AccessibilityServiceInfo> enabledServiceList =
-                manager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_HAPTIC);
-        List<AccessibilityServiceInfo> installedServiceList = manager.getInstalledAccessibilityServiceList();
+    private static boolean findBySettingsSecure(Context context){
+        int ok = 0;
         try {
-            if (enabledServiceList == null || enabledServiceList.isEmpty()) return false;
-            for (AccessibilityServiceInfo service : enabledServiceList) {
-                if (serviceClassName.equals(service.getResolveInfo().serviceInfo.name)) {
-                    return true;
+            ok = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.ACCESSIBILITY_ENABLED);
+        } catch (Settings.SettingNotFoundException e) {
+            Log.e("TAG", "findBySettingsSecure: ", e);
+        }
+
+        TextUtils.SimpleStringSplitter ms = new TextUtils.SimpleStringSplitter(':');
+        if (ok == 1) {
+            String settingValue = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+            if (settingValue != null) {
+                ms.setString(settingValue);
+                while (ms.hasNext()) {
+                    String accessibilityService = ms.next();
+                    if (accessibilityService.contains(DouYinAccessibilityService.class.getName())) {
+                        return true;
+                    }
                 }
             }
-            boolean isExist = false;
-            for (AccessibilityServiceInfo service : installedServiceList) {
-                if (serviceClassName.equals(service.getResolveInfo().serviceInfo.name)) {
-                    isExist = true;
-                    break;
-                }
-            }
-            if (!isExist) {
-                Toast.makeText(context, "系统查询不到辅助服务", Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            Toast.makeText(context, "辅助服务异常", Toast.LENGTH_SHORT).show();
         }
         return false;
     }
