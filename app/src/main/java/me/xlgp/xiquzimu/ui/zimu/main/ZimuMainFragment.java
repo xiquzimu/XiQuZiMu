@@ -15,16 +15,17 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import me.xlgp.xiquzimu.databinding.ZimuMainFragmentBinding;
+import me.xlgp.xiquzimu.listener.OnFragmentChangeListener;
 import me.xlgp.xiquzimu.model.ChangDuan;
 import me.xlgp.xiquzimu.service.PinglunLifecycleService;
-import me.xlgp.xiquzimu.ui.zimu.changci.ChangCiFragment;
 import me.xlgp.xiquzimu.ui.zimu.changduan.ChangDuanTabListFragment;
 
 public class ZimuMainFragment extends Fragment {
 
     private ZimuMainFragmentBinding binding;
-    String[] names = new String[]{"黄梅戏", "越剧", "歌曲", "小调", "唱词"};
+    String[] names = new String[]{"黄梅戏", "越剧", "歌曲", "小调"};
     private Intent intent = null;
+    private OnFragmentChangeListener onFragmentChangeListener;
 
     public static ZimuMainFragment newInstance() {
         return new ZimuMainFragment();
@@ -34,7 +35,7 @@ public class ZimuMainFragment extends Fragment {
         intent = new Intent(requireContext(), PinglunLifecycleService.class);
         intent.putExtra(PinglunLifecycleService.CHANG_DUAN_ID, changDuan.getId());
         requireContext().startService(intent);
-        binding.zimuViewpager2.setCurrentItem(names.length - 1, true);
+        onFragmentChangeListener.onChange(true);
     }
 
     @Nullable
@@ -65,6 +66,10 @@ public class ZimuMainFragment extends Fragment {
                 (tab, position) -> tab.setText(names[position])).attach();
     }
 
+    public void setOnFragmentChangeListener(OnFragmentChangeListener onFragmentChangeListener) {
+        this.onFragmentChangeListener = onFragmentChangeListener;
+    }
+
     class ZimuMainStateAdapter extends FragmentStateAdapter {
 
         private final Fragment[] fragments;
@@ -78,14 +83,9 @@ public class ZimuMainFragment extends Fragment {
         @Override
         public Fragment createFragment(int position) {
             if (fragments[position] == null) {
-                if (position == names.length - 1) fragments[position] = createChangCiFragment();
-                else fragments[position] = new ChangDuanTabListFragment(names[position]);
+                fragments[position] = new ChangDuanTabListFragment(names[position]);
             }
             return fragments[position];
-        }
-
-        private Fragment createChangCiFragment() {
-            return ChangCiFragment.newInstance();
         }
 
         @Override

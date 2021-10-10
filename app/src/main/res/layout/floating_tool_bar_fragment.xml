@@ -13,24 +13,48 @@
         android:background="@color/touming_btn"
         android:src="@drawable/ic_baseline_close_24"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/titleBtn"
+        app:layout_constraintEnd_toStartOf="@+id/centerLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="TouchTargetSizeCheck"
         android:contentDescription="@string/closeFloating" />
 
-    <Button
-        android:id="@+id/titleBtn"
+    <LinearLayout
+        android:id="@+id/centerLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/touming_btn"
-        android:text="@string/floatingTitle"
-        android:textColor="#fff"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/kaiOrShouBtn"
+        app:layout_constraintEnd_toStartOf="@id/kaiOrShouBtn"
         app:layout_constraintStart_toEndOf="@+id/closeFloatingBtn"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        android:background="@color/touming_btn"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/changduanBtn"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:text="@string/changduan_tab_item"
+            android:textColor="#fff" />
+
+        <Button
+            android:id="@+id/changciBtn"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="@string/changci_tab_item"
+            android:textColor="#fff" />
+
+        <Button
+            android:id="@+id/titleBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/floatingTitle"
+            android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
+            android:textColor="#fff" />
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/kaiOrShouBtn"
@@ -40,7 +64,7 @@
         android:src="@drawable/ic_baseline_arrow_drop_up_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/titleBtn"
+        app:layout_constraintStart_toEndOf="@id/centerLayout"
         app:layout_constraintTop_toTopOf="parent"
         android:contentDescription="@string/kaiOrShoue" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,6 +17,7 @@ import me.xlgp.xiquzimu.R;
 import me.xlgp.xiquzimu.databinding.FloatingToolBarFragmentBinding;
 import me.xlgp.xiquzimu.listener.FloatingMoveListener;
 import me.xlgp.xiquzimu.listener.OnDoubleClickListener;
+import me.xlgp.xiquzimu.listener.OnFragmentChangeListener;
 import me.xlgp.xiquzimu.service.DianZanService;
 import me.xlgp.xiquzimu.service.FloatingService;
 
@@ -27,6 +28,7 @@ public class FloatingToolBarFragment extends Fragment {
     private boolean isShou = true;
     private Integer shouHeight = 0;
     private LinearLayout rootLayout;
+    private OnFragmentChangeListener onFragmentChangeListener;
 
     public static FloatingToolBarFragment newInstance() {
         return new FloatingToolBarFragment();
@@ -97,6 +99,21 @@ public class FloatingToolBarFragment extends Fragment {
             FloatingService service = (FloatingService) requireContext();
             service.stop();
         });
+
+        binding.changciBtn.setOnClickListener(v -> {
+            if (onFragmentChangeListener != null) {
+                onFragmentChangeListener.onChange(true);
+            }
+        });
+        binding.changduanBtn.setOnClickListener(v -> {
+            if (onFragmentChangeListener != null) {
+                onFragmentChangeListener.onChange(false);
+            }
+        });
+    }
+
+    public void setOnFragmentChangeListener(OnFragmentChangeListener onFragmentChangeListener) {
+        this.onFragmentChangeListener = onFragmentChangeListener;
     }
 
     public static class Factory {

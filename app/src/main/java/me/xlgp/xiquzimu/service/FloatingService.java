@@ -21,6 +21,7 @@ import me.xlgp.xiquzimu.R;
 import me.xlgp.xiquzimu.obj.ZWindowManager;
 import me.xlgp.xiquzimu.obj.ZimuLayoutParams;
 import me.xlgp.xiquzimu.ui.floating.toolbar.FloatingToolBarFragment;
+import me.xlgp.xiquzimu.ui.zimu.changci.ChangCiFragment;
 import me.xlgp.xiquzimu.ui.zimu.main.ZimuMainFragment;
 
 public class FloatingService extends LifecycleService {
@@ -60,9 +61,25 @@ public class FloatingService extends LifecycleService {
 
     void addFragment() {
 
+        ChangCiFragment changCiFragment = ChangCiFragment.newInstance();
+        ZimuMainFragment zimuMainFragment = ZimuMainFragment.newInstance();
+        FloatingToolBarFragment floatingToolBarFragment = FloatingToolBarFragment.Factory.create();
+
+        floatingToolBarFragment.setOnFragmentChangeListener(change -> {
+            if (change) {
+                mFragments.getSupportFragmentManager().beginTransaction().detach(zimuMainFragment).attach(changCiFragment).commit();
+            } else {
+                mFragments.getSupportFragmentManager().beginTransaction().detach(changCiFragment).attach(zimuMainFragment).commit();
+            }
+        });
+
+        zimuMainFragment.setOnFragmentChangeListener(change -> mFragments.getSupportFragmentManager().beginTransaction().detach(zimuMainFragment).attach(changCiFragment).commit());
+
         mFragments.getSupportFragmentManager().beginTransaction()
-                .add(R.id.floatingToolBar, FloatingToolBarFragment.Factory.create())
-                .add(R.id.floatingContainer, ZimuMainFragment.newInstance()).runOnCommit(() -> rootView.setVisibility(View.VISIBLE)).commit();
+                .add(R.id.floatingToolBar, floatingToolBarFragment)
+                .add(R.id.floatingContainer, zimuMainFragment)
+                .add(R.id.floatingChangciContainer, changCiFragment).detach(changCiFragment)
+                .runOnCommit(() -> rootView.setVisibility(View.VISIBLE)).commit();
     }
 
 

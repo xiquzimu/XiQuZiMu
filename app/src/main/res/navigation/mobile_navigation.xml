@@ -21,6 +21,6 @@
         android:id="@+id/navigation_about"
         android:name="me.xlgp.xiquzimu.ui.about.AboutFragment"
         android:label="@string/title_about"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_about" />
 
 </navigation>
