@@ -29,6 +29,9 @@ public class FloatingService extends LifecycleService {
     final FragmentController mFragments = FragmentController.createController(new FloatingHostCallbacks());
     private View rootView;
 
+    private ChangCiFragment changCiFragment = null;
+    private ZimuMainFragment zimuMainFragment = null;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -59,21 +62,23 @@ public class FloatingService extends LifecycleService {
         return rootView;
     }
 
+    private void changeFragment(boolean changciEnable) {
+        if (changciEnable) {
+            mFragments.getSupportFragmentManager().beginTransaction().detach(zimuMainFragment).attach(changCiFragment).commit();
+        } else {
+            mFragments.getSupportFragmentManager().beginTransaction().detach(changCiFragment).attach(zimuMainFragment).commit();
+        }
+    }
+
     void addFragment() {
 
-        ChangCiFragment changCiFragment = ChangCiFragment.newInstance();
-        ZimuMainFragment zimuMainFragment = ZimuMainFragment.newInstance();
-        FloatingToolBarFragment floatingToolBarFragment = FloatingToolBarFragment.Factory.create();
+        changCiFragment = ChangCiFragment.newInstance();
+        zimuMainFragment = ZimuMainFragment.newInstance();
+        FloatingToolBarFragment floatingToolBarFragment = FloatingToolBarFragment.newInstance();
 
-        floatingToolBarFragment.setOnFragmentChangeListener(change -> {
-            if (change) {
-                mFragments.getSupportFragmentManager().beginTransaction().detach(zimuMainFragment).attach(changCiFragment).commit();
-            } else {
-                mFragments.getSupportFragmentManager().beginTransaction().detach(changCiFragment).attach(zimuMainFragment).commit();
-            }
-        });
+        floatingToolBarFragment.setOnFragmentChangeListener(this::changeFragment);
 
-        zimuMainFragment.setOnFragmentChangeListener(change -> mFragments.getSupportFragmentManager().beginTransaction().detach(zimuMainFragment).attach(changCiFragment).commit());
+        zimuMainFragment.setOnFragmentChangeListener(change -> changeFragment(true));
 
         mFragments.getSupportFragmentManager().beginTransaction()
                 .add(R.id.floatingToolBar, floatingToolBarFragment)
