@@ -115,12 +115,4 @@ public class FloatingToolBarFragment extends Fragment {
     public void setOnFragmentChangeListener(OnFragmentChangeListener onFragmentChangeListener) {
         this.onFragmentChangeListener = onFragmentChangeListener;
     }
-
-    public static class Factory {
-        public static FloatingToolBarFragment create() {
-            FloatingToolBarFragment floatingToolBarFragment = FloatingToolBarFragment.newInstance();
-            floatingToolBarFragment.setPanelTitle("唱段列表");
-            return floatingToolBarFragment;
-        }
-    }
 }
