@@ -155,12 +155,21 @@ public class ChangCiFragment extends Fragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String content = intent.getStringExtra("content");
-            int position = intent.getIntExtra("position", 0);
-            boolean enable = intent.getBooleanExtra("enable", true);
-            if (!enable) binding.pingLunSwitchMaterial.setChecked(false);
-            updateRecyclerView(position);
-            updateTitleView(content);
+            String action = intent.getStringExtra("action");
+
+            if (AppConstant.BROADCAST_ACTION_DONE.equals(action)) {
+                //发送完毕
+                boolean enable = intent.getBooleanExtra("enable", true);
+                if (!enable) binding.pingLunSwitchMaterial.setChecked(false);
+
+            } else if (AppConstant.BROADCAST_ACTION_START.equals(action)) {
+                //开发发送
+                String content = intent.getStringExtra("content");
+                int position = intent.getIntExtra("position", -1);
+                updateRecyclerView(position);
+                changCiAdapter.hightLightItem(position);
+                updateTitleView(content);
+            }
         }
     }
 

@@ -136,23 +136,26 @@ public class PinglunLifecycleService extends LifecycleService {
             pingLunService.run(changCi.getContent(), aBoolean -> {
                 if (enablePinglun()) {
                     pinglun();
+                    sendPinglunBroadcast(true);
                 } else {
-                    sendPinglunBroadcast();
+                    sendPinglunBroadcast(false);
                 }
             });
         }
     }
 
-    private void sendPinglunBroadcast() {
+    private void sendPinglunBroadcast(boolean enable) {
         Intent intent = new Intent();
         intent.setAction(AppConstant.INTENT_FILTER_ACTION);
-        intent.putExtra("enable", false);
+        intent.putExtra("action", AppConstant.BROADCAST_ACTION_DONE);
+        intent.putExtra("enable", enable);
         sendBroadcast(intent);
     }
 
     private void sendPinglunBroadcast(ChangCi changCi) {
         Intent intent = new Intent();
         intent.setAction(AppConstant.INTENT_FILTER_ACTION);
+        intent.putExtra("action", AppConstant.BROADCAST_ACTION_START);
         intent.putExtra("content", changCi.getContent());
         intent.putExtra("position", pinglunBinder.getCurrentPosition());
         sendBroadcast(intent);
