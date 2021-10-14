@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
+import java.util.List;
+
 import me.xlgp.xiquzimu.R;
 import me.xlgp.xiquzimu.adapter.BaseAdapter;
 import me.xlgp.xiquzimu.databinding.ZimuDetailItemLayoutBinding;
@@ -18,6 +20,8 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
     private int mHighLightPosition = 0;
     private int preHighLightPosition = -1;
 
+    private final static String REMOVE_PROGRESS = "remove_item_progress";
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -27,9 +31,16 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
     @Override
     public void onBindViewHolder(@NonNull BaseAdapter.ViewHolder<ChangCi> holder, int position) {
         super.onBindViewHolder(holder, position);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull BaseAdapter.ViewHolder<ChangCi> holder, int position, @NonNull List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
         try {
             ViewHolder viewHolder = ((ViewHolder) holder);
-            if (!isHighLight(position)) {
+            if (!payloads.isEmpty() && payloads.contains(REMOVE_PROGRESS)){
+                viewHolder.removeProgress();
+            }else if (!isHighLight(position)) {
                 viewHolder.removeProgress();
             } else if (isHighLight(position)) {
                 viewHolder.startProgress();
@@ -38,12 +49,18 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     public void hightLightItem(int position) {   // 外部调用 adapter 中这个办法，用于设置要高亮显示的位置，并调用重绘特定 position
         mHighLightPosition = position;
-        notifyItemChanged(preHighLightPosition);
-        notifyItemChanged(position);
+        notifyItemChanged(preHighLightPosition,0);
+        notifyItemChanged(position,1);
+    }
+
+    public void clearLightItem(){
+        notifyItemChanged(preHighLightPosition, REMOVE_PROGRESS);
+        preHighLightPosition = -1;
     }
 
     private boolean isHighLight(int position) {  // 在 onBindViewHolder 中调用 用于判断当前是否需要高亮显示
@@ -57,26 +74,11 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
         private long delay = 1000;
         private final long delayMillis = 100;
 
-        private final Runnable runnable = new Runnable() {
-            private int current = 0;
-
-            @Override
-            public void run() {
-                if (binding == null) {
-                    removeProgress();
-                    return;
-                }
-                binding.progressBar.setProgress(current += delayMillis);
-                if (current >= delay) {
-                    removeProgress();
-                } else {
-                    handler.postDelayed(this, delayMillis);
-                }
-            }
-        };
+        private Runnable runnable = null;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            runnable = new ProgressRunnable();
             binding = ZimuDetailItemLayoutBinding.bind(itemView);
             binding.itemLayout.setOnClickListener(v -> {
                 // 设置当前唱词
@@ -103,8 +105,26 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
         }
 
         public void startProgress() {
-            binding.progressBar.setProgress(0);
+            runnable = new ProgressRunnable();
             handler.postDelayed(runnable, delayMillis);
+        }
+
+        class ProgressRunnable implements Runnable {
+            private int current = 0;
+
+            @Override
+            public void run() {
+                if (binding == null) {
+                    removeProgress();
+                    return;
+                }
+                binding.progressBar.setProgress(current += delayMillis);
+                if (current >= delay) {
+                    removeProgress();
+                } else {
+                    handler.postDelayed(this, delayMillis);
+                }
+            }
         }
     }
 }

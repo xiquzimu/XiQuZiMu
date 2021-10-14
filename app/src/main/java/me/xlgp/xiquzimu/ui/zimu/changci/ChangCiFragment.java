@@ -83,8 +83,14 @@ public class ChangCiFragment extends Fragment {
     private CompoundButton.OnCheckedChangeListener getOnCheckedChangeListener() {
         return (buttonView, isChecked) -> {
             if (pinglunBinder != null) {
-                if (isChecked) pinglunBinder.start();
-                else pinglunBinder.pause();
+                if (isChecked) {
+                    pinglunBinder.start();
+                    changCiAdapter.hightLightItem(pinglunBinder.getCurrentPosition());
+                }
+                else {
+                    pinglunBinder.pause();
+                    changCiAdapter.clearLightItem();
+                }
             }
         };
     }
