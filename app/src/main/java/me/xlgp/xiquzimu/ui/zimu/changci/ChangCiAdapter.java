@@ -20,6 +20,9 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
     private int mHighLightPosition = 0;
     private int preHighLightPosition = -1;
 
+    //标记当前item能否高亮，因为若不判断，当高亮行退出高亮并滑出可见区域后，再次回到该高亮行时，会再次执行高亮
+    private boolean enableHightLight = false;
+
     private final static String REMOVE_PROGRESS = "remove_item_progress";
 
     @NonNull
@@ -38,9 +41,9 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
         super.onBindViewHolder(holder, position, payloads);
         try {
             ViewHolder viewHolder = ((ViewHolder) holder);
-            if (!payloads.isEmpty() && payloads.contains(REMOVE_PROGRESS)){
+            if (!payloads.isEmpty() && payloads.contains(REMOVE_PROGRESS)) {
                 viewHolder.removeProgress();
-            }else if (!isHighLight(position)) {
+            } else if (!isHighLight(position)) {
                 viewHolder.removeProgress();
             } else if (isHighLight(position)) {
                 viewHolder.startProgress();
@@ -49,22 +52,23 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public void hightLightItem(int position) {   // 外部调用 adapter 中这个办法，用于设置要高亮显示的位置，并调用重绘特定 position
         mHighLightPosition = position;
-        notifyItemChanged(preHighLightPosition,0);
-        notifyItemChanged(position,1);
+        enableHightLight = true;
+        notifyItemChanged(preHighLightPosition, 0);
+        notifyItemChanged(position, 1);
     }
 
-    public void clearLightItem(){
+    public void clearLightItem() {
+        enableHightLight = false;
         notifyItemChanged(preHighLightPosition, REMOVE_PROGRESS);
         preHighLightPosition = -1;
     }
 
     private boolean isHighLight(int position) {  // 在 onBindViewHolder 中调用 用于判断当前是否需要高亮显示
-        return mHighLightPosition == position;
+        return mHighLightPosition == position && enableHightLight;
     }
 
     protected static class ViewHolder extends BaseAdapter.ViewHolder<ChangCi> {
