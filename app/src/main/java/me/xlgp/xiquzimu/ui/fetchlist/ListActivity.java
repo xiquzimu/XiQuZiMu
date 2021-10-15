@@ -1,14 +1,14 @@
 package me.xlgp.xiquzimu.ui.fetchlist;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -52,7 +52,7 @@ public class ListActivity extends AppCompatActivity {
         fetchViewModel.getNameList().observe(this, list -> {
             searchRecyclerviewLayout.setRefreshing(false);
             if (list.size() == 0) {
-                Toast.makeText(this, "无法获取远程唱词", Toast.LENGTH_SHORT).show();
+                Snackbar.make(getWindow().getDecorView(), "无法获取远程唱段", Snackbar.LENGTH_SHORT).show();
             }
             setTotalCountTextView(list.size());
             nameListAdapter.updateData(list);
@@ -81,16 +81,16 @@ public class ListActivity extends AppCompatActivity {
         };
     }
 
-    @SuppressLint("SetTextI18n")
     private void setTotalCountTextView(int count) {
-        binding.totalCountTextView.setText("共有 " + count + " 条");
+        String total = "共有 " + count + " 条";
+        binding.totalCountTextView.setText(total);
     }
 
     private OnItemClickListener<String> getOnItemClickListener() {
         return (itemView, view, data, position) -> {
             Button button = (Button) view;
             CharSequence text = button.getText();
-            button.setText("更新...");
+            button.setText("下载中...");
             button.setEnabled(false);
             new ChangDuanRepository().update(data).subscribe(new Observer<Long>() {
 
@@ -103,19 +103,19 @@ public class ListActivity extends AppCompatActivity {
 
                 @Override
                 public void onNext(@NonNull Long aLong) {
-                    Toast.makeText(button.getContext(), "更新成功", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(button, "更新成功", Snackbar.LENGTH_SHORT).show();
                     finish();
                 }
 
                 @Override
                 public void onError(@NonNull Throwable e) {
-                    Toast.makeText(button.getContext(), "更新失败" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Snackbar.make(button, "更新失败" + e.getMessage(), Snackbar.LENGTH_SHORT).show();
                     finish();
                 }
 
                 @Override
                 public void onComplete() {
-                    Toast.makeText(button.getContext(), "获取唱段失败", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(button, "获取唱段失败", Snackbar.LENGTH_SHORT).show();
                     finish();
                 }
 

@@ -33,6 +33,8 @@ public class HomeFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
+
         homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
 
@@ -47,16 +49,13 @@ public class HomeFragment extends Fragment {
             binding.openFloatingServiceBtn.setText(quanxianState.getTextid());
         });
 
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
         binding.runBtn.setOnClickListener(this::onRun);
         binding.openAccessibilitySetting.setOnClickListener(this::onOpenAccessibilitySetting);
         binding.openFloatingServiceBtn.setOnClickListener(this::onStartFloatingService);
 
         binding.remoteBtn.setOnClickListener(this::onRemote);
 
-        return root;
+        return binding.getRoot();
     }
 
     @Override

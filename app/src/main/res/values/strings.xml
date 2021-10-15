@@ -27,9 +27,10 @@
     <string name="title_home">首页</string>
     <string name="title_dashboard">列表</string>
     <string name="title_about">关于</string>
-    <string name="searchEditTextHint">查询点什么...</string>
+    <string name="searchEditTextHint">查询点什么&#8230;</string>
     <string name="aboutApp">一款应用于戏曲直播时自动发送字幕的软件</string>
     <string name="jumu_tab_item">剧目</string>
     <string name="changduan_tab_item">唱段</string>
     <string name="changci_tab_item">唱词</string>
+    <string name="download">下载</string>
 </resources>
