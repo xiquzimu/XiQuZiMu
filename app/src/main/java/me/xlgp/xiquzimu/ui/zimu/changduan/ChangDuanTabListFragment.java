@@ -68,7 +68,7 @@ public class ChangDuanTabListFragment extends Fragment {
             if (s != null) Toast.makeText(requireContext(), s, Toast.LENGTH_SHORT).show();
         });
         mViewModel.getChangDuanList().observe(getViewLifecycleOwner(), changDuanList -> {
-            leftAdapter.updateData(ChangDuanHelper.setChangDuan(changDuanList));
+            leftAdapter.updateData(ChangDuanHelper.setLeftChangDuan(changDuanList));
             rightAdapter.updateData(changDuanList);
         });
 

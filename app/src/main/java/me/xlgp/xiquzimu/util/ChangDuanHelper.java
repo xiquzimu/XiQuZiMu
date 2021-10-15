@@ -1,5 +1,7 @@
 package me.xlgp.xiquzimu.util;
 
+import com.github.promeg.pinyinhelper.Pinyin;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,10 +19,11 @@ import me.xlgp.xiquzimu.model.ChangCiList;
 import me.xlgp.xiquzimu.model.ChangDuan;
 import me.xlgp.xiquzimu.model.ChangDuanInfo;
 import me.xlgp.xiquzimu.params.LeftChangDuan;
+import me.xlgp.xiquzimu.params.TagChangDuan;
 
 public class ChangDuanHelper {
 
-    public static List<LeftChangDuan> setChangDuan(List<ChangDuan> list) {
+    public static List<LeftChangDuan> setLeftChangDuan(List<ChangDuan> list) {
         List<LeftChangDuan> leftchangDuanList = new ArrayList<>();
         String name = "";
         for (int i = 0; i < list.size(); i++) {
@@ -34,6 +37,23 @@ public class ChangDuanHelper {
             }
         }
         return leftchangDuanList;
+    }
+
+    public static List<TagChangDuan> getTagChangDuan(List<ChangDuan> list) {
+        List<TagChangDuan> tagchangDuanList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            ChangDuan changDuan = list.get(i);
+            TagChangDuan tagChangDuan = new TagChangDuan();
+            tagChangDuan.setId(changDuan.getId());
+            tagChangDuan.setName(changDuan.getName());
+            tagChangDuan.setOffset(changDuan.getOffset());
+            tagChangDuan.setJuMu(changDuan.getJuMu());
+            tagChangDuan.setJuZhong(changDuan.getJuZhong());
+            tagChangDuan.setTag(String.valueOf(Pinyin.toPinyin(changDuan.getJuMu().charAt(0)).charAt(0)));
+            tagChangDuan.setCreateTime(changDuan.getCreateTime());
+            tagchangDuanList.add(tagChangDuan);
+        }
+        return tagchangDuanList;
     }
 
     /**

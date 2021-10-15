@@ -5,9 +5,9 @@ import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
 
-import me.xlgp.xiquzimu.model.ChangDuan;
+import me.xlgp.xiquzimu.params.TagChangDuan;
 
-public class ChangDuanSearchRecyclerviewLayout extends SearchRecyclerviewLayout<ChangDuan> {
+public class ChangDuanSearchRecyclerviewLayout extends SearchRecyclerviewLayout<TagChangDuan> {
     public ChangDuanSearchRecyclerviewLayout(Context context) {
         super(context);
     }

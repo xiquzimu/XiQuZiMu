@@ -6,8 +6,9 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 import me.xlgp.xiquzimu.model.ChangDuan;
+import me.xlgp.xiquzimu.params.TagChangDuan;
 
-public class ChangDuanPredicate implements Predicate<ChangDuan> {
+public class ChangDuanPredicate implements Predicate<TagChangDuan> {
     private final MutableLiveData<CharSequence> liveData;
 
     public ChangDuanPredicate(MutableLiveData<CharSequence> liveData) {
@@ -23,7 +24,7 @@ public class ChangDuanPredicate implements Predicate<ChangDuan> {
     }
 
     @Override
-    public boolean test(ChangDuan changDuan) {
+    public boolean test(TagChangDuan changDuan) {
         try {
             return juMu(changDuan, liveData.getValue()) || name(changDuan, liveData.getValue());
         } catch (Exception e) {

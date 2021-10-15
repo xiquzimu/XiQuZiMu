@@ -13,6 +13,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.function.Predicate;
@@ -59,6 +60,10 @@ public class SearchRecyclerviewLayout<T> extends LinearLayout {
 
         binding.recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
 
+    }
+
+    public RecyclerView getRecyclerview(){
+        return binding.recyclerview;
     }
 
     public MutableLiveData<CharSequence> getFilterCharSequenceLiveData() {

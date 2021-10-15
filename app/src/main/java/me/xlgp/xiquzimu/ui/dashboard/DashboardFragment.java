@@ -12,6 +12,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.xiquzimu.databinding.FragmentDashboardBinding;
 import me.xlgp.xiquzimu.predicate.ChangDuanPredicate;
@@ -33,15 +35,13 @@ public class DashboardFragment extends Fragment {
         searchRecyclerviewLayout = binding.zimuListSearchRecyclerviewLayout;
 
         viewModel = new ViewModelProvider(this).get(ChangDuanViewModel.class);
-        viewModel.deleteState.observe(getViewLifecycleOwner(), s -> {
-            if (s != null) {
-                Toast.makeText(requireContext(), s, Toast.LENGTH_SHORT).show();
-            }
-        });
+        viewModel.deleteState.observe(getViewLifecycleOwner(), s -> Snackbar.make(requireView(), s, Snackbar.LENGTH_SHORT).show());
+        viewModel.loadState.observe(getViewLifecycleOwner(), s -> Snackbar.make(requireView(), s, Snackbar.LENGTH_SHORT).show());
         initSearchRecyclerviewLayout();
 
         ChangDuanListAdapter changDuanListAdapter = new ChangDuanListAdapter();
         searchRecyclerviewLayout.setSearchListAdapter(changDuanListAdapter);
+        searchRecyclerviewLayout.getRecyclerview().addItemDecoration(new ChangDuanListAdapter.GroupHeaderItemDecoration(changDuanListAdapter));
         viewModel.getChangduanList().observe(getViewLifecycleOwner(), list -> {
             searchRecyclerviewLayout.setRefreshing(false);
             if (list.size() == 0) {
