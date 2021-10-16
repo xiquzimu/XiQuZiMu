@@ -4,11 +4,10 @@
     package="me.xlgp.xiquzimu">
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="me.xlgp.xiquzimu.ZimuApplication"
+        android:name=".ZimuApplication"
         android:allowBackup="false"
         android:debuggable="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,13 +16,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.XiQuZiMu"
         tools:ignore="HardcodedDebugMode">
+
         <activity
-            android:name="me.xlgp.xiquzimu.ui.fetchlist.ListActivity"
+            android:name=".ui.webview.GiteeWebActivity"
+            android:exported="true" />
+
+        <activity
+            android:name=".ui.fetchlist.ListActivity"
             android:exported="true" />
         <activity
-            android:name="me.xlgp.xiquzimu.ui.main.NavMainActivity"
-            android:theme="@style/Theme.XiQuZiMu.StartWindowTheme"
-            android:exported="true">
+            android:name=".ui.main.NavMainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.XiQuZiMu.StartWindowTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,10 +35,10 @@
             </intent-filter>
         </activity>
 
-        <service android:name="me.xlgp.xiquzimu.service.FloatingService" />
-        <service android:name="me.xlgp.xiquzimu.service.PinglunLifecycleService"/>
+        <service android:name=".service.FloatingService" />
+        <service android:name=".service.PinglunLifecycleService" />
         <service
-            android:name="me.xlgp.xiquzimu.service.DouYinAccessibilityService"
+            android:name=".service.DouYinAccessibilityService"
             android:exported="false"
             android:label="@string/accessibility_service_label"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">

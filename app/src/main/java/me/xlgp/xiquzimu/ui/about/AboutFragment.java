@@ -1,5 +1,6 @@
 package me.xlgp.xiquzimu.ui.about;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import me.xlgp.xiquzimu.databinding.FragmentAboutBinding;
+import me.xlgp.xiquzimu.ui.webview.GiteeWebActivity;
 
 public class AboutFragment extends Fragment {
 
@@ -24,6 +26,7 @@ public class AboutFragment extends Fragment {
 
         aboutViewModel.getPackageVersion().observe(getViewLifecycleOwner(), s -> binding.textPackageVersion.setText(s));
 
+        binding.updateVersion.setOnClickListener(v -> startActivity(new Intent(requireActivity(), GiteeWebActivity.class)));
         return root;
     }
 
