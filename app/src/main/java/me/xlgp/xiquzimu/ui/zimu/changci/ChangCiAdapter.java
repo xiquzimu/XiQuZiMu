@@ -42,9 +42,9 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
         try {
             ViewHolder viewHolder = ((ViewHolder) holder);
             if (!payloads.isEmpty() && payloads.contains(REMOVE_PROGRESS)) {
-                viewHolder.removeProgress();
+                viewHolder.removeProgress(true);
             } else if (!isHighLight(position)) {
-                viewHolder.removeProgress();
+                viewHolder.removeProgress(false);
             } else if (isHighLight(position)) {
                 viewHolder.startProgress();
                 preHighLightPosition = holder.getAdapterPosition();
@@ -54,7 +54,7 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
         }
     }
 
-    public void hightLightItem(int position) {   // 外部调用 adapter 中这个办法，用于设置要高亮显示的位置，并调用重绘特定 position
+    public void hightLightItem(int position) {   //  p外部调用 adapter 中这个办法，用于设置要高亮显示的位置，并调用重绘特定osition
         mHighLightPosition = position;
         enableHightLight = true;
         notifyItemChanged(preHighLightPosition, 0);
@@ -76,9 +76,10 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
         private final ZimuDetailItemLayoutBinding binding;
         private final Handler handler = new Handler(Looper.getMainLooper());
         private long delay = 1000;
-        private final long delayMillis = 100;
+        private final long delayMillis = 50;
+        private int current = 0;
 
-        private Runnable runnable = null;
+        private final Runnable runnable;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -101,30 +102,32 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
             binding.progressBar.setMax((int) delay);
         }
 
-        public void removeProgress() {
+        public void removeProgress(boolean clear) {
             if (binding != null) {
                 binding.progressBar.setProgress(0);
+            }
+            if (clear) {
+                current = 0;
             }
             handler.removeCallbacks(runnable);
         }
 
         public void startProgress() {
-            runnable = new ProgressRunnable();
+            removeProgress(false);
             handler.postDelayed(runnable, delayMillis);
         }
 
         class ProgressRunnable implements Runnable {
-            private int current = 0;
 
             @Override
             public void run() {
                 if (binding == null) {
-                    removeProgress();
+                    removeProgress(true);
                     return;
                 }
                 binding.progressBar.setProgress(current += delayMillis);
                 if (current >= delay) {
-                    removeProgress();
+                    removeProgress(true);
                 } else {
                     handler.postDelayed(this, delayMillis);
                 }
