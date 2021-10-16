@@ -16,11 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.XiQuZiMu"
         tools:ignore="HardcodedDebugMode">
-
+        <activity
+            android:name=".ui.changci.ChangCiActivity"
+            android:exported="true" />
         <activity
             android:name=".ui.webview.GiteeWebActivity"
             android:exported="true" />
-
         <activity
             android:name=".ui.fetchlist.ListActivity"
             android:exported="true" />

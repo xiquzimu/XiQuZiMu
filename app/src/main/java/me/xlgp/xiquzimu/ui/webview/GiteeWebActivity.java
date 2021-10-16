@@ -21,4 +21,10 @@ public class GiteeWebActivity extends AppCompatActivity {
         binding.giteeWebView.loadUrl("https://gitee.com/xlgp/XiQuZiMu/releases");
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
+    }
 }

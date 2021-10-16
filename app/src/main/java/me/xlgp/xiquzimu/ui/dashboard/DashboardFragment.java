@@ -1,6 +1,7 @@
 package me.xlgp.xiquzimu.ui.dashboard;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.google.android.material.snackbar.Snackbar;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import me.xlgp.xiquzimu.databinding.FragmentDashboardBinding;
 import me.xlgp.xiquzimu.predicate.ChangDuanPredicate;
+import me.xlgp.xiquzimu.ui.changci.ChangCiActivity;
 import me.xlgp.xiquzimu.view.ChangDuanSearchRecyclerviewLayout;
 
 public class DashboardFragment extends Fragment {
@@ -40,6 +42,11 @@ public class DashboardFragment extends Fragment {
         initSearchRecyclerviewLayout();
 
         ChangDuanListAdapter changDuanListAdapter = new ChangDuanListAdapter();
+        changDuanListAdapter.setOnItemClickListener((itemView, view, data, position) -> {
+            Intent intent = new Intent(requireActivity(), ChangCiActivity.class);
+            intent.putExtra("changduanID", data.getId());
+            startActivity(intent);
+        });
         searchRecyclerviewLayout.setSearchListAdapter(changDuanListAdapter);
         searchRecyclerviewLayout.getRecyclerview().addItemDecoration(new ChangDuanListAdapter.GroupHeaderItemDecoration(changDuanListAdapter));
         viewModel.getChangduanList().observe(getViewLifecycleOwner(), list -> {

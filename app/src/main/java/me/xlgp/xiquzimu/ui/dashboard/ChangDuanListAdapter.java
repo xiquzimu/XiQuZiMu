@@ -107,7 +107,7 @@ public class ChangDuanListAdapter extends SearchListAdapter<TagChangDuan> {
         public ViewHolder(View view) {
             super(view);
             binding = ChangduanItemLayoutBinding.bind(view);
-
+            view.setOnClickListener(v -> onItemClickListener.onItemClick(view,view, data, getAdapterPosition()));
             view.setOnLongClickListener(v -> {
                 createAlertDialog();
                 return false;

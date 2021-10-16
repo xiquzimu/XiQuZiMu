@@ -33,4 +33,9 @@
     <string name="changduan_tab_item">唱段</string>
     <string name="changci_tab_item">唱词</string>
     <string name="download">下载</string>
+    <string name="juZhong">剧种：</string>
+    <string name="juMu">剧目：</string>
+    <string name="offset">时差</string>
+    <string name="changDuanName">唱段：</string>
+    <string name="saveChangCi">保存</string>
 </resources>
