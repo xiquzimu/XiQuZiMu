@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import me.xlgp.xiquzimu.adapter.BaseAdapter;
 import me.xlgp.xiquzimu.databinding.ActivityChangCiBinding;
+import me.xlgp.xiquzimu.model.ChangCi;
 import me.xlgp.xiquzimu.model.ChangDuan;
 
 public class ChangCiActivity extends AppCompatActivity {
@@ -41,14 +43,25 @@ public class ChangCiActivity extends AppCompatActivity {
         viewModel.loadData(changduanID);
 
         bing.save.setOnClickListener(this::save);
+        bing.add.setOnClickListener(this::add);
     }
 
     private void initRecyclerView() {
         bing.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         bing.recyclerView.setAdapter(changCiAdapter);
+        changCiAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener<ChangCi>() {
+            @Override
+            public void onItemClick(View itemView, View view, ChangCi data, int position) {
+                changCiAdapter.removeItem(position);
+            }
+        });
     }
 
     private void save(View view) {
+    }
+
+    public void add(View view){
+        changCiAdapter.addItem();
     }
 
     private void initView(ChangDuan changDuan) {

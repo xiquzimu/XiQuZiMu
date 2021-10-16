@@ -25,4 +25,12 @@
         android:inputType="text"
         android:textSize="16sp"
         tools:ignore="LabelFor" />
+
+    <Button
+        android:id="@+id/remove"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-6dp"
+        android:text="@string/remove_changci_item" />
 </LinearLayout>

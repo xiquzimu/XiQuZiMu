@@ -4,6 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,6 +23,20 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
         return new ViewHolder(view);
     }
 
+    public void addItem() {
+        ChangCi changCi = new ChangCi();
+        list.add(changCi);
+        notifyItemInserted(getItemCount());
+        notifyItemChanged(getItemCount());
+    }
+
+    public void removeItem(int position) {
+        notifyItemRemoved(position);
+        list.remove(position);
+        //受影响的item都刷新position
+        notifyItemRangeChanged(position, list.size() - 1);
+    }
+
     static class ViewHolder extends BaseAdapter.ViewHolder<ChangCi> {
 
         private final ChangCiItemBinding binding;
@@ -29,6 +44,23 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             binding = ChangCiItemBinding.bind(itemView);
+            binding.remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    createAlertDialog(v);
+                }
+            });
+        }
+
+        private void createAlertDialog(View v) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(itemView.getContext());
+            builder.setTitle("删除")
+                    .setMessage("请选择操作")
+                    .setPositiveButton("删除该项", (dialog, which) -> {
+                        onItemClickListener.onItemClick(itemView, v, data, getAdapterPosition());
+                    })
+                    .setNegativeButton("取消", (dialog, which) -> {
+                    }).show();
         }
 
         @Override

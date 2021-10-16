@@ -38,4 +38,6 @@
     <string name="offset">时差</string>
     <string name="changDuanName">唱段：</string>
     <string name="saveChangCi">保存</string>
+    <string name="add_changci_item">新增项</string>
+    <string name="remove_changci_item">删除</string>
 </resources>
