@@ -1,6 +1,5 @@
 package me.xlgp.xiquzimu.ui.dashboard;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -43,9 +42,7 @@ public class DashboardFragment extends Fragment {
 
         ChangDuanListAdapter changDuanListAdapter = new ChangDuanListAdapter();
         changDuanListAdapter.setOnItemClickListener((itemView, view, data, position) -> {
-            Intent intent = new Intent(requireActivity(), ChangCiActivity.class);
-            intent.putExtra("changduanID", data.getId());
-            startActivity(intent);
+            toChangCiActivity(data.getId());
         });
         searchRecyclerviewLayout.setSearchListAdapter(changDuanListAdapter);
         searchRecyclerviewLayout.getRecyclerview().addItemDecoration(new ChangDuanListAdapter.GroupHeaderItemDecoration(changDuanListAdapter));
@@ -60,13 +57,19 @@ public class DashboardFragment extends Fragment {
 
         binding.clear.setOnClickListener(this::onClearList);
         binding.update.setOnClickListener(this::onFetch);
-
+        binding.add.setOnClickListener(this::add);
         return root;
     }
 
-    @SuppressLint("SetTextI18n")
+    private void toChangCiActivity(Integer id) {
+        Intent intent = new Intent(requireActivity(), ChangCiActivity.class);
+        intent.putExtra("changduanID", id);
+        startActivity(intent);
+    }
+
     private void setTotalCountTextView(int count) {
-        binding.totalCountTextView.setText("共有唱段 " + count + " 段");
+        String text = "共有 " + count + " 项";
+        binding.totalCountTextView.setText(text);
     }
 
     private void initSearchRecyclerviewLayout() {
@@ -75,6 +78,10 @@ public class DashboardFragment extends Fragment {
         searchRecyclerviewLayout.setRefreshing(true);
         searchRecyclerviewLayout.setPredicate(new ChangDuanPredicate(searchRecyclerviewLayout.getFilterCharSequenceLiveData()));
         searchRecyclerviewLayout.setOnRefreshListener(viewModel::loadChangDuanList);
+    }
+
+    public void add(View view) {
+        toChangCiActivity(-1);
     }
 
     public void onFetch(View view) {

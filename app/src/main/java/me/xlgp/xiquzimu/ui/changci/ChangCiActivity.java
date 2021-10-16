@@ -16,7 +16,6 @@ public class ChangCiActivity extends AppCompatActivity {
 
     private ActivityChangCiBinding bing;
     private ChangCiAdapter changCiAdapter;
-    private ChangCiViewModel viewModel = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +25,7 @@ public class ChangCiActivity extends AppCompatActivity {
 
         int changduanID = getIntent().getIntExtra("changduanID", -1);
 
-        viewModel = new ViewModelProvider(this).get(ChangCiViewModel.class);
+        ChangCiViewModel viewModel = new ViewModelProvider(this).get(ChangCiViewModel.class);
 
         changCiAdapter = new ChangCiAdapter();
 
@@ -48,7 +47,6 @@ public class ChangCiActivity extends AppCompatActivity {
         bing.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         bing.recyclerView.setAdapter(changCiAdapter);
     }
-
 
     private void save(View view) {
     }
