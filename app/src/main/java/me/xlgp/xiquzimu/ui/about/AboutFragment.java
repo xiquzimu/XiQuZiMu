@@ -4,10 +4,12 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,6 +19,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
+import me.xlgp.xiquzimu.BuildConfig;
 import me.xlgp.xiquzimu.R;
 import me.xlgp.xiquzimu.databinding.FragmentAboutBinding;
 
@@ -46,11 +49,27 @@ public class AboutFragment extends Fragment {
         return root;
     }
 
+    private boolean checkVersion(String apkName) {
+        String[] list = apkName.split("_");
+        if (list.length <= 1) {
+            return false;
+        }
+        String version = list[1].substring(1);
+        ;
+        return BuildConfig.VERSION_NAME.compareTo(version) < 0;
+    }
+
     private void download(List<String> list) {
         DownloadManager mDownloadManager = (DownloadManager) requireActivity().getSystemService(Context.DOWNLOAD_SERVICE);
 
         String url = list.get(0);
         String apkName = list.get(0).substring(list.get(0).lastIndexOf("/") + 1);
+
+        if (!checkVersion(apkName)) {
+            Toast.makeText(requireActivity(), "无版本可更新", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String mApkDir = "Download/" + apkName;
 
         Uri mApkUri = Uri.parse("https://gitee.com" + url);
@@ -61,7 +80,7 @@ public class AboutFragment extends Fragment {
         down.setDescription("在正下载 " + apkName + " ...");
         down.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         down.setVisibleInDownloadsUi(true);
-        down.setDestinationInExternalFilesDir(requireActivity(), null, mApkDir);
+        down.setDestinationInExternalFilesDir(requireActivity(), Environment.DIRECTORY_DOWNLOADS, mApkDir);
 
         long mDownloadId = mDownloadManager.enqueue(down);
     }

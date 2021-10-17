@@ -40,4 +40,10 @@
     <string name="saveChangCi">保存</string>
     <string name="add_changci_item">新增项</string>
     <string name="remove_changci_item">删除</string>
+    <string name="developer">开发者：心灵的孤僻</string>
+    <string name="giteeProjectUrl">https://gitee.com/xlgp/XiQuZiMu</string>
+    <string name="item_go">前往</string>
+    <string name="updateVersion">更新版本</string>
+    <string name="projectUrl">项目地址：</string>
+
 </resources>
