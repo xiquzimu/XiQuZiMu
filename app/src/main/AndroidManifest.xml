@@ -37,6 +37,7 @@
         </activity>
 
         <service android:name=".service.FloatingService" />
+        <service android:name=".service.DownloadService" />
         <service android:name=".service.PinglunLifecycleService" />
         <service
             android:name=".service.DouYinAccessibilityService"
