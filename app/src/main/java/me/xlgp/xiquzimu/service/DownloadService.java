@@ -15,10 +15,9 @@ import androidx.lifecycle.LifecycleService;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-
 import me.xlgp.xiquzimu.BuildConfig;
 import me.xlgp.xiquzimu.R;
+import me.xlgp.xiquzimu.util.InstallAPKUtil;
 
 public class DownloadService extends LifecycleService {
 
@@ -35,6 +34,7 @@ public class DownloadService extends LifecycleService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         if (downloading) {
             Toast.makeText(this, "正在下载", Toast.LENGTH_SHORT).show();
             return super.onStartCommand(intent, flags, startId);
@@ -42,6 +42,7 @@ public class DownloadService extends LifecycleService {
 
         downloadUrl = intent.getStringExtra("apkDownloadUrl");
         apkName = downloadUrl.substring(downloadUrl.lastIndexOf("/") + 1);
+
         if (!checkVersion(apkName)) {
             Toast.makeText(this, "无版本可更新", Toast.LENGTH_SHORT).show();
             stopSelf();
@@ -71,6 +72,7 @@ public class DownloadService extends LifecycleService {
         if (receiver != null) {
             unregisterReceiver(receiver);
         }
+        downloading = false;
         super.onDestroy();
     }
 
@@ -83,7 +85,6 @@ public class DownloadService extends LifecycleService {
         request.setTitle(getString(R.string.app_zh_name));
         request.setDescription("在正下载 " + apkName + " ...");
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setVisibleInDownloadsUi(true);
         request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, apkName);
 
         DownloadManager dm = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
@@ -96,11 +97,7 @@ public class DownloadService extends LifecycleService {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            intent = new Intent(Intent.ACTION_VIEW);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setDataAndType(Uri.fromFile(new File(Environment.DIRECTORY_DOWNLOADS + apkName)),
-                    "application/vnd.android.package-archive");
-            startActivity(intent);
+            InstallAPKUtil.installAPK(context.getApplicationContext(), apkName);
             stopSelf();
         }
     }
