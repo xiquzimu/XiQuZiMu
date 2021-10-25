@@ -13,7 +13,7 @@
 
 > #### 字幕数据库
 
-1.  由于没有服务器，字幕数据储存于[Gitee](https://gitee.com/xlgp/opera-lyrics)以及[Github](https://gitee.com/xlgp/opera-lyrics)上。
+1.  由于没有服务器，字幕数据储存于Gitee仓库[戏曲唱词](https://gitee.com/xlgp/opera-lyrics)以及Github仓库[opera-lyrics](https://gitee.com/xlgp/opera-lyrics)上。
 2.  由于gitee会屏蔽某些词，可能会显示不全
 3.  github在墙外，可能上不去，然而数据比较全。
 
