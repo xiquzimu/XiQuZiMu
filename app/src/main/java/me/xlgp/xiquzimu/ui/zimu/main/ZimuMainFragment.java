@@ -9,10 +9,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+
+import java.util.List;
 
 import me.xlgp.xiquzimu.databinding.ZimuMainFragmentBinding;
 import me.xlgp.xiquzimu.listener.OnFragmentChangeListener;
@@ -23,7 +26,6 @@ import me.xlgp.xiquzimu.ui.zimu.changduan.ChangDuanTabListFragment;
 public class ZimuMainFragment extends Fragment {
 
     private ZimuMainFragmentBinding binding;
-    String[] names = new String[]{"黄梅戏", "越剧", "歌曲", "小调"};
     private Intent intent = null;
     private OnFragmentChangeListener onFragmentChangeListener;
 
@@ -42,8 +44,12 @@ public class ZimuMainFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ZimuMainFragmentBinding.inflate(inflater, container, false);
-        binding.zimuViewpager2.setAdapter(new ZimuMainStateAdapter(this));
-        initTabList();
+        ZimuMainViewModel viewModel = new ViewModelProvider(this).get(ZimuMainViewModel.class);
+        viewModel.getTabNameList().observe(getViewLifecycleOwner(), list -> {
+            binding.zimuViewpager2.setAdapter(new ZimuMainStateAdapter(this, list));
+            initTabList(list);
+        });
+
         return binding.getRoot();
     }
 
@@ -55,42 +61,43 @@ public class ZimuMainFragment extends Fragment {
         }
     }
 
-    private void initTabList() {
-
-        for (String name : names) {
+    private void initTabList(List<String> list) {
+        list.forEach(name -> {
             TabLayout.Tab tab = binding.zimuTabList.newTab();
             tab.setText(name);
             binding.zimuTabList.addTab(tab);
-        }
+        });
         new TabLayoutMediator(binding.zimuTabList, binding.zimuViewpager2,
-                (tab, position) -> tab.setText(names[position])).attach();
+                (tab, position) -> tab.setText(list.get(position))).attach();
     }
 
     public void setOnFragmentChangeListener(OnFragmentChangeListener onFragmentChangeListener) {
         this.onFragmentChangeListener = onFragmentChangeListener;
     }
 
-    class ZimuMainStateAdapter extends FragmentStateAdapter {
+    static class ZimuMainStateAdapter extends FragmentStateAdapter {
 
         private final Fragment[] fragments;
+        private final List<String> list;
 
-        public ZimuMainStateAdapter(@NonNull Fragment fragment) {
+        public ZimuMainStateAdapter(@NonNull Fragment fragment, List<String> list) {
             super(fragment);
-            fragments = new Fragment[names.length];
+            fragments = new Fragment[list.size()];
+            this.list = list;
         }
 
         @NonNull
         @Override
         public Fragment createFragment(int position) {
             if (fragments[position] == null) {
-                fragments[position] = new ChangDuanTabListFragment(names[position]);
+                fragments[position] = new ChangDuanTabListFragment(list.get(position));
             }
             return fragments[position];
         }
 
         @Override
         public int getItemCount() {
-            return names.length;
+            return list.size();
         }
     }
 }
