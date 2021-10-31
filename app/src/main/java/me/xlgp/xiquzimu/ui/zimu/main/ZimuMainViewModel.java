@@ -3,8 +3,9 @@ package me.xlgp.xiquzimu.ui.zimu.main;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import me.xlgp.xiquzimu.constant.JuZhongConstant;
 
 public class ZimuMainViewModel extends ViewModel {
 
@@ -19,11 +20,7 @@ public class ZimuMainViewModel extends ViewModel {
     }
 
     private void initTabNameList() {
-        List<String> list = new ArrayList<>();
-        list.add("黄梅戏");
-        list.add("越剧");
-        list.add("歌曲");
-        list.add("小调");
+        List<String> list = JuZhongConstant.list();
         tabNameList.postValue(list);
     }
 }

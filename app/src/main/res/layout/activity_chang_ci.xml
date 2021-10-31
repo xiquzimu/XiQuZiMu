@@ -34,17 +34,10 @@
                 android:layout_height="wrap_content"
                 android:text="@string/juZhong" />
 
-            <EditText
-                android:id="@+id/editTextJuZhong"
+            <Spinner
+                android:id="@+id/juMuSpinner"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:autofillHints="@string/juZhong"
-                android:layout_weight="1"
-                android:labelFor="@id/juZhong"
-                android:ems="6"
-                android:inputType="text"
-                android:textSize="14sp"
-                tools:ignore="LabelFor" />
+                android:layout_height="match_parent" />
 
             <TextView
                 android:id="@+id/juMu"
@@ -54,7 +47,7 @@
 
             <EditText
                 android:id="@+id/editTextJuMu"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:autofillHints="@string/juMu"
@@ -138,6 +131,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/add_changci_item" />
+            android:text="@string/add_changci_item"
+            style="?android:attr/buttonBarButtonStyle" />
     </LinearLayout>
 </LinearLayout>
