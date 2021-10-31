@@ -45,5 +45,7 @@
     <string name="item_go">前往</string>
     <string name="updateVersion">更新版本</string>
     <string name="projectUrl">项目地址：</string>
+    <string name="remoteBtnText">下载远程唱段</string>
+    <string name="createLRC">制作LRC唱词</string>
 
 </resources>

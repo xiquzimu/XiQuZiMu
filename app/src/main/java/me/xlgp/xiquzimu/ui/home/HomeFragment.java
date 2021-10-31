@@ -21,6 +21,7 @@ import me.xlgp.xiquzimu.ui.fetchlist.ListActivity;
 import me.xlgp.xiquzimu.databinding.FragmentHomeBinding;
 import me.xlgp.xiquzimu.designpatterns.ObserverHelper;
 import me.xlgp.xiquzimu.service.FloatingService;
+import me.xlgp.xiquzimu.ui.webview.GiteeWebActivity;
 import me.xlgp.xiquzimu.util.AccessibilitySettingsHelper;
 import me.xlgp.xiquzimu.util.FloatingHelper;
 
@@ -54,6 +55,7 @@ public class HomeFragment extends Fragment {
         binding.openFloatingServiceBtn.setOnClickListener(this::onStartFloatingService);
 
         binding.remoteBtn.setOnClickListener(this::onRemote);
+        binding.createLRCBtn.setOnClickListener(this::onCreateLRC);
 
         return binding.getRoot();
     }
@@ -79,6 +81,10 @@ public class HomeFragment extends Fragment {
         } else {
             homeViewModel.getAccessibilitySettingStatus().setValue(new AccessibilitySettingStatus.Error());
         }
+    }
+
+    public void onCreateLRC(View view){
+        startActivity(new Intent(requireContext(), GiteeWebActivity.class));
     }
 
     public void onRemote(View view) {

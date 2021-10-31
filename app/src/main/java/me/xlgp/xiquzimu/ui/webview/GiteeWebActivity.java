@@ -1,8 +1,8 @@
 package me.xlgp.xiquzimu.ui.webview;
 
-import android.content.Intent;
-import android.net.Uri;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.webkit.WebSettings;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,13 +12,19 @@ public class GiteeWebActivity extends AppCompatActivity {
 
     ActivityGiteeWebBinding binding;
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityGiteeWebBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.giteeWebView.loadUrl("https://gitee.com/xlgp/XiQuZiMu/releases");
+        binding.giteeWebView.loadUrl("https://xlgp.gitee.io/changci.html");
+
+        WebSettings settings = binding.giteeWebView.getSettings();
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        settings.setJavaScriptEnabled(true);
+
 
     }
 
