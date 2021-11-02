@@ -154,4 +154,31 @@
             android:contentDescription="@string/item_go"
             android:src="@drawable/ic_baseline_chevron_right_24" />
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/statement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:divider="@color/black_touming_bg"
+        android:focusable="true"
+        android:orientation="horizontal">
+
+        <TextView
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:text="@string/statement"
+            android:textAlignment="viewStart"
+            android:textColor="@color/item_color" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="6dp"
+            android:clickable="false"
+            android:contentDescription="@string/item_go"
+            android:src="@drawable/ic_baseline_chevron_right_24" />
+    </LinearLayout>
 </LinearLayout>

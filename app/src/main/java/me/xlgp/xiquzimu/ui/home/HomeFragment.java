@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import io.reactivex.rxjava3.core.Observable;
+import me.xlgp.xiquzimu.constant.UrlConstant;
 import me.xlgp.xiquzimu.ui.fetchlist.ListActivity;
 import me.xlgp.xiquzimu.databinding.FragmentHomeBinding;
 import me.xlgp.xiquzimu.designpatterns.ObserverHelper;
@@ -84,7 +85,9 @@ public class HomeFragment extends Fragment {
     }
 
     public void onCreateLRC(View view){
-        startActivity(new Intent(requireContext(), GiteeWebActivity.class));
+        Intent intent = new Intent(requireContext(), GiteeWebActivity.class);
+        intent.putExtra("URL", UrlConstant.CHANG_CI);
+        startActivity(intent);
     }
 
     public void onRemote(View view) {

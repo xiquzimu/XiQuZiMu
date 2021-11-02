@@ -1,6 +1,7 @@
 package me.xlgp.xiquzimu.ui.webview;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.webkit.WebSettings;
 
@@ -19,13 +20,21 @@ public class GiteeWebActivity extends AppCompatActivity {
         binding = ActivityGiteeWebBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.giteeWebView.loadUrl("https://xlgp.gitee.io/changci.html");
-
+        String url = getUrl();
+        if (url != null) {
+            binding.giteeWebView.loadUrl(url);
+        }
         WebSettings settings = binding.giteeWebView.getSettings();
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setJavaScriptEnabled(true);
 
 
+    }
+
+    private String getUrl() {
+        Intent intent = getIntent();
+        if (intent == null) return null;
+        return intent.getStringExtra("URL");
     }
 
     @Override

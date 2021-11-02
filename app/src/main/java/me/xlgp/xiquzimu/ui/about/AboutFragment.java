@@ -13,8 +13,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import me.xlgp.xiquzimu.constant.UrlConstant;
 import me.xlgp.xiquzimu.databinding.FragmentAboutBinding;
 import me.xlgp.xiquzimu.service.DownloadService;
+import me.xlgp.xiquzimu.ui.webview.GiteeWebActivity;
 
 public class AboutFragment extends Fragment {
 
@@ -38,6 +40,11 @@ public class AboutFragment extends Fragment {
         });
 
         binding.updateVersion.setOnClickListener(v -> viewModel.loadDownloadUrl());
+        binding.statement.setOnClickListener(v->{
+            Intent intent = new Intent(requireContext(), GiteeWebActivity.class);
+            intent.putExtra("URL", UrlConstant.STATEMENT);
+            requireActivity().startActivity(intent);
+        });
 
         return root;
     }
