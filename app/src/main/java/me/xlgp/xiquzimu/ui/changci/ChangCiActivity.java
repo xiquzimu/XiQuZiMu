@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -16,8 +15,9 @@ import me.xlgp.xiquzimu.R;
 import me.xlgp.xiquzimu.constant.JuZhongConstant;
 import me.xlgp.xiquzimu.databinding.ActivityChangCiBinding;
 import me.xlgp.xiquzimu.model.ChangDuan;
+import me.xlgp.xiquzimu.ui.base.BaseToolBarActivity;
 
-public class ChangCiActivity extends AppCompatActivity {
+public class ChangCiActivity extends BaseToolBarActivity {
 
     private ActivityChangCiBinding bing;
     private ChangCiAdapter changCiAdapter;
@@ -27,6 +27,7 @@ public class ChangCiActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         bing = ActivityChangCiBinding.inflate(getLayoutInflater());
         setContentView(bing.getRoot());
+        setTitle("唱词列表");
 
         int changduanID = getIntent().getIntExtra("changduanID", -1);
 
@@ -52,8 +53,8 @@ public class ChangCiActivity extends AppCompatActivity {
         bing.add.setOnClickListener(this::add);
     }
 
-    private void initSpinner(){
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.changci_spinner_item,JuZhongConstant.list());
+    private void initSpinner() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.changci_spinner_item, JuZhongConstant.list());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         bing.juMuSpinner.setAdapter(adapter);
     }
@@ -67,7 +68,7 @@ public class ChangCiActivity extends AppCompatActivity {
     private void save(View view) {
     }
 
-    public void add(View view){
+    public void add(View view) {
         changCiAdapter.addItem();
     }
 
@@ -78,12 +79,12 @@ public class ChangCiActivity extends AppCompatActivity {
         bing.editTextName.setText(changDuan.getName());
     }
 
-    private void setSpinner(ChangDuan changDuan){
+    private void setSpinner(ChangDuan changDuan) {
         if (changDuan == null) return;
         String juZhong = changDuan.getJuZhong();
         List<String> list = JuZhongConstant.list();
-        for (int i = 0; i < list.size(); i++){
-            if (list.get(i).equals(juZhong)){
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).equals(juZhong)) {
                 bing.juMuSpinner.setSelection(i);
                 break;
             }

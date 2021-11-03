@@ -5,13 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.webkit.WebSettings;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import me.xlgp.xiquzimu.databinding.ActivityGiteeWebBinding;
+import me.xlgp.xiquzimu.ui.base.BaseToolBarActivity;
 
-public class GiteeWebActivity extends AppCompatActivity {
+public class GiteeWebActivity extends BaseToolBarActivity {
 
-    ActivityGiteeWebBinding binding;
+    private ActivityGiteeWebBinding binding;
+    private String title;
+    private String url;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -20,7 +21,8 @@ public class GiteeWebActivity extends AppCompatActivity {
         binding = ActivityGiteeWebBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        String url = getUrl();
+        getFromIntent();
+        setTitle(title);
         if (url != null) {
             binding.giteeWebView.loadUrl(url);
         }
@@ -31,10 +33,11 @@ public class GiteeWebActivity extends AppCompatActivity {
 
     }
 
-    private String getUrl() {
+    private void getFromIntent() {
         Intent intent = getIntent();
-        if (intent == null) return null;
-        return intent.getStringExtra("URL");
+        if (intent == null) return;
+        url = intent.getStringExtra("URL");
+        title = intent.getStringExtra("title");
     }
 
     @Override

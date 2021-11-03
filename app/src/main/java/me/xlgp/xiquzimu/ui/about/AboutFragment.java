@@ -40,9 +40,10 @@ public class AboutFragment extends Fragment {
         });
 
         binding.updateVersion.setOnClickListener(v -> viewModel.loadDownloadUrl());
-        binding.statement.setOnClickListener(v->{
+        binding.statement.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), GiteeWebActivity.class);
             intent.putExtra("URL", UrlConstant.STATEMENT);
+            intent.putExtra("title", "免责声明");
             requireActivity().startActivity(intent);
         });
 

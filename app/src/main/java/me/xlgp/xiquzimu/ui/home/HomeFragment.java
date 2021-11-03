@@ -18,10 +18,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import io.reactivex.rxjava3.core.Observable;
 import me.xlgp.xiquzimu.constant.UrlConstant;
-import me.xlgp.xiquzimu.ui.fetchlist.ListActivity;
 import me.xlgp.xiquzimu.databinding.FragmentHomeBinding;
 import me.xlgp.xiquzimu.designpatterns.ObserverHelper;
 import me.xlgp.xiquzimu.service.FloatingService;
+import me.xlgp.xiquzimu.ui.fetchlist.ListActivity;
 import me.xlgp.xiquzimu.ui.webview.GiteeWebActivity;
 import me.xlgp.xiquzimu.util.AccessibilitySettingsHelper;
 import me.xlgp.xiquzimu.util.FloatingHelper;
@@ -84,9 +84,10 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    public void onCreateLRC(View view){
+    public void onCreateLRC(View view) {
         Intent intent = new Intent(requireContext(), GiteeWebActivity.class);
         intent.putExtra("URL", UrlConstant.CHANG_CI);
+        intent.putExtra("title", "唱词制作");
         startActivity(intent);
     }
 

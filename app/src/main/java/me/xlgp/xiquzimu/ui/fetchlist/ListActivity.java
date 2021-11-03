@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.RadioGroup;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -22,9 +21,10 @@ import me.xlgp.xiquzimu.adapter.BaseAdapter.OnItemClickListener;
 import me.xlgp.xiquzimu.config.FetchRepositoryConfig;
 import me.xlgp.xiquzimu.data.ChangDuanRepository;
 import me.xlgp.xiquzimu.databinding.ActivityListBinding;
+import me.xlgp.xiquzimu.ui.base.BaseToolBarActivity;
 import me.xlgp.xiquzimu.view.StringSearchRecyclerviewLayout;
 
-public class ListActivity extends AppCompatActivity {
+public class ListActivity extends BaseToolBarActivity {
 
     ActivityListBinding binding = null;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -35,7 +35,7 @@ public class ListActivity extends AppCompatActivity {
 
         binding = ActivityListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        setTitle("远程唱词列表");
         StringSearchRecyclerviewLayout searchRecyclerviewLayout = binding.nameListSearchRecyclerviewLayout;
         searchRecyclerviewLayout.build(this);
         searchRecyclerviewLayout.setPredicate(new StringPredicate(searchRecyclerviewLayout.getFilterCharSequenceLiveData()));

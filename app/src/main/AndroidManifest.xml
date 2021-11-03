@@ -5,7 +5,7 @@
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
         android:name=".ZimuApplication"
@@ -19,13 +19,16 @@
         tools:ignore="HardcodedDebugMode">
         <activity
             android:name=".ui.changci.ChangCiActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:parentActivityName=".ui.main.NavMainActivity" />
         <activity
             android:name=".ui.webview.GiteeWebActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:parentActivityName=".ui.main.NavMainActivity" />
         <activity
             android:name=".ui.fetchlist.ListActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:parentActivityName=".ui.main.NavMainActivity" />
         <activity
             android:name=".ui.main.NavMainActivity"
             android:exported="true"
