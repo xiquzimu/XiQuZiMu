@@ -87,7 +87,6 @@ public class HomeFragment extends Fragment {
     public void onCreateLRC(View view) {
         Intent intent = new Intent(requireContext(), GiteeWebActivity.class);
         intent.putExtra("URL", UrlConstant.CHANG_CI);
-        intent.putExtra("title", "唱词制作");
         startActivity(intent);
     }
 

@@ -2,7 +2,6 @@ package me.xlgp.xiquzimu.ui.about;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import me.xlgp.xiquzimu.R;
 import me.xlgp.xiquzimu.constant.UrlConstant;
 import me.xlgp.xiquzimu.databinding.FragmentAboutBinding;
 import me.xlgp.xiquzimu.service.DownloadService;
@@ -33,7 +33,6 @@ public class AboutFragment extends Fragment {
         viewModel.errorState.observe(getViewLifecycleOwner(), s -> Snackbar.make(binding.getRoot(), s, Snackbar.LENGTH_SHORT).show());
 
         viewModel.getDownloadUrlList().observe(getViewLifecycleOwner(), list -> {
-            Log.i("TAG", "onCreateView: " + list);
             Intent intent = new Intent(requireActivity(), DownloadService.class);
             intent.putExtra("apkDownloadUrl", list.get(0));
             requireActivity().startService(intent);
@@ -43,10 +42,13 @@ public class AboutFragment extends Fragment {
         binding.statement.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), GiteeWebActivity.class);
             intent.putExtra("URL", UrlConstant.STATEMENT);
-            intent.putExtra("title", "免责声明");
             requireActivity().startActivity(intent);
         });
-
+        binding.projectUrl.setOnClickListener(v->{
+            Intent intent = new Intent(requireContext(), GiteeWebActivity.class);
+            intent.putExtra("URL", requireContext().getString(R.string.giteeProjectUrl));
+            requireActivity().startActivity(intent);
+        });
         return root;
     }
 
