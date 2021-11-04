@@ -29,8 +29,6 @@ public class GiteeWebActivity extends BaseToolBarActivity {
         WebSettings settings = binding.giteeWebView.getSettings();
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setJavaScriptEnabled(true);
-
-
     }
 
     private void getFromIntent() {
