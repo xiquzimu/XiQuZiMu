@@ -9,35 +9,54 @@
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:paddingTop="0dp">
 
-        <Button
+
+        <ImageView
             android:id="@+id/clear"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="清除唱词" />
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:clickable="true"
+            android:contentDescription="@string/clearCurrentZiMuBtn"
+            android:focusable="true"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:src="@drawable/ic_baseline_delete_24" />
 
-        <Button
+        <ImageView
             android:id="@+id/update"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="更新唱词" />
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:clickable="true"
+            android:contentDescription="@string/update"
+            android:focusable="true"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:src="@drawable/ic_baseline_arrow_downward_24" />
 
-        <Button
+        <ImageView
             android:id="@+id/add"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="新增唱词" />
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:clickable="true"
+            android:contentDescription="@string/add"
+            android:focusable="true"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:src="@drawable/ic_baseline_add_24" />
 
         <TextView
             android:id="@+id/totalCountTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:paddingStart="0dp"
+            android:paddingEnd="20dp"
+            android:textAlignment="textEnd"
+            tools:ignore="RtlCompat" />
     </LinearLayout>
 
     <me.xlgp.xiquzimu.view.ChangDuanSearchRecyclerviewLayout

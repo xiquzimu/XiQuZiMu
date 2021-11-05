@@ -20,6 +20,8 @@
     <string name="settingsTips">请先开启以下权限</string>
     <string name="runFloatingServiceBtn">运行</string>
     <string name="clearCurrentZiMuBtn">清除</string>
+    <string name="update">更新</string>
+    <string name="add">新增</string>
     <string name="package_version" />
     <string name="floatingTitle">悬浮窗口</string>
     <string name="fetchChangDuan">更新唱段</string>
