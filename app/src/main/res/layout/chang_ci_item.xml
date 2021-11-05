@@ -11,6 +11,8 @@
         android:layout_height="wrap_content"
         android:autofillHints="时间"
         android:ems="4"
+        android:hint="@string/timeEditTextHint"
+        android:background="@null"
         android:inputType="text"
         android:textSize="14sp"
         tools:ignore="LabelFor" />
@@ -23,6 +25,8 @@
         android:autofillHints="唱词"
         android:inputType="text"
         android:textSize="14sp"
+        android:hint="@string/contentEditTextHint"
+        android:background="@null"
         tools:ignore="LabelFor" />
 
     <Button

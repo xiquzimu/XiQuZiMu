@@ -133,5 +133,12 @@
             android:layout_weight="1"
             android:text="@string/add_changci_item"
             style="?android:attr/buttonBarButtonStyle" />
+        <Button
+            android:id="@+id/copy"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/copy"
+            style="?android:attr/buttonBarButtonStyle" />
     </LinearLayout>
 </LinearLayout>

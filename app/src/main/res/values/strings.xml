@@ -51,4 +51,7 @@
     <string name="createLRC">制作LRC唱词</string>
     <string name="statement">免责声明</string>
     <string name="web_loading">正在加载...</string>
+    <string name="copy">复制</string>
+    <string name="timeEditTextHint">时间</string>
+    <string name="contentEditTextHint">唱词</string>
 </resources>

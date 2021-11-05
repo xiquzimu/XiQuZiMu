@@ -23,11 +23,12 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
         return new ViewHolder(view);
     }
 
-    public void addItem() {
+    public int addItem() {
         ChangCi changCi = new ChangCi();
         list.add(changCi);
         notifyItemInserted(getItemCount());
         notifyItemChanged(getItemCount());
+        return getItemCount() - 1;
     }
 
     public void removeItem(int position) {

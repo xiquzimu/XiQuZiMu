@@ -1,8 +1,11 @@
 package me.xlgp.xiquzimu.ui.changci;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,12 +18,15 @@ import me.xlgp.xiquzimu.R;
 import me.xlgp.xiquzimu.constant.JuZhongConstant;
 import me.xlgp.xiquzimu.databinding.ActivityChangCiBinding;
 import me.xlgp.xiquzimu.model.ChangDuan;
+import me.xlgp.xiquzimu.model.ChangDuanInfo;
 import me.xlgp.xiquzimu.ui.base.BaseToolBarActivity;
+import me.xlgp.xiquzimu.util.ChangDuanHelper;
 
 public class ChangCiActivity extends BaseToolBarActivity {
 
     private ActivityChangCiBinding bing;
     private ChangCiAdapter changCiAdapter;
+    private ChangCiViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +37,7 @@ public class ChangCiActivity extends BaseToolBarActivity {
 
         int changduanID = getIntent().getIntExtra("changduanID", -1);
 
-        ChangCiViewModel viewModel = new ViewModelProvider(this).get(ChangCiViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ChangCiViewModel.class);
 
         changCiAdapter = new ChangCiAdapter();
 
@@ -51,6 +57,18 @@ public class ChangCiActivity extends BaseToolBarActivity {
 
         bing.save.setOnClickListener(this::save);
         bing.add.setOnClickListener(this::add);
+        bing.copy.setOnClickListener(this::copy);
+    }
+
+    private void copy(View view) {
+        ChangDuanInfo changDuanInfo = viewModel.getChangDuanInfo().getValue();
+        if (changDuanInfo == null) {
+            Toast.makeText(this, "无数据可复制", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        ClipData clipData = ChangDuanHelper.copyFromChangDuanInfo(changDuanInfo);
+        clipboardManager.setPrimaryClip(clipData);
     }
 
     private void initSpinner() {
@@ -69,7 +87,8 @@ public class ChangCiActivity extends BaseToolBarActivity {
     }
 
     public void add(View view) {
-        changCiAdapter.addItem();
+        int position = changCiAdapter.addItem();
+        bing.recyclerView.smoothScrollToPosition(position);
     }
 
     private void initView(ChangDuan changDuan) {

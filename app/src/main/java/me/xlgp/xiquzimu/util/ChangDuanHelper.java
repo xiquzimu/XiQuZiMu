@@ -1,5 +1,7 @@
 package me.xlgp.xiquzimu.util;
 
+import android.content.ClipData;
+
 import com.github.promeg.pinyinhelper.Pinyin;
 
 import java.text.ParseException;
@@ -22,6 +24,25 @@ import me.xlgp.xiquzimu.params.LeftChangDuan;
 import me.xlgp.xiquzimu.params.TagChangDuan;
 
 public class ChangDuanHelper {
+
+    public static ClipData copyFromChangDuanInfo(ChangDuanInfo changDuanInfo) {
+
+        ChangDuan changDuan = changDuanInfo.getChangDuan();
+        StringBuilder text = new StringBuilder();
+        text.append("[ti:").append(changDuan.getName()).append("]").append("\n");
+        text.append("[jz:").append(changDuan.getJuZhong()).append("]").append("\n");
+        text.append("[jm:").append(changDuan.getJuMu()).append("]").append("\n");
+        text.append("[offset:").append(changDuan.getOffset()).append("]").append("\n");
+
+        ChangCiList changCiList = changDuanInfo.getChangeCiList();
+
+        for (ChangCi changci : changCiList) {
+            text.append("[").append(changci.getShowTime()).append("]").append(changci.getContent()).append("\n");
+        }
+
+        return ClipData.newPlainText("text", text);
+
+    }
 
     public static List<LeftChangDuan> setLeftChangDuan(List<ChangDuan> list) {
         List<LeftChangDuan> leftchangDuanList = new ArrayList<>();
