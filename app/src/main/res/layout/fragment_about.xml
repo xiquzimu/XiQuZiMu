@@ -67,6 +67,7 @@
         android:clickable="true"
         android:divider="@color/black_touming_bg"
         android:focusable="true"
+        android:background="@drawable/underline"
         android:orientation="horizontal">
 
         <TextView
@@ -80,12 +81,13 @@
             android:textColor="@color/item_color" />
 
         <ImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginTop="6dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="6dp"
             android:clickable="false"
             android:contentDescription="@string/item_go"
-            android:src="@drawable/ic_baseline_chevron_right_24" />
+            android:src="@drawable/ic_right" />
     </LinearLayout>
 
     <LinearLayout
@@ -95,6 +97,7 @@
         android:clickable="true"
         android:divider="@color/black_touming_bg"
         android:focusable="true"
+        android:background="@drawable/underline"
         android:orientation="horizontal">
 
         <TextView
@@ -109,12 +112,13 @@
             android:textColor="@color/item_color" />
 
         <ImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginTop="6dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="6dp"
             android:clickable="false"
             android:contentDescription="@string/item_go"
-            android:src="@drawable/ic_baseline_chevron_right_24" />
+            android:src="@drawable/ic_right" />
     </LinearLayout>
 
     <LinearLayout
@@ -124,6 +128,7 @@
         android:clickable="true"
         android:divider="@color/black_touming_bg"
         android:focusable="true"
+        android:background="@drawable/underline"
         android:orientation="horizontal">
 
         <TextView
@@ -146,12 +151,13 @@
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginTop="6dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="6dp"
             android:clickable="false"
             android:contentDescription="@string/item_go"
-            android:src="@drawable/ic_baseline_chevron_right_24" />
+            android:src="@drawable/ic_right" />
     </LinearLayout>
     <LinearLayout
         android:id="@+id/statement"
@@ -160,6 +166,7 @@
         android:clickable="true"
         android:divider="@color/black_touming_bg"
         android:focusable="true"
+        android:background="@drawable/underline"
         android:orientation="horizontal">
 
         <TextView
@@ -173,11 +180,12 @@
             android:textColor="@color/item_color" />
 
         <ImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginTop="6dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="6dp"
             android:clickable="false"
             android:contentDescription="@string/item_go"
-            android:src="@drawable/ic_baseline_chevron_right_24" />
+            android:src="@drawable/ic_right" />
     </LinearLayout>
 </LinearLayout>
