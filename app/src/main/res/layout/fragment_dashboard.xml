@@ -23,7 +23,7 @@
             android:focusable="true"
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
-            android:src="@drawable/ic_baseline_delete_24" />
+            android:src="@drawable/ic_delete" />
 
         <ImageView
             android:id="@+id/update"
