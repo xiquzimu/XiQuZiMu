@@ -69,6 +69,7 @@ public class ChangCiActivity extends BaseToolBarActivity {
         ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         ClipData clipData = ChangDuanHelper.copyFromChangDuanInfo(changDuanInfo);
         clipboardManager.setPrimaryClip(clipData);
+        Toast.makeText(this, "已复制", Toast.LENGTH_SHORT).show();
     }
 
     private void initSpinner() {
