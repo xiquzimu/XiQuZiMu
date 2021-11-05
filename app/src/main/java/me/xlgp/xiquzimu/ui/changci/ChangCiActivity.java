@@ -1,7 +1,6 @@
 package me.xlgp.xiquzimu.ui.changci;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -20,7 +19,7 @@ import me.xlgp.xiquzimu.databinding.ActivityChangCiBinding;
 import me.xlgp.xiquzimu.model.ChangDuan;
 import me.xlgp.xiquzimu.model.ChangDuanInfo;
 import me.xlgp.xiquzimu.ui.base.BaseToolBarActivity;
-import me.xlgp.xiquzimu.util.ChangDuanHelper;
+import me.xlgp.xiquzimu.ui.copy.CopyChangCiActivity;
 
 public class ChangCiActivity extends BaseToolBarActivity {
 
@@ -66,10 +65,9 @@ public class ChangCiActivity extends BaseToolBarActivity {
             Toast.makeText(this, "无数据可复制", Toast.LENGTH_SHORT).show();
             return;
         }
-        ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        ClipData clipData = ChangDuanHelper.copyFromChangDuanInfo(changDuanInfo);
-        clipboardManager.setPrimaryClip(clipData);
-        Toast.makeText(this, "已复制", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, CopyChangCiActivity.class);
+        intent.putExtra("changduanID", changDuanInfo.getChangDuan().getId());
+        startActivity(intent);
     }
 
     private void initSpinner() {
