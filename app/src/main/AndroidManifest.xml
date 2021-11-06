@@ -18,9 +18,6 @@
         android:theme="@style/Theme.XiQuZiMu"
         tools:ignore="HardcodedDebugMode">
         <activity
-            android:name=".ui.copy.CopyChangCiActivity"
-            android:exported="true" />
-        <activity
             android:name=".ui.changci.ChangCiActivity"
             android:exported="true" />
         <activity
