@@ -32,11 +32,6 @@ public class AboutViewModel extends ViewModel {
         return downloadUrlList;
     }
 
-    public void downloadApk() {
-        FetchGiteeRepository fetchGiteeRepository = new FetchGiteeRepository();
-
-    }
-
     public void loadDownloadUrl() {
         FetchGiteeRepository fetchGiteeRepository = new FetchGiteeRepository();
         fetchGiteeRepository.getDownlaodUrl().compose(ObserverHelper.transformer()).subscribe(new Observer<List<String>>() {

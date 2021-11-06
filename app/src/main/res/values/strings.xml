@@ -54,4 +54,5 @@
     <string name="copy">复制</string>
     <string name="timeEditTextHint">时间</string>
     <string name="contentEditTextHint">唱词</string>
+    <string name="laoding">laoding</string>
 </resources>

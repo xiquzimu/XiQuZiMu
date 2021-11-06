@@ -11,8 +11,10 @@ import android.webkit.WebViewClient;
 
 import androidx.annotation.RequiresApi;
 
+import me.xlgp.xiquzimu.R;
 import me.xlgp.xiquzimu.databinding.ActivityGiteeWebBinding;
 import me.xlgp.xiquzimu.ui.base.BaseToolBarActivity;
+import me.xlgp.xiquzimu.util.AnimationHelper;
 
 public class GiteeWebActivity extends BaseToolBarActivity {
 
@@ -30,6 +32,7 @@ public class GiteeWebActivity extends BaseToolBarActivity {
         getFromIntent();
         setTitle("网络文档");
         if (url != null) {
+            loading(true);
             binding.giteeWebView.loadUrl(url);
         }
         binding.giteeWebView.setWebViewClient(new GiteeWebViewClient());
@@ -45,6 +48,16 @@ public class GiteeWebActivity extends BaseToolBarActivity {
         url = intent.getStringExtra("URL");
     }
 
+    private void loading(boolean loading) {
+        if (loading) {
+            binding.loadingImageView.setVisibility(View.VISIBLE);
+            binding.loadingImageView.startAnimation(AnimationHelper.getRotateAnimation(this, R.anim.anim_circle_rotate));
+        } else {
+            binding.loadingImageView.clearAnimation();
+            binding.loadingImageView.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -57,6 +70,7 @@ public class GiteeWebActivity extends BaseToolBarActivity {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             if (binding != null) {
+                loading(false);
                 binding.loadingFramelayout.setVisibility(View.GONE);
             }
             setTitle(view.getTitle());

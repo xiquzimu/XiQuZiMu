@@ -17,6 +17,7 @@ import me.xlgp.xiquzimu.constant.UrlConstant;
 import me.xlgp.xiquzimu.databinding.FragmentAboutBinding;
 import me.xlgp.xiquzimu.service.DownloadService;
 import me.xlgp.xiquzimu.ui.webview.GiteeWebActivity;
+import me.xlgp.xiquzimu.util.AnimationHelper;
 
 public class AboutFragment extends Fragment {
 
@@ -36,20 +37,36 @@ public class AboutFragment extends Fragment {
             Intent intent = new Intent(requireActivity(), DownloadService.class);
             intent.putExtra("apkDownloadUrl", list.get(0));
             requireActivity().startService(intent);
+            loading(false);
         });
 
-        binding.updateVersion.setOnClickListener(v -> viewModel.loadDownloadUrl());
+
+        binding.updateVersion.setOnClickListener(v -> {
+            loading(true);
+            viewModel.loadDownloadUrl();
+        });
         binding.statement.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), GiteeWebActivity.class);
             intent.putExtra("URL", UrlConstant.STATEMENT);
             requireActivity().startActivity(intent);
         });
-        binding.projectUrl.setOnClickListener(v->{
+        binding.projectUrl.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), GiteeWebActivity.class);
             intent.putExtra("URL", requireContext().getString(R.string.giteeProjectUrl));
             requireActivity().startActivity(intent);
         });
         return root;
+    }
+
+
+    private void loading(boolean loading) {
+        if (loading) {
+            binding.loadingImageView.setVisibility(View.VISIBLE);
+            binding.loadingImageView.startAnimation(AnimationHelper.getRotateAnimation(requireContext(), R.anim.anim_circle_rotate));
+        } else {
+            binding.loadingImageView.clearAnimation();
+            binding.loadingImageView.setVisibility(View.GONE);
+        }
     }
 
     @Override
