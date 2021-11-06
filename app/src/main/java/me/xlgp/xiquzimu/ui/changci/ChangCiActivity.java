@@ -1,11 +1,12 @@
 package me.xlgp.xiquzimu.ui.changci;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.PopupMenu;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -19,9 +20,10 @@ import me.xlgp.xiquzimu.databinding.ActivityChangCiBinding;
 import me.xlgp.xiquzimu.model.ChangDuan;
 import me.xlgp.xiquzimu.model.ChangDuanInfo;
 import me.xlgp.xiquzimu.ui.base.BaseToolBarActivity;
-import me.xlgp.xiquzimu.ui.copy.CopyChangCiActivity;
+import me.xlgp.xiquzimu.util.ChangDuanHelper;
+import me.xlgp.xiquzimu.util.CopyHelper;
 
-public class ChangCiActivity extends BaseToolBarActivity {
+public class ChangCiActivity extends BaseToolBarActivity implements PopupMenu.OnMenuItemClickListener {
 
     private ActivityChangCiBinding bing;
     private ChangCiAdapter changCiAdapter;
@@ -65,9 +67,14 @@ public class ChangCiActivity extends BaseToolBarActivity {
             Toast.makeText(this, "无数据可复制", Toast.LENGTH_SHORT).show();
             return;
         }
-        Intent intent = new Intent(this, CopyChangCiActivity.class);
-        intent.putExtra("changduanID", changDuanInfo.getChangDuan().getId());
-        startActivity(intent);
+        initPopupMenu(view);
+    }
+
+    private void initPopupMenu(View v) {
+        PopupMenu popupMenu = new PopupMenu(this, v);
+        popupMenu.getMenuInflater().inflate(R.menu.copy_menu, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(this);
+        popupMenu.show();
     }
 
     private void initSpinner() {
@@ -92,7 +99,6 @@ public class ChangCiActivity extends BaseToolBarActivity {
 
     private void initView(ChangDuan changDuan) {
         bing.editTextJuMu.setText(changDuan.getJuMu());
-
         bing.editTextOffset.setText(String.valueOf(changDuan.getOffset()));
         bing.editTextName.setText(changDuan.getName());
     }
@@ -113,5 +119,21 @@ public class ChangCiActivity extends BaseToolBarActivity {
     protected void onDestroy() {
         super.onDestroy();
         bing = null;
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        ChangDuanInfo changDuanInfo = viewModel.getChangDuanInfo().getValue();
+        if (changDuanInfo == null) {
+            Toast.makeText(this, "无数据可复制", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (item.getItemId() == R.id.item_chunjing) {
+            CopyHelper.copy(ChangDuanHelper.copyChunJingFromChangDuanInfo(changDuanInfo), getApplication());
+        } else if (item.getItemId() == R.id.item_zimu) {
+            CopyHelper.copy(ChangDuanHelper.copyFromChangDuanInfo(changDuanInfo), getApplication());
+        }
+        Toast.makeText(this, "已复制：" + changDuanInfo.getChangDuan().getName(), Toast.LENGTH_SHORT).show();
+        return false;
     }
 }

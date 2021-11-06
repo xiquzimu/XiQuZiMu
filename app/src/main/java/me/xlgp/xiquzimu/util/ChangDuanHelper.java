@@ -44,6 +44,24 @@ public class ChangDuanHelper {
 
     }
 
+    public static ClipData copyChunJingFromChangDuanInfo(ChangDuanInfo changDuanInfo) {
+
+        ChangDuan changDuan = changDuanInfo.getChangDuan();
+        StringBuilder text = new StringBuilder();
+        text.append(changDuan.getName()).append("\n");
+        text.append(changDuan.getJuZhong()).append("\n");
+        text.append(changDuan.getJuMu()).append("\n");
+
+        ChangCiList changCiList = changDuanInfo.getChangeCiList();
+
+        for (ChangCi changci : changCiList) {
+            text.append(changci.getContent()).append("\n");
+        }
+
+        return ClipData.newPlainText("text", text);
+
+    }
+
     public static List<LeftChangDuan> setLeftChangDuan(List<ChangDuan> list) {
         List<LeftChangDuan> leftchangDuanList = new ArrayList<>();
         String name = "";
