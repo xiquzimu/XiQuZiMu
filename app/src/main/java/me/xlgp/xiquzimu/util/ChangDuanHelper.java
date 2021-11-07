@@ -1,7 +1,5 @@
 package me.xlgp.xiquzimu.util;
 
-import android.content.ClipData;
-
 import com.github.promeg.pinyinhelper.Pinyin;
 
 import java.text.ParseException;
@@ -25,7 +23,7 @@ import me.xlgp.xiquzimu.params.TagChangDuan;
 
 public class ChangDuanHelper {
 
-    public static ClipData copyFromChangDuanInfo(ChangDuanInfo changDuanInfo) {
+    public static StringBuilder copyFromChangDuanInfo(ChangDuanInfo changDuanInfo) {
 
         ChangDuan changDuan = changDuanInfo.getChangDuan();
         StringBuilder text = new StringBuilder();
@@ -40,11 +38,10 @@ public class ChangDuanHelper {
             text.append("[").append(changci.getShowTime()).append("]").append(changci.getContent()).append("\n");
         }
 
-        return ClipData.newPlainText("text", text);
-
+        return text;
     }
 
-    public static ClipData copyChunJingFromChangDuanInfo(ChangDuanInfo changDuanInfo) {
+    public static StringBuilder copyChunJingFromChangDuanInfo(ChangDuanInfo changDuanInfo) {
 
         ChangDuan changDuan = changDuanInfo.getChangDuan();
         StringBuilder text = new StringBuilder();
@@ -58,7 +55,7 @@ public class ChangDuanHelper {
             text.append(changci.getContent()).append("\n");
         }
 
-        return ClipData.newPlainText("text", text);
+        return text;
 
     }
 

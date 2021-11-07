@@ -55,4 +55,11 @@
     <string name="timeEditTextHint">时间</string>
     <string name="contentEditTextHint">唱词</string>
     <string name="laoding">laoding</string>
+    <string name="item_share">分享</string>
+    <string name="item_save">保存</string>
+
+    <string-array name="copy_item_array">
+        <item>🔹字幕版</item>
+        <item>🔹纯净版</item>
+    </string-array>
 </resources>
