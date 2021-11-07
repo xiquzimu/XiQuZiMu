@@ -80,9 +80,9 @@ public class ChangCiActivity extends BaseToolBarActivity {
         return true;
     }
 
-    public Dialog createDialog(SELECT_ITEM_ENMU enmu) {
+    public Dialog createDialog(SELECT_ITEM_ENMU enmu, String title) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("选择复制类型")
+        builder.setTitle(title)
                 .setItems(R.array.copy_item_array, (dialog, which) -> {
                     switch (enmu) {
                         case SHARE:
@@ -185,9 +185,9 @@ public class ChangCiActivity extends BaseToolBarActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.item_copy) {
-            createDialog(SELECT_ITEM_ENMU.COPY).show();
+            createDialog(SELECT_ITEM_ENMU.COPY, "选择复制类型").show();
         } else if (item.getItemId() == R.id.item_share) {
-            createDialog(SELECT_ITEM_ENMU.SHARE).show();
+            createDialog(SELECT_ITEM_ENMU.SHARE, "选择分享类型").show();
         }
         return super.onOptionsItemSelected(item);
     }
