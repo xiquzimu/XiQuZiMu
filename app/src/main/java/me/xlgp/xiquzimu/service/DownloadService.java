@@ -36,7 +36,7 @@ public class DownloadService extends LifecycleService {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         if (downloading) {
-            Toast.makeText(this, "正在下载", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "正在下载,请勿重复操作...", Toast.LENGTH_SHORT).show();
             return super.onStartCommand(intent, flags, startId);
         }
 
@@ -91,6 +91,7 @@ public class DownloadService extends LifecycleService {
 
         dm.enqueue(request);
         downloading = true;
+        Toast.makeText(this, "正在下载", Toast.LENGTH_SHORT).show();
     }
 
     class DownloadBroadcastReceiver extends BroadcastReceiver {
