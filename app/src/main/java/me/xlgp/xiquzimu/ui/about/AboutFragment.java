@@ -47,12 +47,12 @@ public class AboutFragment extends Fragment {
         });
         binding.statement.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), GiteeWebActivity.class);
-            intent.putExtra("URL", UrlConstant.STATEMENT);
+            intent.putExtra(GiteeWebActivity.KEY_URL, UrlConstant.STATEMENT);
             requireActivity().startActivity(intent);
         });
         binding.projectUrl.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), GiteeWebActivity.class);
-            intent.putExtra("URL", requireContext().getString(R.string.giteeProjectUrl));
+            intent.putExtra(GiteeWebActivity.KEY_URL, requireContext().getString(R.string.giteeProjectUrl));
             requireActivity().startActivity(intent);
         });
         return root;
