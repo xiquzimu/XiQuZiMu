@@ -47,18 +47,6 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <receiver
-            android:name=".receiver.AppInstallReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <action android:name="android.intent.action.PACKAGE_REPLACED" />
-
-                <data android:scheme="package" />
-            </intent-filter>
-        </receiver>
-
         <service android:name=".service.FloatingService" />
         <service android:name=".service.DownloadService" />
         <service android:name=".service.PinglunLifecycleService" />
