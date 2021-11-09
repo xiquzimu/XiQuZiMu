@@ -4,9 +4,16 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.view.WindowManager;
 
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+
+import java.util.concurrent.TimeUnit;
+
 import me.xlgp.xiquzimu.config.FetchRepositoryConfig;
 import me.xlgp.xiquzimu.db.AppDatabase;
 import me.xlgp.xiquzimu.obj.ZWindowManager;
+import me.xlgp.xiquzimu.worker.ClearApklWorker;
 
 public class ZimuApplication extends Application {
     @Override
@@ -15,6 +22,18 @@ public class ZimuApplication extends Application {
         AppDatabase.build(getApplicationContext());
         setFetchRepositoryConfig();
         ZWindowManager.getInstance().build((WindowManager) getApplicationContext().getSystemService(WINDOW_SERVICE));
+        initClearApklWorker();
+    }
+
+    private void initClearApklWorker() {
+        WorkRequest workRequest =
+                new OneTimeWorkRequest.Builder(ClearApklWorker.class)
+                        .setInitialDelay(10, TimeUnit.HOURS)
+                        .build();
+        WorkManager
+                .getInstance(getApplicationContext())
+                .enqueue(workRequest);
+
     }
 
     private void setFetchRepositoryConfig() {

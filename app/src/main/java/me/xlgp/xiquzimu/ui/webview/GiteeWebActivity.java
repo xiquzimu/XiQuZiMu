@@ -21,6 +21,8 @@ public class GiteeWebActivity extends BaseToolBarActivity {
     private ActivityGiteeWebBinding binding;
     private String url;
 
+    public static final String KEY_URL = "url";
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -45,7 +47,7 @@ public class GiteeWebActivity extends BaseToolBarActivity {
     private void getFromIntent() {
         Intent intent = getIntent();
         if (intent == null) return;
-        url = intent.getStringExtra("URL");
+        url = intent.getStringExtra(KEY_URL);
     }
 
     private void loading(boolean loading) {

@@ -15,9 +15,8 @@ import androidx.lifecycle.LifecycleService;
 
 import org.jetbrains.annotations.NotNull;
 
-import me.xlgp.xiquzimu.BuildConfig;
 import me.xlgp.xiquzimu.R;
-import me.xlgp.xiquzimu.util.InstallAPKUtil;
+import me.xlgp.xiquzimu.util.APKHelper;
 
 public class DownloadService extends LifecycleService {
 
@@ -25,6 +24,8 @@ public class DownloadService extends LifecycleService {
     private String downloadUrl = null;
     private String apkName = null;
     private BroadcastReceiver receiver;
+
+    public static String KEY_DOWNLOAD_URL = "apkDownloadUrl";
 
     @Nullable
     @Override
@@ -40,10 +41,10 @@ public class DownloadService extends LifecycleService {
             return super.onStartCommand(intent, flags, startId);
         }
 
-        downloadUrl = intent.getStringExtra("apkDownloadUrl");
+        downloadUrl = intent.getStringExtra(KEY_DOWNLOAD_URL);
         apkName = downloadUrl.substring(downloadUrl.lastIndexOf("/") + 1);
 
-        if (!checkVersion(apkName)) {
+        if (!APKHelper.checkVersion(apkName)) {
             Toast.makeText(this, "无版本可更新", Toast.LENGTH_SHORT).show();
             stopSelf();
             return super.onStartCommand(intent, flags, startId);
@@ -56,15 +57,6 @@ public class DownloadService extends LifecycleService {
         startDownload();
 
         return super.onStartCommand(intent, flags, startId);
-    }
-
-    private boolean checkVersion(String apkName) {
-        String[] list = apkName.split("_");
-        if (list.length <= 1) {
-            return false;
-        }
-        String version = list[1].substring(1);
-        return BuildConfig.VERSION_NAME.compareTo(version) < 0;
     }
 
     @Override
@@ -98,7 +90,7 @@ public class DownloadService extends LifecycleService {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            InstallAPKUtil.installAPK(context.getApplicationContext(), apkName);
+            APKHelper.installAPK(context.getApplicationContext(), apkName);
             stopSelf();
         }
     }
