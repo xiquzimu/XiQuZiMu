@@ -25,6 +25,8 @@ public class DownloadService extends LifecycleService {
     private String apkName = null;
     private BroadcastReceiver receiver;
 
+    public static String KEY_DOWNLOAD_URL = "apkDownloadUrl";
+
     @Nullable
     @Override
     public IBinder onBind(@NotNull Intent intent) {
@@ -39,7 +41,7 @@ public class DownloadService extends LifecycleService {
             return super.onStartCommand(intent, flags, startId);
         }
 
-        downloadUrl = intent.getStringExtra("apkDownloadUrl");
+        downloadUrl = intent.getStringExtra(KEY_DOWNLOAD_URL);
         apkName = downloadUrl.substring(downloadUrl.lastIndexOf("/") + 1);
 
         if (!APKHelper.checkVersion(apkName)) {

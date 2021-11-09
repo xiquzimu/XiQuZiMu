@@ -35,7 +35,7 @@ public class AboutFragment extends Fragment {
 
         viewModel.getDownloadUrlList().observe(getViewLifecycleOwner(), list -> {
             Intent intent = new Intent(requireActivity(), DownloadService.class);
-            intent.putExtra("apkDownloadUrl", list.get(0));
+            intent.putExtra(DownloadService.KEY_DOWNLOAD_URL, list.get(0));
             requireActivity().startService(intent);
             loading(false);
         });
