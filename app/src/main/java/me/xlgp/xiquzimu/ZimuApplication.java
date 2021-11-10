@@ -28,7 +28,7 @@ public class ZimuApplication extends Application {
     private void initClearApklWorker() {
         WorkRequest workRequest =
                 new OneTimeWorkRequest.Builder(ClearApkWorker.class)
-                        .setInitialDelay(10, TimeUnit.HOURS)
+                        .setInitialDelay(1, TimeUnit.HOURS)
                         .build();
         WorkManager
                 .getInstance(getApplicationContext())
