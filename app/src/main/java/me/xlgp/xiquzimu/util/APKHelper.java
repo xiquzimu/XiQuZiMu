@@ -1,5 +1,6 @@
 package me.xlgp.xiquzimu.util;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 
 import me.xlgp.xiquzimu.BuildConfig;
+import me.xlgp.xiquzimu.R;
 
 public class APKHelper {
     public static void installAPK(Context context, String apkName) {
@@ -66,5 +68,28 @@ public class APKHelper {
         }
         String version = list[1].substring(1);
         return BuildConfig.VERSION_NAME.compareTo(version) < 0;
+    }
+
+    public static String getApkName(String url) {
+        if ("".equals(url)) {
+            return url;
+        }
+        return url.substring(url.lastIndexOf("/") + 1);
+    }
+
+    public static void download(Context context, String downloadUrl) {
+        Uri mApkUri = Uri.parse("https://gitee.com" + downloadUrl);
+        String apkName = getApkName(downloadUrl);
+        DownloadManager.Request request = new DownloadManager.Request(mApkUri);
+
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
+        request.setTitle(context.getString(R.string.app_zh_name));
+        request.setDescription("在正下载 " + apkName + " ...");
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOWNLOADS, apkName);
+
+        DownloadManager dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+
+        dm.enqueue(request);
     }
 }
