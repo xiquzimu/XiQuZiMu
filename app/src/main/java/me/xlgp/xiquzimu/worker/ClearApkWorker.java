@@ -8,8 +8,8 @@ import androidx.work.WorkerParameters;
 
 import me.xlgp.xiquzimu.util.APKHelper;
 
-public class ClearApklWorker extends Worker {
-    public ClearApklWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+public class ClearApkWorker extends Worker {
+    public ClearApkWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
 

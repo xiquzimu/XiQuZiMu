@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 import me.xlgp.xiquzimu.config.FetchRepositoryConfig;
 import me.xlgp.xiquzimu.db.AppDatabase;
 import me.xlgp.xiquzimu.obj.ZWindowManager;
-import me.xlgp.xiquzimu.worker.ClearApklWorker;
+import me.xlgp.xiquzimu.worker.ClearApkWorker;
 
 public class ZimuApplication extends Application {
     @Override
@@ -27,7 +27,7 @@ public class ZimuApplication extends Application {
 
     private void initClearApklWorker() {
         WorkRequest workRequest =
-                new OneTimeWorkRequest.Builder(ClearApklWorker.class)
+                new OneTimeWorkRequest.Builder(ClearApkWorker.class)
                         .setInitialDelay(10, TimeUnit.HOURS)
                         .build();
         WorkManager
