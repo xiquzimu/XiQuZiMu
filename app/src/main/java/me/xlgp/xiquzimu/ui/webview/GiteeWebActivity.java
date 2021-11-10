@@ -33,10 +33,8 @@ public class GiteeWebActivity extends BaseToolBarActivity {
 
         getFromIntent();
         setTitle("网络文档");
-        if (url != null) {
-            loading(true);
-            binding.giteeWebView.loadUrl(url);
-        }
+        loading(true);
+        binding.giteeWebView.loadUrl(url);
         binding.giteeWebView.setWebViewClient(new GiteeWebViewClient());
         WebSettings settings = binding.giteeWebView.getSettings();
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
