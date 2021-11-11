@@ -28,6 +28,8 @@ public class ListActivity extends BaseToolBarActivity {
 
     ActivityListBinding binding = null;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private FetchViewModel fetchViewModel;
+    StringSearchRecyclerviewLayout searchRecyclerviewLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,7 @@ public class ListActivity extends BaseToolBarActivity {
         binding = ActivityListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setTitle("远程唱词列表");
-        StringSearchRecyclerviewLayout searchRecyclerviewLayout = binding.nameListSearchRecyclerviewLayout;
+        searchRecyclerviewLayout = binding.nameListSearchRecyclerviewLayout;
         searchRecyclerviewLayout.build(this);
         searchRecyclerviewLayout.setPredicate(new StringPredicate(searchRecyclerviewLayout.getFilterCharSequenceLiveData()));
         searchRecyclerviewLayout.setRefreshing(true);
@@ -45,7 +47,7 @@ public class ListActivity extends BaseToolBarActivity {
         nameListAdapter.setOnItemClickListener(getOnItemClickListener());
         searchRecyclerviewLayout.setSearchListAdapter(nameListAdapter);
 
-        FetchViewModel fetchViewModel = new ViewModelProvider(this).get(FetchViewModel.class);
+        fetchViewModel = new ViewModelProvider(this).get(FetchViewModel.class);
 
         searchRecyclerviewLayout.setOnRefreshListener(fetchViewModel::fetchNameList);
 
@@ -70,6 +72,11 @@ public class ListActivity extends BaseToolBarActivity {
         }
     }
 
+    private void fetchNameList() {
+        searchRecyclerviewLayout.setRefreshing(true);
+        fetchViewModel.fetchNameList();
+    }
+
     private RadioGroup.OnCheckedChangeListener getOnCheckedChangeListener() {
         return (group, checkedId) -> {
             ZimuApplication zimuApplication = (ZimuApplication) getApplication();
@@ -78,6 +85,7 @@ public class ListActivity extends BaseToolBarActivity {
             } else if (checkedId == binding.githubRadioButton.getId()) {
                 zimuApplication.setFetchRepositoryConfig(FetchRepositoryConfig.REPOSITORY_ENUM.GITHUB);
             }
+            fetchNameList();
         };
     }
 
