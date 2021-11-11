@@ -14,15 +14,23 @@ import me.xlgp.xiquzimu.config.FetchRepositoryConfig;
 import me.xlgp.xiquzimu.db.AppDatabase;
 import me.xlgp.xiquzimu.obj.ZWindowManager;
 import me.xlgp.xiquzimu.worker.ClearApkWorker;
+import me.xlgp.xiquzimu.worker.InitChangDuanInfoWorker;
 
 public class ZimuApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         AppDatabase.build(getApplicationContext());
         setFetchRepositoryConfig();
         ZWindowManager.getInstance().build((WindowManager) getApplicationContext().getSystemService(WINDOW_SERVICE));
         initClearApklWorker();
+        initChangDuanInfo();
+    }
+
+    private void initChangDuanInfo(){
+        WorkRequest workRequest = new OneTimeWorkRequest.Builder(InitChangDuanInfoWorker.class).build();
+        WorkManager.getInstance(getApplicationContext()).enqueue(workRequest);
     }
 
     private void initClearApklWorker() {
@@ -41,7 +49,7 @@ public class ZimuApplication extends Application {
                 .getSharedPreferences(FetchRepositoryConfig.NAME, MODE_PRIVATE);
         FetchRepositoryConfig
                 .setRepositoryType(sharedPreferences.
-                        getInt(FetchRepositoryConfig.REPOSITORY, FetchRepositoryConfig.REPOSITORY_ENUM.GITEE.ordinal()));
+                        getInt(FetchRepositoryConfig.REPOSITORY, FetchRepositoryConfig.REPOSITORY_ENUM.GITHUB.ordinal()));
     }
 
     public void setFetchRepositoryConfig(FetchRepositoryConfig.REPOSITORY_ENUM repositoryEnum) {
