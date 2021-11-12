@@ -24,7 +24,6 @@ import me.xlgp.xiquzimu.service.FloatingService;
 public class FloatingToolBarFragment extends Fragment {
 
     private FloatingToolBarFragmentBinding binding;
-    private String title;
     private boolean isShou = true;
     private Integer shouHeight = 0;
     private LinearLayout rootLayout;
@@ -39,13 +38,8 @@ public class FloatingToolBarFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FloatingToolBarFragmentBinding.inflate(inflater, container, false);
         rootLayout = (LinearLayout) ((FloatingService) requireContext()).getRootView();
-        binding.titleBtn.setText(title);
         onViewListener();
         return binding.getRoot();
-    }
-
-    public void setPanelTitle(String panelTitle) {
-        title = panelTitle;
     }
 
     private int getShouHeight() {

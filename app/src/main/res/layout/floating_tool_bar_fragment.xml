@@ -38,6 +38,14 @@
             android:text="@string/changduan_tab_item"
             android:textColor="#fff" />
 
+        <ImageButton
+            android:id="@+id/titleBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/floatingTitle"
+            android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
+            android:src="@drawable/ic_baseline_horizontal_rule_24"/>
         <Button
             android:id="@+id/changciBtn"
             style="?android:attr/buttonBarButtonStyle"
@@ -46,14 +54,6 @@
             android:text="@string/changci_tab_item"
             android:textColor="#fff" />
 
-        <Button
-            android:id="@+id/titleBtn"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="@string/floatingTitle"
-            android:layout_weight="1"
-            style="?android:attr/buttonBarButtonStyle"
-            android:textColor="#fff" />
     </LinearLayout>
 
     <ImageButton
