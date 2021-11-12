@@ -70,6 +70,11 @@ public class SearchRecyclerviewLayout<T> extends LinearLayout {
         return searchViewModel.getSearchTextLiveData();
     }
 
+    public void clearFocus(){
+        binding.searchEditText.clearFocus();
+        binding.searchEditText.setText("");
+    }
+
     public void build(LifecycleOwner lifecycleOwner) {
         searchViewModel.getSearchTextLiveData().observe(lifecycleOwner, charSequence -> searchListAdapter.filter(predicate));
     }

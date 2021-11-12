@@ -41,9 +41,7 @@ public class DashboardFragment extends Fragment {
         initSearchRecyclerviewLayout();
 
         ChangDuanListAdapter changDuanListAdapter = new ChangDuanListAdapter();
-        changDuanListAdapter.setOnItemClickListener((itemView, view, data, position) -> {
-            toChangCiActivity(data.getId());
-        });
+        changDuanListAdapter.setOnItemClickListener((itemView, view, data, position) -> toChangCiActivity(data.getId()));
         searchRecyclerviewLayout.setSearchListAdapter(changDuanListAdapter);
         searchRecyclerviewLayout.getRecyclerview().addItemDecoration(new ChangDuanListAdapter.GroupHeaderItemDecoration(changDuanListAdapter));
         viewModel.getChangduanList().observe(getViewLifecycleOwner(), list -> {
@@ -59,6 +57,12 @@ public class DashboardFragment extends Fragment {
         binding.update.setOnClickListener(this::onFetch);
         binding.add.setOnClickListener(this::add);
         return root;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        searchRecyclerviewLayout.clearFocus();
     }
 
     private void toChangCiActivity(Integer id) {

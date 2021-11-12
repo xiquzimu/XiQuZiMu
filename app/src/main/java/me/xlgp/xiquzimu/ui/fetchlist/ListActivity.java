@@ -94,6 +94,12 @@ public class ListActivity extends BaseToolBarActivity {
         binding.totalCountTextView.setText(total);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        searchRecyclerviewLayout.clearFocus();
+    }
+
     private OnItemClickListener<String> getOnItemClickListener() {
         return (itemView, view, data, position) -> {
             Button button = (Button) view;
