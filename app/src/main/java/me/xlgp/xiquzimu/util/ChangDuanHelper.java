@@ -118,7 +118,7 @@ public class ChangDuanHelper {
 
     private static void addAfterChangCi(ChangDuan changDuan, ChangCiList changCiList) {
         ChangCi afterChangCi = new ChangCi();
-        long afterDelayMillis = 7000;
+        long afterDelayMillis = 10000;
         afterChangCi.setDelayMillis(afterDelayMillis);
         afterChangCi.setShowTime(formatDate(changCiList.get(changCiList.size() - 1).getShowTime(), afterDelayMillis));
         afterChangCi.setContent(EmojiManager.SMALL_BLUE_DIAMOND + "本曲出自" + changDuan.getJuZhong() + "《" + changDuan.getJuMu() + "》选段：" + changDuan.getName());
@@ -148,15 +148,18 @@ public class ChangDuanHelper {
 
     public static void parseChangCiListByDelayMillis(ChangDuanInfo changDuanInfo) {
         ChangCiList changCiList = changDuanInfo.getChangeCiList();
-        long beforeDelaymillis = getDelayMillis("00:00.00");
+        long beforeMillis = getDelayMillis("00:00.00");
+        long offset = changDuanInfo.getChangDuan().getOffset() * 1000;
         for (int i = 0; i < changCiList.size(); i++) {
-            //时间间隔 = 本句的时间-前句时间+时间补偿值（offset）,offset:一般表示唱词先于唱段声音出现
-            long curDelay = getDelayMillis(changCiList.get(i).getShowTime());
-            long offset = changDuanInfo.getChangDuan().getOffset() * 1000;
-            if (curDelay + offset > 0) curDelay += offset;
-            long delayMillis = curDelay - beforeDelaymillis;
+            //当前的时间的毫秒
+            long curMillis = getDelayMillis(changCiList.get(i).getShowTime());
+            //时间间隔 = 本句的时间-前句时间
+            long delayMillis = curMillis - beforeMillis;
+            if (i == 0 && delayMillis + offset > 0) { //若是第一句，加上时间差值,offset:一般表示唱词先于唱段声音出现
+                delayMillis += offset;
+            }
             changCiList.get(i).setDelayMillis(delayMillis);
-            beforeDelaymillis = curDelay;
+            beforeMillis = curMillis;
         }
     }
 
