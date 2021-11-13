@@ -103,11 +103,11 @@ public class ChangCiAdapter extends BaseAdapter<ChangCi> {
         }
 
         public void removeProgress(boolean clear) {
-            if (clear) { //用于判断是需要取消进度条， 因为当高亮行滑出可见空间区域后再次回到可见区域需要重新绘制，此时的进度条应从current开始，
-                current = 0;
-            }
             if (binding != null) {
-                binding.progressBar.setProgress(current);
+                binding.progressBar.setProgress(0);
+            }
+            if (clear) {
+                current = 0;
             }
             handler.removeCallbacks(runnable);
         }
